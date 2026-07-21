@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { AuthResponse } from "../types";
+import type { AuthResponse, UserRole } from "../types";
 
 interface AuthState {
   token: string | null;
   userId: string | null;
   nome: string | null;
   email: string | null;
-  role: "Comprador" | "Administrador" | null;
+  role: UserRole | null;
   setAuth: (auth: AuthResponse) => void;
   logout: () => void;
 }

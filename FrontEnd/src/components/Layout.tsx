@@ -19,11 +19,14 @@ export default function Layout() {
             NexTicket
           </Typography>
 
-          <Button component={RouterLink} to="/eventos">Eventos</Button>
+          {role !== "Validador" && <Button component={RouterLink} to="/eventos">Eventos</Button>}
 
-          {token && <Button component={RouterLink} to="/meus-ingressos">Meus ingressos</Button>}
+          {token && role !== "Validador" && <Button component={RouterLink} to="/meus-ingressos">Meus ingressos</Button>}
           {role === "Administrador" && <Button component={RouterLink} to="/admin/eventos">Meus eventos</Button>}
-          {role === "Administrador" && <Button component={RouterLink} to="/admin/validar">Validar ingresso</Button>}
+          {role === "Administrador" && <Button component={RouterLink} to="/admin/funcionarios">Funcionários</Button>}
+          {(role === "Administrador" || role === "Validador") && (
+            <Button component={RouterLink} to="/admin/validar">Validar ingresso</Button>
+          )}
 
           <Box flexGrow={0} />
 

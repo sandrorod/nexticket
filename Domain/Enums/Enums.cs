@@ -3,7 +3,8 @@ namespace NexTicket.Domain.Enums;
 public enum UserRole
 {
     Comprador = 0,
-    Administrador = 1
+    Administrador = 1,
+    Validador = 2
 }
 
 public enum EventStatus

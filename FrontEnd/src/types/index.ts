@@ -1,4 +1,13 @@
-export type UserRole = "Comprador" | "Administrador";
+export type UserRole = "Comprador" | "Administrador" | "Validador";
+
+export interface StaffDto {
+  id: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  ativo: boolean;
+  createdAt: string;
+}
 
 export interface AuthResponse {
   token: string;
