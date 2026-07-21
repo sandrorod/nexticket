@@ -1,22 +1,34 @@
 import { useState } from "react";
-import { Container, Typography, TextField, Button, Paper, Alert, Box } from "@mui/material";
+import {
+  Container, Typography, TextField, Button, Paper, Alert, Box,
+  ToggleButtonGroup, ToggleButton,
+} from "@mui/material";
+import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
+import KeyboardIcon from "@mui/icons-material/Keyboard";
 import { api } from "../../api/client";
 import type { ValidateTicketPreviewResponse } from "../../types";
+import QrScanner from "../../components/QrScanner";
+
+type Mode = "camera" | "manual";
 
 export default function ValidateTicketPage() {
+  const [mode, setMode] = useState<Mode>("camera");
   const [token, setToken] = useState("");
   const [preview, setPreview] = useState<ValidateTicketPreviewResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handlePreview = async () => {
+  const fetchPreview = async (scannedToken: string) => {
     setLoading(true);
+    setToken(scannedToken);
     try {
-      const { data } = await api.post<ValidateTicketPreviewResponse>("/tickets/validate/preview", { token });
+      const { data } = await api.post<ValidateTicketPreviewResponse>("/tickets/validate/preview", { token: scannedToken });
       setPreview(data);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleManualSearch = () => fetchPreview(token);
 
   const handleConfirm = async () => {
     setLoading(true);
@@ -28,17 +40,39 @@ export default function ValidateTicketPage() {
     }
   };
 
+  const handleNovaLeitura = () => {
+    setPreview(null);
+    setToken("");
+  };
+
   return (
     <Container maxWidth="sm" sx={{ py: 4 }}>
       <Typography variant="h4" fontWeight={700} mb={3}>Validar ingresso</Typography>
 
-      <Box display="flex" gap={2} mb={3}>
-        <TextField label="Token do QR Code" value={token} onChange={(e) => setToken(e.target.value)} fullWidth />
-        <Button variant="outlined" onClick={handlePreview} disabled={loading || !token}>Buscar</Button>
-      </Box>
+      <ToggleButtonGroup
+        exclusive
+        value={mode}
+        onChange={(_, v) => v && setMode(v)}
+        sx={{ mb: 3 }}
+        fullWidth
+      >
+        <ToggleButton value="camera"><QrCodeScannerIcon sx={{ mr: 1 }} fontSize="small" />Câmera</ToggleButton>
+        <ToggleButton value="manual"><KeyboardIcon sx={{ mr: 1 }} fontSize="small" />Digitar</ToggleButton>
+      </ToggleButtonGroup>
+
+      {mode === "camera" && !preview && (
+        <QrScanner active={mode === "camera" && !preview} onScan={fetchPreview} />
+      )}
+
+      {mode === "manual" && !preview && (
+        <Box display="flex" gap={2} mb={3}>
+          <TextField label="Token do QR Code" value={token} onChange={(e) => setToken(e.target.value)} fullWidth />
+          <Button variant="outlined" onClick={handleManualSearch} disabled={loading || !token}>Buscar</Button>
+        </Box>
+      )}
 
       {preview && (
-        <Paper sx={{ p: 3 }} elevation={2}>
+        <Paper sx={{ p: 3, mt: 3 }} elevation={2}>
           <Alert severity={preview.valido ? "success" : "error"} sx={{ mb: 2 }}>
             {preview.mensagem}
           </Alert>
@@ -53,11 +87,15 @@ export default function ValidateTicketPage() {
             </>
           )}
 
-          {preview.valido && (
+          {preview.valido && preview.status !== "Utilizado" && (
             <Button variant="contained" color="success" fullWidth sx={{ mt: 2 }} onClick={handleConfirm} disabled={loading}>
               VALIDAR
             </Button>
           )}
+
+          <Button variant="text" fullWidth sx={{ mt: 1 }} onClick={handleNovaLeitura}>
+            Ler próximo ingresso
+          </Button>
         </Paper>
       )}
     </Container>
