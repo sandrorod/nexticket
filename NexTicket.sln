@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexTicket.Domain", "Domain\NexTicket.Domain.csproj", "{D61586A6-7A15-4272-8A11-212066F1857B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexTicket.Application", "Application\NexTicket.Application.csproj", "{A30951A1-9246-401A-B528-1D3AD053E0E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexTicket.Infrastructure", "Infrastructure\NexTicket.Infrastructure.csproj", "{C2473487-E969-4FEC-9EB9-89EC811B0324}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexTicket.API", "API\NexTicket.API.csproj", "{3B1635B1-14A1-4518-B42C-3901B778F278}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D61586A6-7A15-4272-8A11-212066F1857B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D61586A6-7A15-4272-8A11-212066F1857B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D61586A6-7A15-4272-8A11-212066F1857B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D61586A6-7A15-4272-8A11-212066F1857B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A30951A1-9246-401A-B528-1D3AD053E0E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A30951A1-9246-401A-B528-1D3AD053E0E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A30951A1-9246-401A-B528-1D3AD053E0E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A30951A1-9246-401A-B528-1D3AD053E0E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2473487-E969-4FEC-9EB9-89EC811B0324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2473487-E969-4FEC-9EB9-89EC811B0324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2473487-E969-4FEC-9EB9-89EC811B0324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2473487-E969-4FEC-9EB9-89EC811B0324}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B1635B1-14A1-4518-B42C-3901B778F278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1635B1-14A1-4518-B42C-3901B778F278}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B1635B1-14A1-4518-B42C-3901B778F278}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1635B1-14A1-4518-B42C-3901B778F278}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

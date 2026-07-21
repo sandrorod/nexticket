@@ -1,0 +1,6 @@
+@NexTicket.API_HostAddress = http://localhost:5220
+
+GET {{NexTicket.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
