@@ -17,6 +17,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Cpf).HasMaxLength(14);
 
         builder.HasIndex(u => u.Email).IsUnique();
-        builder.HasIndex(u => u.Cpf).IsUnique().HasFilter("[Cpf] IS NOT NULL");
+        builder.HasIndex(u => u.Cpf).IsUnique().HasFilter("\"Cpf\" IS NOT NULL");
     }
 }

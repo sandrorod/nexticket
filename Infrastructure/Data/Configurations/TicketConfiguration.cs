@@ -24,11 +24,11 @@ public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
         // nem repetir a combinação Nome+Telefone.
         builder.HasIndex(t => new { t.EventId, t.Email })
             .IsUnique()
-            .HasFilter("[Status] <> 2");
+            .HasFilter("\"Status\" <> 2");
 
         builder.HasIndex(t => new { t.EventId, t.Nome, t.Telefone })
             .IsUnique()
-            .HasFilter("[Status] <> 2");
+            .HasFilter("\"Status\" <> 2");
 
         builder.HasOne(t => t.Event)
             .WithMany(e => e.Tickets)

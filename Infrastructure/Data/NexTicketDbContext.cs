@@ -17,6 +17,7 @@ public class NexTicketDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("nexticket_app");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(NexTicketDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }

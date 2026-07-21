@@ -11,7 +11,7 @@ public class CouponConfiguration : IEntityTypeConfiguration<Coupon>
         builder.ToTable("Coupons");
 
         builder.Property(c => c.Codigo).IsRequired().HasMaxLength(50);
-        builder.Property(c => c.Valor).HasColumnType("decimal(10,2)");
+        builder.Property(c => c.Valor).HasColumnType("numeric(10,2)");
 
         builder.HasIndex(c => c.Codigo).IsUnique();
 

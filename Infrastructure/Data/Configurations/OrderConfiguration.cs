@@ -10,8 +10,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         builder.ToTable("Orders");
 
-        builder.Property(o => o.ValorTotal).HasColumnType("decimal(10,2)");
-        builder.Property(o => o.Desconto).HasColumnType("decimal(10,2)");
+        builder.Property(o => o.ValorTotal).HasColumnType("numeric(10,2)");
+        builder.Property(o => o.Desconto).HasColumnType("numeric(10,2)");
 
         builder.HasOne(o => o.User)
             .WithMany(u => u.Orders)
@@ -40,7 +40,7 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
     public void Configure(EntityTypeBuilder<OrderItem> builder)
     {
         builder.ToTable("OrderItems");
-        builder.Property(i => i.ValorUnitario).HasColumnType("decimal(10,2)");
+        builder.Property(i => i.ValorUnitario).HasColumnType("numeric(10,2)");
         builder.Ignore(i => i.ValorTotal);
     }
 }

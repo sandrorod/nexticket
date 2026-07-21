@@ -11,7 +11,7 @@ public class LotConfiguration : IEntityTypeConfiguration<Lot>
         builder.ToTable("Lots");
 
         builder.Property(l => l.Nome).IsRequired().HasMaxLength(100);
-        builder.Property(l => l.Preco).HasColumnType("decimal(10,2)");
+        builder.Property(l => l.Preco).HasColumnType("numeric(10,2)");
 
         builder.Ignore(l => l.QuantidadeDisponivel);
 
