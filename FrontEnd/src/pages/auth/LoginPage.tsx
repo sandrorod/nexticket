@@ -41,7 +41,10 @@ export default function LoginPage() {
             {loading ? "Entrando..." : "Entrar"}
           </Button>
         </Box>
-        <Typography variant="body2" mt={3} textAlign="center">
+        <Typography variant="body2" mt={2} textAlign="center">
+          <Link component={RouterLink} to="/esqueci-senha">Esqueceu sua senha?</Link>
+        </Typography>
+        <Typography variant="body2" mt={1} textAlign="center">
           Não tem conta? <Link component={RouterLink} to="/registro">Cadastre-se</Link>
         </Typography>
       </Paper>

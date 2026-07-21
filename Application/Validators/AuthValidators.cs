@@ -25,3 +25,22 @@ public class LoginRequestValidator : AbstractValidator<LoginRequest>
         RuleFor(x => x.Senha).NotEmpty();
     }
 }
+
+public class ForgotPasswordRequestValidator : AbstractValidator<ForgotPasswordRequest>
+{
+    public ForgotPasswordRequestValidator()
+    {
+        RuleFor(x => x.Email).NotEmpty().EmailAddress();
+    }
+}
+
+public class ResetPasswordRequestValidator : AbstractValidator<ResetPasswordRequest>
+{
+    public ResetPasswordRequestValidator()
+    {
+        RuleFor(x => x.Token).NotEmpty();
+        RuleFor(x => x.NovaSenha).NotEmpty().MinimumLength(8)
+            .Matches("[A-Z]").WithMessage("A senha deve conter ao menos uma letra maiúscula.")
+            .Matches("[0-9]").WithMessage("A senha deve conter ao menos um número.");
+    }
+}

@@ -13,5 +13,8 @@ public class User : BaseEntity
     public UserRole Role { get; set; } = UserRole.Comprador;
     public bool Ativo { get; set; } = true;
 
+    public string? ResetPasswordToken { get; set; }
+    public DateTime? ResetPasswordTokenExpiraEm { get; set; }
+
     public ICollection<Order> Orders { get; set; } = new List<Order>();
 }

@@ -15,6 +15,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.SenhaHash).IsRequired();
         builder.Property(u => u.Telefone).IsRequired().HasMaxLength(20);
         builder.Property(u => u.Cpf).HasMaxLength(14);
+        builder.Property(u => u.ResetPasswordToken).HasMaxLength(200);
 
         builder.HasIndex(u => u.Email).IsUnique();
         builder.HasIndex(u => u.Cpf).IsUnique().HasFilter("\"Cpf\" IS NOT NULL");

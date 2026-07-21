@@ -3,6 +3,7 @@ using NexTicket.Application.DTOs.Coupons;
 using NexTicket.Application.DTOs.Events;
 using NexTicket.Application.DTOs.Lots;
 using NexTicket.Application.DTOs.Orders;
+using NexTicket.Application.DTOs.Staff;
 using NexTicket.Application.DTOs.Tickets;
 
 namespace NexTicket.Application.Common.Interfaces;
@@ -12,6 +13,8 @@ public interface IAuthService
     Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken ct = default);
     Task<AuthResponse> LoginAsync(LoginRequest request, CancellationToken ct = default);
     Task ChangePasswordAsync(Guid userId, ChangePasswordRequest request, CancellationToken ct = default);
+    Task ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken ct = default);
+    Task ResetPasswordAsync(ResetPasswordRequest request, CancellationToken ct = default);
 }
 
 public interface IEventService
@@ -50,4 +53,12 @@ public interface ICouponService
 {
     Task<CouponDto> CreateAsync(CreateCouponRequest request, CancellationToken ct = default);
     Task<List<CouponDto>> GetAllAsync(CancellationToken ct = default);
+}
+
+public interface IStaffService
+{
+    Task<List<StaffDto>> GetAllAsync(CancellationToken ct = default);
+    Task<StaffDto> CreateAsync(CreateStaffRequest request, CancellationToken ct = default);
+    Task DeactivateAsync(Guid id, CancellationToken ct = default);
+    Task ReactivateAsync(Guid id, CancellationToken ct = default);
 }

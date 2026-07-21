@@ -19,3 +19,9 @@ export const registerUser = (payload: RegisterPayload) =>
 
 export const loginUser = (payload: LoginPayload) =>
   api.post<AuthResponse>("/auth/login", payload).then((r) => r.data);
+
+export const forgotPassword = (email: string) =>
+  api.post("/auth/forgot-password", { email });
+
+export const resetPassword = (token: string, novaSenha: string) =>
+  api.post("/auth/reset-password", { token, novaSenha });

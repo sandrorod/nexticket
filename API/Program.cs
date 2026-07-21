@@ -21,7 +21,7 @@ builder.Host.UseSerilog();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
@@ -49,7 +49,8 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
+    .AddPolicy("Administrador", policy => policy.RequireRole("Administrador"))
+    .AddPolicy("PodeValidarIngressos", policy => policy.RequireRole("Administrador", "Validador"));
 
 builder.Services.AddSwaggerGen(options =>
 {
