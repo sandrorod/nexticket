@@ -12,6 +12,7 @@ public class Event : BaseEntity
     public string Local { get; set; } = string.Empty;
     public string? MapaUrl { get; set; }
     public string? ImagemUrl { get; set; }
+    public string? TransmissaoUrl { get; set; }
     public EventStatus Status { get; set; } = EventStatus.Rascunho;
     public int MaximoPorCpf { get; set; }
     public int MaximoPorUsuario { get; set; }

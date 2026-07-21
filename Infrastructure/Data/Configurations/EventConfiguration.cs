@@ -15,6 +15,7 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.Property(e => e.Local).IsRequired().HasMaxLength(300);
         builder.Property(e => e.ImagemUrl).HasMaxLength(500);
         builder.Property(e => e.MapaUrl).HasMaxLength(500);
+        builder.Property(e => e.TransmissaoUrl).HasMaxLength(500);
 
         builder.HasMany(e => e.Lots)
             .WithOne(l => l.Event)

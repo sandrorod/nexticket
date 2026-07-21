@@ -12,6 +12,7 @@ const emptyForm: EventPayload = {
   local: "",
   mapaUrl: "",
   imagemUrl: "",
+  transmissaoUrl: "",
   maximoPorCpf: 4,
   maximoPorUsuario: 4,
 };
@@ -41,6 +42,7 @@ export default function EventFormPage() {
         local: existing.local,
         mapaUrl: existing.mapaUrl ?? "",
         imagemUrl: existing.imagemUrl ?? "",
+        transmissaoUrl: existing.transmissaoUrl ?? "",
         maximoPorCpf: existing.maximoPorCpf,
         maximoPorUsuario: existing.maximoPorUsuario,
       });
@@ -57,7 +59,12 @@ export default function EventFormPage() {
     setError(null);
     setLoading(true);
     try {
-      const payload = { ...form, mapaUrl: form.mapaUrl || undefined, imagemUrl: form.imagemUrl || undefined };
+      const payload = {
+        ...form,
+        mapaUrl: form.mapaUrl || undefined,
+        imagemUrl: form.imagemUrl || undefined,
+        transmissaoUrl: form.transmissaoUrl || undefined,
+      };
       const result = isEdit ? await updateEvent(id!, payload) : await createEvent(payload);
       navigate(`/admin/eventos/${result.id}`);
     } catch (err: any) {
@@ -92,6 +99,7 @@ export default function EventFormPage() {
 
           <TextField label="URL da imagem (opcional)" value={form.imagemUrl} onChange={update("imagemUrl")} fullWidth />
           <TextField label="URL do mapa (opcional)" value={form.mapaUrl} onChange={update("mapaUrl")} fullWidth />
+          <TextField label="URL da transmissão (opcional)" value={form.transmissaoUrl} onChange={update("transmissaoUrl")} fullWidth />
 
           <Grid container spacing={2}>
             <Grid item xs={6}>

@@ -9,6 +9,7 @@ public record EventDto(
     string Local,
     string? MapaUrl,
     string? ImagemUrl,
+    string? TransmissaoUrl,
     string Status,
     int MaximoPorCpf,
     int MaximoPorUsuario,
@@ -23,6 +24,7 @@ public record CreateEventRequest(
     string Local,
     string? MapaUrl,
     string? ImagemUrl,
+    string? TransmissaoUrl,
     int MaximoPorCpf,
     int MaximoPorUsuario);
 
@@ -34,5 +36,6 @@ public record UpdateEventRequest(
     string Local,
     string? MapaUrl,
     string? ImagemUrl,
+    string? TransmissaoUrl,
     int MaximoPorCpf,
     int MaximoPorUsuario);

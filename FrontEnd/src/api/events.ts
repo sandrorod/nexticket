@@ -17,6 +17,7 @@ export interface EventPayload {
   local: string;
   mapaUrl?: string;
   imagemUrl?: string;
+  transmissaoUrl?: string;
   maximoPorCpf: number;
   maximoPorUsuario: number;
 }

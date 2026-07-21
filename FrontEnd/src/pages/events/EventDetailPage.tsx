@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   Box, Container, Typography, Card, CardContent, Button, Chip,
-  ToggleButton, ToggleButtonGroup, Divider,
+  ToggleButton, ToggleButtonGroup, Divider, Alert,
 } from "@mui/material";
+import LiveTvIcon from "@mui/icons-material/LiveTv";
 import { getEventById, getLotsByEvent } from "../../api/events";
 import type { LotDto } from "../../types";
 import CheckoutForm from "../checkout/CheckoutForm";
@@ -37,7 +38,22 @@ export default function EventDetailPage() {
       <Typography variant="h4" fontWeight={700}>{event.nome}</Typography>
       <Typography color="text.secondary" mb={1}>{event.local}</Typography>
       <Typography color="text.secondary" mb={2}>{event.data} às {event.hora}</Typography>
-      <Typography mb={4}>{event.descricao}</Typography>
+      <Typography mb={3}>{event.descricao}</Typography>
+
+      {event.transmissaoUrl && (
+        <Alert
+          icon={<LiveTvIcon />}
+          severity="info"
+          action={
+            <Button color="inherit" size="small" href={event.transmissaoUrl} target="_blank" rel="noopener noreferrer">
+              Assistir
+            </Button>
+          }
+          sx={{ mb: 3 }}
+        >
+          Este evento possui transmissão ao vivo.
+        </Alert>
+      )}
 
       <Typography variant="h6" fontWeight={600} mb={2}>Lotes disponíveis</Typography>
 

@@ -53,6 +53,7 @@ public class EventService : IEventService
             Local = request.Local,
             MapaUrl = request.MapaUrl,
             ImagemUrl = request.ImagemUrl,
+            TransmissaoUrl = request.TransmissaoUrl,
             MaximoPorCpf = request.MaximoPorCpf,
             MaximoPorUsuario = request.MaximoPorUsuario,
             Status = EventStatus.Rascunho
@@ -76,6 +77,7 @@ public class EventService : IEventService
         ev.Local = request.Local;
         ev.MapaUrl = request.MapaUrl;
         ev.ImagemUrl = request.ImagemUrl;
+        ev.TransmissaoUrl = request.TransmissaoUrl;
         ev.MaximoPorCpf = request.MaximoPorCpf;
         ev.MaximoPorUsuario = request.MaximoPorUsuario;
 

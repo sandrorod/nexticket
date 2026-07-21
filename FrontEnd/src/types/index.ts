@@ -17,6 +17,7 @@ export interface EventDto {
   local: string;
   mapaUrl?: string;
   imagemUrl?: string;
+  transmissaoUrl?: string;
   status: string;
   maximoPorCpf: number;
   maximoPorUsuario: number;
