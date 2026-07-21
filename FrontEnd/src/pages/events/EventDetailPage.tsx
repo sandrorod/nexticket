@@ -32,7 +32,9 @@ export default function EventDetailPage() {
   return (
     <Container sx={{ py: 4 }}>
       {event.imagemUrl && (
-        <Box component="img" src={event.imagemUrl} alt={event.nome} sx={{ width: "100%", maxHeight: 320, objectFit: "cover", borderRadius: 3, mb: 3 }} />
+        <Box sx={{ width: "100%", aspectRatio: "16 / 9", borderRadius: 3, overflow: "hidden", mb: 3 }}>
+          <Box component="img" src={event.imagemUrl} alt={event.nome} sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </Box>
       )}
 
       <Typography variant="h4" fontWeight={700}>{event.nome}</Typography>

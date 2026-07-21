@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Container, Typography, TextField, Button, Paper, Box, Alert, Grid } from "@mui/material";
 import { getEventById, createEvent, updateEvent, type EventPayload } from "../../api/events";
+import ImageUpload from "../../components/ImageUpload";
 
 const emptyForm: EventPayload = {
   nome: "",
@@ -54,6 +55,10 @@ export default function EventFormPage() {
     setForm((f) => ({ ...f, [field]: value }));
   };
 
+  const handleImageChange = (url: string | undefined) => {
+    setForm((f) => ({ ...f, imagemUrl: url ?? "" }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -97,7 +102,8 @@ export default function EventFormPage() {
             </Grid>
           </Grid>
 
-          <TextField label="URL da imagem (opcional)" value={form.imagemUrl} onChange={update("imagemUrl")} fullWidth />
+          <ImageUpload value={form.imagemUrl || undefined} onChange={handleImageChange} />
+
           <TextField label="URL do mapa (opcional)" value={form.mapaUrl} onChange={update("mapaUrl")} fullWidth />
           <TextField label="URL da transmissão (opcional)" value={form.transmissaoUrl} onChange={update("transmissaoUrl")} fullWidth />
 

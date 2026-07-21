@@ -20,7 +20,9 @@ export default function EventsListPage() {
           <Grid item xs={12} sm={6} md={4} key={ev.id}>
             <Card elevation={1}>
               <CardActionArea onClick={() => navigate(`/eventos/${ev.id}`)}>
-                {ev.imagemUrl && <CardMedia component="img" height="160" image={ev.imagemUrl} alt={ev.nome} />}
+                {ev.imagemUrl && (
+                  <CardMedia component="img" image={ev.imagemUrl} alt={ev.nome} sx={{ aspectRatio: "16 / 9", objectFit: "cover" }} />
+                )}
                 <CardContent>
                   <Chip label={ev.status} size="small" sx={{ mb: 1 }} />
                   <Typography variant="h6" fontWeight={600}>{ev.nome}</Typography>
