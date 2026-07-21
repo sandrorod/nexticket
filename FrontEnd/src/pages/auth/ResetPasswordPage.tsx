@@ -38,7 +38,7 @@ export default function ResetPasswordPage() {
   if (!token) {
     return (
       <Container maxWidth="xs" sx={{ mt: 10 }}>
-        <Paper sx={{ p: 4 }} elevation={2}>
+        <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: 3 }} elevation={0} variant="outlined">
           <Alert severity="error">Link de redefinição inválido.</Alert>
           <Typography variant="body2" mt={3} textAlign="center">
             <Link component={RouterLink} to="/esqueci-senha">Solicitar novo link</Link>

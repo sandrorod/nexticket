@@ -174,34 +174,34 @@ export default function AdminEventDetailPage() {
         <DialogTitle>{editingLot ? "Editar lote" : "Novo lote"}</DialogTitle>
         <DialogContent>
           {error && <Alert severity="error" sx={{ mb: 2, mt: 1 }}>{error}</Alert>}
-          <Box display="flex" flexDirection="column" gap={2} mt={1}>
-            <TextField label="Nome do lote" value={lotForm.nome} onChange={updateLotField("nome")} required fullWidth />
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField label="Preço (R$)" type="number" value={lotForm.preco} onChange={updateLotField("preco")} required fullWidth inputProps={{ min: 0, step: 0.01 }} />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField label="Quantidade" type="number" value={lotForm.quantidade} onChange={updateLotField("quantidade")} required fullWidth inputProps={{ min: 1 }} />
-              </Grid>
+          <Grid container spacing={2} mt={0.5}>
+            <Grid item xs={12} sm={8}>
+              <TextField label="Nome do lote" value={lotForm.nome} onChange={updateLotField("nome")} required fullWidth />
             </Grid>
-            <TextField
-              label="Máximo por usuário"
-              type="number"
-              value={lotForm.maximoPorUsuario}
-              onChange={updateLotField("maximoPorUsuario")}
-              required
-              fullWidth
-              inputProps={{ min: 1 }}
-            />
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField label="Início das vendas" type="datetime-local" value={lotForm.dataInicio} onChange={updateLotField("dataInicio")} required fullWidth InputLabelProps={{ shrink: true }} />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField label="Fim das vendas" type="datetime-local" value={lotForm.dataFim} onChange={updateLotField("dataFim")} required fullWidth InputLabelProps={{ shrink: true }} />
-              </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Máximo por usuário"
+                type="number"
+                value={lotForm.maximoPorUsuario}
+                onChange={updateLotField("maximoPorUsuario")}
+                required
+                fullWidth
+                inputProps={{ min: 1 }}
+              />
             </Grid>
-          </Box>
+            <Grid item xs={6}>
+              <TextField label="Preço (R$)" type="number" value={lotForm.preco} onChange={updateLotField("preco")} required fullWidth inputProps={{ min: 0, step: 0.01 }} />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField label="Quantidade" type="number" value={lotForm.quantidade} onChange={updateLotField("quantidade")} required fullWidth inputProps={{ min: 1 }} />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField label="Início das vendas" type="datetime-local" value={lotForm.dataInicio} onChange={updateLotField("dataInicio")} required fullWidth InputLabelProps={{ shrink: true }} />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField label="Fim das vendas" type="datetime-local" value={lotForm.dataFim} onChange={updateLotField("dataFim")} required fullWidth InputLabelProps={{ shrink: true }} />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setLotDialogOpen(false)}>Cancelar</Button>

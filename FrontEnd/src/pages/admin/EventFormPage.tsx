@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Container, Typography, TextField, Button, Paper, Box, Alert, Grid } from "@mui/material";
+import { Container, Typography, TextField, Button, Paper, Box, Alert, Grid, Divider } from "@mui/material";
 import { getEventById, createEvent, updateEvent, type EventPayload } from "../../api/events";
 import ImageUpload from "../../components/ImageUpload";
 
@@ -39,7 +39,7 @@ export default function EventFormPage() {
         nome: existing.nome,
         descricao: existing.descricao,
         data: existing.data,
-        hora: existing.hora,
+        hora: existing.hora.slice(0, 5),
         local: existing.local,
         mapaUrl: existing.mapaUrl ?? "",
         imagemUrl: existing.imagemUrl ?? "",
@@ -66,6 +66,7 @@ export default function EventFormPage() {
     try {
       const payload = {
         ...form,
+        hora: form.hora.length === 5 ? `${form.hora}:00` : form.hora,
         mapaUrl: form.mapaUrl || undefined,
         imagemUrl: form.imagemUrl || undefined,
         transmissaoUrl: form.transmissaoUrl || undefined,
@@ -80,35 +81,60 @@ export default function EventFormPage() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
+    <Container maxWidth="md" sx={{ py: 4 }}>
       <Typography variant="h4" fontWeight={700} mb={3}>
         {isEdit ? "Editar evento" : "Novo evento"}
       </Typography>
 
-      <Paper sx={{ p: 4 }} elevation={2}>
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: 3 }} elevation={0} variant="outlined">
+        {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
-        <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
-          <TextField label="Nome do evento" value={form.nome} onChange={update("nome")} required fullWidth />
-          <TextField label="Descrição" value={form.descricao} onChange={update("descricao")} required fullWidth multiline minRows={3} />
-          <TextField label="Local" value={form.local} onChange={update("local")} required fullWidth />
-
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField label="Data" type="date" value={form.data} onChange={update("data")} required fullWidth InputLabelProps={{ shrink: true }} />
+        <Box component="form" onSubmit={handleSubmit}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={7}>
+              <Typography variant="overline" color="text.secondary">Informações do evento</Typography>
+              <Grid container spacing={2} mt={0.5}>
+                <Grid item xs={12}>
+                  <TextField label="Nome do evento" value={form.nome} onChange={update("nome")} required fullWidth />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField label="Descrição" value={form.descricao} onChange={update("descricao")} required fullWidth multiline minRows={4} />
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                  <TextField label="Local" value={form.local} onChange={update("local")} required fullWidth />
+                </Grid>
+                <Grid item xs={6} sm={2}>
+                  <TextField label="Data" type="date" value={form.data} onChange={update("data")} required fullWidth InputLabelProps={{ shrink: true }} />
+                </Grid>
+                <Grid item xs={6} sm={2}>
+                  <TextField label="Hora" type="time" value={form.hora} onChange={update("hora")} required fullWidth InputLabelProps={{ shrink: true }} />
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <TextField label="Hora" type="time" value={form.hora} onChange={update("hora")} required fullWidth InputLabelProps={{ shrink: true }} />
+
+            <Grid item xs={12} md={5}>
+              <Typography variant="overline" color="text.secondary">Capa do evento</Typography>
+              <Box mt={0.5}>
+                <ImageUpload value={form.imagemUrl || undefined} onChange={handleImageChange} />
+              </Box>
             </Grid>
           </Grid>
 
-          <ImageUpload value={form.imagemUrl || undefined} onChange={handleImageChange} />
+          <Divider sx={{ my: 4 }} />
 
-          <TextField label="URL do mapa (opcional)" value={form.mapaUrl} onChange={update("mapaUrl")} fullWidth />
-          <TextField label="URL da transmissão (opcional)" value={form.transmissaoUrl} onChange={update("transmissaoUrl")} fullWidth />
+          <Typography variant="overline" color="text.secondary">Links adicionais (opcional)</Typography>
+          <Grid container spacing={2} mt={0.5} mb={4}>
+            <Grid item xs={12} sm={6}>
+              <TextField label="URL do mapa" value={form.mapaUrl} onChange={update("mapaUrl")} fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="URL da transmissão" value={form.transmissaoUrl} onChange={update("transmissaoUrl")} fullWidth />
+            </Grid>
+          </Grid>
 
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
+          <Typography variant="overline" color="text.secondary">Limites de compra</Typography>
+          <Grid container spacing={2} mt={0.5} mb={4}>
+            <Grid item xs={6} sm={3}>
               <TextField
                 label="Máximo por CPF"
                 type="number"
@@ -119,7 +145,7 @@ export default function EventFormPage() {
                 inputProps={{ min: 1 }}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} sm={3}>
               <TextField
                 label="Máximo por usuário"
                 type="number"
@@ -132,9 +158,12 @@ export default function EventFormPage() {
             </Grid>
           </Grid>
 
-          <Button type="submit" variant="contained" size="large" disabled={loading}>
-            {loading ? "Salvando..." : isEdit ? "Salvar alterações" : "Criar evento"}
-          </Button>
+          <Box display="flex" justifyContent="flex-end" gap={2}>
+            <Button variant="text" onClick={() => navigate(-1)}>Cancelar</Button>
+            <Button type="submit" variant="contained" size="large" disabled={loading} sx={{ px: 4 }}>
+              {loading ? "Salvando..." : isEdit ? "Salvar alterações" : "Criar evento"}
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </Container>

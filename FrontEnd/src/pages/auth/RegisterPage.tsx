@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { Box, Button, Container, Paper, TextField, Typography, Alert, Link } from "@mui/material";
+import { Box, Button, Container, Paper, TextField, Typography, Alert, Link, Grid } from "@mui/material";
 import { registerUser } from "../../api/auth";
 import { useAuthStore } from "../../store/authStore";
 
@@ -30,19 +30,39 @@ export default function RegisterPage() {
   };
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 6 }}>
-      <Paper sx={{ p: 4 }} elevation={2}>
+    <Container maxWidth="sm" sx={{ mt: 6 }}>
+      <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: 3 }} elevation={0} variant="outlined">
         <Typography variant="h5" fontWeight={700} mb={3}>
           Criar conta
         </Typography>
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
-          <TextField label="Nome" value={form.nome} onChange={update("nome")} required fullWidth />
-          <TextField label="Email" type="email" value={form.email} onChange={update("email")} required fullWidth />
-          <TextField label="Senha" type="password" value={form.senha} onChange={update("senha")} required fullWidth helperText="Mínimo 8 caracteres, 1 maiúscula e 1 número" />
-          <TextField label="Telefone" value={form.telefone} onChange={update("telefone")} required fullWidth />
-          <TextField label="CPF (opcional)" value={form.cpf} onChange={update("cpf")} fullWidth />
-          <Button type="submit" variant="contained" size="large" disabled={loading}>
+        <Box component="form" onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={7}>
+              <TextField label="Nome" value={form.nome} onChange={update("nome")} required fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={5}>
+              <TextField label="Telefone" value={form.telefone} onChange={update("telefone")} required fullWidth />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField label="Email" type="email" value={form.email} onChange={update("email")} required fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={7}>
+              <TextField
+                label="Senha"
+                type="password"
+                value={form.senha}
+                onChange={update("senha")}
+                required
+                fullWidth
+                helperText="Mínimo 8 caracteres, 1 maiúscula e 1 número"
+              />
+            </Grid>
+            <Grid item xs={12} sm={5}>
+              <TextField label="CPF (opcional)" value={form.cpf} onChange={update("cpf")} fullWidth />
+            </Grid>
+          </Grid>
+          <Button type="submit" variant="contained" size="large" fullWidth disabled={loading} sx={{ mt: 3 }}>
             {loading ? "Criando..." : "Criar conta"}
           </Button>
         </Box>

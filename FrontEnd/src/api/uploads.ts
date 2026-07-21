@@ -5,8 +5,6 @@ export const uploadEventImage = (file: File) => {
   formData.append("file", file);
 
   return api
-    .post<{ url: string }>("/uploads/event-image", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
+    .post<{ url: string }>("/uploads/event-image", formData)
     .then((r) => r.data.url);
 };

@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Container, Typography, Button, Box, Paper, Table, TableHead, TableRow,
   TableCell, TableBody, Chip, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Alert,
+  TextField, Alert, Grid,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { getStaff, createStaff, deactivateStaff, reactivateStaff, type CreateStaffPayload } from "../../api/staff";
@@ -113,20 +113,28 @@ export default function StaffPage() {
         <DialogTitle>Novo funcionário</DialogTitle>
         <DialogContent>
           {error && <Alert severity="error" sx={{ mb: 2, mt: 1 }}>{error}</Alert>}
-          <Box display="flex" flexDirection="column" gap={2} mt={1}>
-            <TextField label="Nome" value={form.nome} onChange={update("nome")} required fullWidth />
-            <TextField label="Email" type="email" value={form.email} onChange={update("email")} required fullWidth />
-            <TextField
-              label="Senha provisória"
-              type="password"
-              value={form.senha}
-              onChange={update("senha")}
-              required
-              fullWidth
-              helperText="Mínimo 8 caracteres, 1 maiúscula e 1 número"
-            />
-            <TextField label="Telefone" value={form.telefone} onChange={update("telefone")} required fullWidth />
-          </Box>
+          <Grid container spacing={2} mt={0.5}>
+            <Grid item xs={12} sm={7}>
+              <TextField label="Nome" value={form.nome} onChange={update("nome")} required fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={5}>
+              <TextField label="Telefone" value={form.telefone} onChange={update("telefone")} required fullWidth />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField label="Email" type="email" value={form.email} onChange={update("email")} required fullWidth />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Senha provisória"
+                type="password"
+                value={form.senha}
+                onChange={update("senha")}
+                required
+                fullWidth
+                helperText="Mínimo 8 caracteres, 1 maiúscula e 1 número"
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)}>Cancelar</Button>

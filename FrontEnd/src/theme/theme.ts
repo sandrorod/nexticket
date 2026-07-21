@@ -11,4 +11,31 @@ export const theme = createTheme({
   typography: {
     fontFamily: `"Inter", "Roboto", "Helvetica", "Arial", sans-serif`,
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: { textTransform: "none", fontWeight: 600, borderRadius: 10 },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: "outlined",
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: { borderRadius: 10 },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        rounded: { borderRadius: 16 },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: { fontWeight: 600 },
+      },
+    },
+  },
 });

@@ -29,7 +29,7 @@ export default function LoginPage() {
 
   return (
     <Container maxWidth="xs" sx={{ mt: 10 }}>
-      <Paper sx={{ p: 4 }} elevation={2}>
+      <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: 3 }} elevation={0} variant="outlined">
         <Typography variant="h5" fontWeight={700} mb={3}>
           Entrar no NexTicket
         </Typography>
