@@ -22,6 +22,7 @@ export default function Layout() {
           <Button component={RouterLink} to="/eventos">Eventos</Button>
 
           {token && <Button component={RouterLink} to="/meus-ingressos">Meus ingressos</Button>}
+          {role === "Administrador" && <Button component={RouterLink} to="/admin/eventos">Meus eventos</Button>}
           {role === "Administrador" && <Button component={RouterLink} to="/admin/validar">Validar ingresso</Button>}
 
           <Box flexGrow={0} />
