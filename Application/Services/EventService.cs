@@ -28,7 +28,12 @@ public class EventService : IEventService
             .OrderBy(e => e.Data)
             .ToListAsync(ct);
 
-        return _mapper.Map<List<EventDto>>(events);
+        // Evento continua visível até 24h após o horário marcado, independente de login.
+        var visiveis = events
+            .Where(e => e.Data.ToDateTime(e.Hora) >= DateTime.UtcNow.AddHours(-24))
+            .ToList();
+
+        return _mapper.Map<List<EventDto>>(visiveis);
     }
 
     public async Task<EventDto> GetByIdAsync(Guid id, CancellationToken ct = default)
