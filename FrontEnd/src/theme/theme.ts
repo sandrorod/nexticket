@@ -18,7 +18,7 @@ export const theme = createTheme({
   components: {
     MuiContainer: {
       styleOverrides: {
-        maxWidthXl: { maxWidth: "90rem" },
+        maxWidthXl: { maxWidth: "108rem" },
       },
     },
     MuiButton: {
