@@ -14,6 +14,9 @@ import AdminEventsListPage from "./pages/admin/AdminEventsListPage";
 import EventFormPage from "./pages/admin/EventFormPage";
 import AdminEventDetailPage from "./pages/admin/AdminEventDetailPage";
 import StaffPage from "./pages/admin/StaffPage";
+import AccountPage from "./pages/account/AccountPage";
+import TermsPage from "./pages/legal/TermsPage";
+import PrivacyPage from "./pages/legal/PrivacyPage";
 
 function App() {
   return (
@@ -26,10 +29,13 @@ function App() {
         <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
         <Route path="/eventos" element={<EventsListPage />} />
         <Route path="/eventos/:id" element={<EventDetailPage />} />
+        <Route path="/termosecondicoes" element={<TermsPage />} />
+        <Route path="/politicadeprivacidade" element={<PrivacyPage />} />
 
         <Route element={<RequireAuth />}>
           <Route path="/pedidos/:id" element={<OrderConfirmationPage />} />
           <Route path="/meus-ingressos" element={<MyTicketsPage />} />
+          <Route path="/conta" element={<AccountPage />} />
         </Route>
 
         <Route element={<RequireAuth roles={["Administrador", "Validador"]} />}>

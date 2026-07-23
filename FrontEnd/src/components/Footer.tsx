@@ -7,6 +7,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ShieldIcon from "@mui/icons-material/Shield";
+import { useAuthStore } from "../store/authStore";
 
 const linkSx = {
   color: "text.secondary",
@@ -20,6 +21,9 @@ const linkSx = {
 };
 
 export default function Footer() {
+  const token = useAuthStore((s) => s.token);
+  const contaHref = token ? "/conta" : "/login";
+
   return (
     <Box component="footer" sx={{ backgroundColor: "#f8fafc", borderTop: "1px solid rgba(231, 234, 243, 0.9)", mt: 8 }}>
       <Container sx={{ py: 6 }}>
@@ -67,7 +71,7 @@ export default function Footer() {
             <Typography variant="subtitle2" fontWeight={700} color="text.primary" mb={1.5}>
               Sua conta
             </Typography>
-            <Link component={RouterLink} to="/login" sx={linkSx}>
+            <Link component={RouterLink} to={contaHref} sx={linkSx}>
               <PersonIcon sx={{ fontSize: "1.1rem" }} /> Minha conta
             </Link>
             <Link component={RouterLink} to="/meus-ingressos" sx={linkSx}>
@@ -79,10 +83,10 @@ export default function Footer() {
             <Typography variant="subtitle2" fontWeight={700} color="text.primary" mb={1.5}>
               Políticas
             </Typography>
-            <Link href="#" sx={linkSx}>
+            <Link component={RouterLink} to="/termosecondicoes" sx={linkSx}>
               <DescriptionIcon sx={{ fontSize: "1.1rem" }} /> Termos de uso
             </Link>
-            <Link href="#" sx={linkSx}>
+            <Link component={RouterLink} to="/politicadeprivacidade" sx={linkSx}>
               <ShieldIcon sx={{ fontSize: "1.1rem" }} /> Privacidade
             </Link>
           </Grid>
