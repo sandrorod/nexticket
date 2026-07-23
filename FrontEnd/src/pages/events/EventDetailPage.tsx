@@ -82,12 +82,26 @@ export default function EventDetailPage() {
             </Stack>
 
             <Stack direction="row" spacing={1.5} mb={1} justifyContent="flex-start">
-              <IconButton sx={{ backgroundColor: "rgba(55, 125, 255, 0.08)", color: "primary.main" }}>
+              <IconButton
+                component="a"
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ backgroundColor: "rgba(55, 125, 255, 0.08)", color: "primary.main" }}
+              >
                 <FacebookIcon />
               </IconButton>
-              <IconButton sx={{ backgroundColor: "rgba(0, 166, 80, 0.08)", color: "#00a650" }}>
-                <WhatsAppIcon />
-              </IconButton>
+              {event.contatoWhatsapp && (
+                <IconButton
+                  component="a"
+                  href={`https://wa.me/${event.contatoWhatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Confira este evento: ${window.location.href}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ backgroundColor: "rgba(0, 166, 80, 0.08)", color: "#00a650" }}
+                >
+                  <WhatsAppIcon />
+                </IconButton>
+              )}
             </Stack>
             <Typography variant="caption" display="block" textAlign="left" color="text.secondary" mb={3}>
               Compartilhe este evento

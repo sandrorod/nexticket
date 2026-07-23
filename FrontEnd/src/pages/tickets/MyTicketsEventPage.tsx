@@ -9,7 +9,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { getMyTickets } from "../../api/orders";
 import type { TicketDto } from "../../types";
-import { formatarData, formatarHora } from "../../utils/date";
+import { formatarData, formatarHora, formatarDataHora } from "../../utils/date";
 
 const statusColor: Record<string, "success" | "default" | "error"> = {
   Disponivel: "success",
@@ -39,12 +39,19 @@ function TicketCard({ ticket }: { ticket: TicketDto }) {
     <Card>
       <Box ref={cardRef} sx={{ backgroundColor: "#fff" }}>
         <CardContent>
-          <Chip
-            label={ticket.status}
-            color={statusColor[ticket.status] ?? "default"}
-            size="small"
-            sx={{ mb: 1, fontWeight: 700 }}
-          />
+          <Box display="flex" alignItems="center" gap={1} mb={1}>
+            <Chip
+              label={ticket.status}
+              color={statusColor[ticket.status] ?? "default"}
+              size="small"
+              sx={{ fontWeight: 700 }}
+            />
+            {ticket.dataUso && (
+              <Typography variant="caption" color="text.secondary">
+                em {formatarDataHora(ticket.dataUso)}
+              </Typography>
+            )}
+          </Box>
           <Typography variant="body2" color="text.secondary">
             {formatarData(ticket.eventData)} às {formatarHora(ticket.eventHora)}
           </Typography>
