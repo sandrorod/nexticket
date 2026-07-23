@@ -34,9 +34,17 @@ public class SmtpEmailSender : IEmailSender
         };
         message.To.Add(toEmail);
 
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        timeoutCts.CancelAfter(TimeSpan.FromSeconds(15));
+
         try
         {
-            await client.SendMailAsync(message, ct);
+            await client.SendMailAsync(message, timeoutCts.Token);
+        }
+        catch (OperationCanceledException ex) when (!ct.IsCancellationRequested)
+        {
+            _logger.LogError(ex, "Timeout ao enviar email para {Email}", toEmail);
+            throw new TimeoutException($"Timeout ao conectar no servidor SMTP {_settings.Host}:{_settings.Port}", ex);
         }
         catch (Exception ex)
         {

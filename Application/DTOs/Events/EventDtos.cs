@@ -10,6 +10,8 @@ public record EventDto(
     string? MapaUrl,
     string? ImagemUrl,
     string? TransmissaoUrl,
+    DateTime VendaInicio,
+    DateTime VendaFim,
     string Status,
     int MaximoPorCpf,
     int MaximoPorUsuario,
@@ -25,6 +27,8 @@ public record CreateEventRequest(
     string? MapaUrl,
     string? ImagemUrl,
     string? TransmissaoUrl,
+    DateTime VendaInicio,
+    DateTime VendaFim,
     int MaximoPorCpf,
     int MaximoPorUsuario);
 
@@ -37,5 +41,7 @@ public record UpdateEventRequest(
     string? MapaUrl,
     string? ImagemUrl,
     string? TransmissaoUrl,
+    DateTime VendaInicio,
+    DateTime VendaFim,
     int MaximoPorCpf,
     int MaximoPorUsuario);

@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   Box, Container, Typography, Card, CardContent, Button, Chip,
-  ToggleButton, ToggleButtonGroup, Divider, Alert,
+  Divider, Alert, Select, MenuItem, FormControl, InputLabel,
 } from "@mui/material";
+import type { SelectChangeEvent } from "@mui/material";
 import LiveTvIcon from "@mui/icons-material/LiveTv";
 import { getEventById, getLotsByEvent } from "../../api/events";
 import type { LotDto } from "../../types";
 import CheckoutForm from "../checkout/CheckoutForm";
+import { formatarData, formatarHora } from "../../utils/date";
 
 export default function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -39,7 +41,7 @@ export default function EventDetailPage() {
 
       <Typography variant="h4" fontWeight={700}>{event.nome}</Typography>
       <Typography color="text.secondary" mb={1}>{event.local}</Typography>
-      <Typography color="text.secondary" mb={2}>{event.data} às {event.hora}</Typography>
+      <Typography color="text.secondary" mb={2}>{formatarData(event.data)} às {formatarHora(event.hora)}</Typography>
       <Typography mb={3}>{event.descricao}</Typography>
 
       {event.transmissaoUrl && (
@@ -70,7 +72,7 @@ export default function EventDetailPage() {
               <Box>
                 <Typography fontWeight={600}>{lot.nome}</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  R$ {lot.preco.toFixed(2)} · {lot.quantidadeDisponivel} disponíveis
+                  R$ {lot.preco.toFixed(2)}
                 </Typography>
               </Box>
               <Box display="flex" gap={1} alignItems="center">
@@ -92,16 +94,22 @@ export default function EventDetailPage() {
         <>
           <Divider sx={{ mb: 3 }} />
           <Typography variant="h6" fontWeight={600} mb={2}>Quantidade de ingressos</Typography>
-          <ToggleButtonGroup
-            exclusive
-            value={quantity}
-            onChange={(_, v) => v && setQuantity(v)}
-            sx={{ mb: 3 }}
-          >
-            {Array.from({ length: Math.min(selectedLot.maximoPorUsuario, 10) }, (_, i) => i + 1).map((n) => (
-              <ToggleButton key={n} value={n}>{n}</ToggleButton>
-            ))}
-          </ToggleButtonGroup>
+          <FormControl sx={{ mb: 3, minWidth: 120 }}>
+            <InputLabel id="quantidade-label">Quantidade</InputLabel>
+            <Select
+              labelId="quantidade-label"
+              label="Quantidade"
+              value={quantity}
+              onChange={(e: SelectChangeEvent<number>) => setQuantity(Number(e.target.value))}
+            >
+              {Array.from(
+                { length: Math.min(selectedLot.maximoPorUsuario, selectedLot.quantidadeDisponivel, 10) },
+                (_, i) => i + 1
+              ).map((n) => (
+                <MenuItem key={n} value={n}>{n}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           <CheckoutForm event={event} lot={selectedLot} quantity={quantity} />
         </>

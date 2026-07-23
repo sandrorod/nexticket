@@ -11,6 +11,8 @@ public class CreateEventRequestValidator : AbstractValidator<CreateEventRequest>
         RuleFor(x => x.Descricao).NotEmpty().MaximumLength(4000);
         RuleFor(x => x.Local).NotEmpty().MaximumLength(300);
         RuleFor(x => x.Data).NotEmpty();
+        RuleFor(x => x.VendaInicio).NotEmpty();
+        RuleFor(x => x.VendaFim).GreaterThan(x => x.VendaInicio);
         RuleFor(x => x.MaximoPorCpf).GreaterThan(0);
         RuleFor(x => x.MaximoPorUsuario).GreaterThan(0);
     }
@@ -23,6 +25,8 @@ public class UpdateEventRequestValidator : AbstractValidator<UpdateEventRequest>
         RuleFor(x => x.Nome).NotEmpty().MaximumLength(200);
         RuleFor(x => x.Descricao).NotEmpty().MaximumLength(4000);
         RuleFor(x => x.Local).NotEmpty().MaximumLength(300);
+        RuleFor(x => x.VendaInicio).NotEmpty();
+        RuleFor(x => x.VendaFim).GreaterThan(x => x.VendaInicio);
         RuleFor(x => x.MaximoPorCpf).GreaterThan(0);
         RuleFor(x => x.MaximoPorUsuario).GreaterThan(0);
     }

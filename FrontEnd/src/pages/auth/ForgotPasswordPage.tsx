@@ -7,15 +7,19 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     try {
       await forgotPassword(email);
+      setSent(true);
+    } catch (err: any) {
+      setError(err?.response?.data?.errors?.[0] ?? "Não foi possível enviar o email. Tente novamente.");
     } finally {
       setLoading(false);
-      setSent(true);
     }
   };
 
@@ -35,6 +39,7 @@ export default function ForgotPasswordPage() {
           </Alert>
         ) : (
           <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
+            {error && <Alert severity="error">{error}</Alert>}
             <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required fullWidth />
             <Button type="submit" variant="contained" size="large" disabled={loading}>
               {loading ? "Enviando..." : "Enviar link de redefinição"}

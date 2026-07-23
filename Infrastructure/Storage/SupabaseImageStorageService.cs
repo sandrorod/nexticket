@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Options;
 using NexTicket.Application.Common.Exceptions;
 using NexTicket.Application.Common.Interfaces;
@@ -16,9 +17,16 @@ public class SupabaseImageStorageService : IImageStorageService
         _settings = settings.Value;
     }
 
+    private static string SanitizeFileName(string fileName)
+    {
+        var extension = Path.GetExtension(fileName);
+        var normalized = Regex.Replace(fileName[..^extension.Length], "[^a-zA-Z0-9-_]+", "-").Trim('-');
+        return string.IsNullOrEmpty(normalized) ? "arquivo" + extension : normalized + extension;
+    }
+
     public async Task<string> UploadEventImageAsync(Stream content, string fileName, string contentType, CancellationToken ct = default)
     {
-        var objectPath = $"{Guid.NewGuid()}-{Path.GetFileName(fileName)}";
+        var objectPath = $"{Guid.NewGuid()}-{SanitizeFileName(Path.GetFileName(fileName))}";
         var uploadUrl = $"{_settings.Url}/storage/v1/object/{_settings.EventsBucket}/{objectPath}";
 
         using var streamContent = new StreamContent(content);

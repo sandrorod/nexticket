@@ -18,6 +18,8 @@ export interface EventPayload {
   mapaUrl?: string;
   imagemUrl?: string;
   transmissaoUrl?: string;
+  vendaInicio: string;
+  vendaFim: string;
   maximoPorCpf: number;
   maximoPorUsuario: number;
 }

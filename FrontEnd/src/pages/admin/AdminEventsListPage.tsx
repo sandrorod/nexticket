@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { getEvents } from "../../api/events";
+import { formatarData } from "../../utils/date";
 
 const statusColor: Record<string, "success" | "default" | "error" | "warning"> = {
   Publicado: "success",
@@ -46,7 +47,7 @@ export default function AdminEventsListPage() {
               {events?.map((ev) => (
                 <TableRow key={ev.id} hover>
                   <TableCell>{ev.nome}</TableCell>
-                  <TableCell>{ev.data}</TableCell>
+                  <TableCell>{formatarData(ev.data)}</TableCell>
                   <TableCell>{ev.local}</TableCell>
                   <TableCell>
                     <Chip label={ev.status} size="small" color={statusColor[ev.status] ?? "default"} />

@@ -27,6 +27,8 @@ export interface EventDto {
   mapaUrl?: string;
   imagemUrl?: string;
   transmissaoUrl?: string;
+  vendaInicio: string;
+  vendaFim: string;
   status: string;
   maximoPorCpf: number;
   maximoPorUsuario: number;

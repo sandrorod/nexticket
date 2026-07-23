@@ -13,6 +13,8 @@ public class Event : BaseEntity
     public string? MapaUrl { get; set; }
     public string? ImagemUrl { get; set; }
     public string? TransmissaoUrl { get; set; }
+    public DateTime VendaInicio { get; set; }
+    public DateTime VendaFim { get; set; }
     public EventStatus Status { get; set; } = EventStatus.Rascunho;
     public int MaximoPorCpf { get; set; }
     public int MaximoPorUsuario { get; set; }

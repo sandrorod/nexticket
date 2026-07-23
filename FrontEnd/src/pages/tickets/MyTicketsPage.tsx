@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Container, Typography, Grid, Card, CardContent, Box, Chip, Divider } from "@mui/material";
 import { QRCodeSVG } from "qrcode.react";
 import { getMyTickets } from "../../api/orders";
+import { formatarData, formatarHora } from "../../utils/date";
 
 const statusColor: Record<string, "success" | "default" | "error"> = {
   Disponivel: "success",
@@ -28,7 +29,7 @@ export default function MyTicketsPage() {
                 <Typography variant="h6" fontWeight={600}>{ticket.eventNome}</Typography>
                 <Typography variant="body2" color="text.secondary">{ticket.eventLocal}</Typography>
                 <Typography variant="body2" color="text.secondary" mb={2}>
-                  {ticket.eventData} às {ticket.eventHora}
+                  {formatarData(ticket.eventData)} às {formatarHora(ticket.eventHora)}
                 </Typography>
 
                 <Divider sx={{ mb: 2 }} />

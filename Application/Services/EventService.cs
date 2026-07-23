@@ -24,13 +24,13 @@ public class EventService : IEventService
         var events = await _uow.Events.Query()
             .Include(e => e.Lots)
             .Include(e => e.Tickets)
-            .Where(e => e.Status != EventStatus.Cancelado)
+            .Where(e => e.Status == EventStatus.Publicado)
             .OrderBy(e => e.Data)
             .ToListAsync(ct);
 
-        // Evento continua visível até 24h após o horário marcado, independente de login.
+        // Evento continua visível até 24h após o fim do período de venda, independente de login.
         var visiveis = events
-            .Where(e => e.Data.ToDateTime(e.Hora) >= DateTime.UtcNow.AddHours(-24))
+            .Where(e => e.VendaFim >= DateTime.UtcNow.AddHours(-24))
             .ToList();
 
         return _mapper.Map<List<EventDto>>(visiveis);
@@ -59,9 +59,11 @@ public class EventService : IEventService
             MapaUrl = request.MapaUrl,
             ImagemUrl = request.ImagemUrl,
             TransmissaoUrl = request.TransmissaoUrl,
+            VendaInicio = request.VendaInicio,
+            VendaFim = request.VendaFim,
             MaximoPorCpf = request.MaximoPorCpf,
             MaximoPorUsuario = request.MaximoPorUsuario,
-            Status = EventStatus.Rascunho
+            Status = EventStatus.Publicado
         };
 
         await _uow.Events.AddAsync(ev, ct);
@@ -83,6 +85,8 @@ public class EventService : IEventService
         ev.MapaUrl = request.MapaUrl;
         ev.ImagemUrl = request.ImagemUrl;
         ev.TransmissaoUrl = request.TransmissaoUrl;
+        ev.VendaInicio = request.VendaInicio;
+        ev.VendaFim = request.VendaFim;
         ev.MaximoPorCpf = request.MaximoPorCpf;
         ev.MaximoPorUsuario = request.MaximoPorUsuario;
 

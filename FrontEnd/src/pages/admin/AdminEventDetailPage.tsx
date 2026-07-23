@@ -9,6 +9,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { getEventById, getLotsByEvent, cancelEvent, createLot, updateLot, type LotPayload } from "../../api/events";
 import type { LotDto } from "../../types";
+import { formatarData, formatarHora } from "../../utils/date";
 
 const emptyLotForm: LotPayload = {
   nome: "",
@@ -102,7 +103,7 @@ export default function AdminEventDetailPage() {
         <Box>
           <Chip label={event.status} size="small" sx={{ mb: 1 }} />
           <Typography variant="h4" fontWeight={700}>{event.nome}</Typography>
-          <Typography color="text.secondary">{event.local} · {event.data} às {event.hora}</Typography>
+          <Typography color="text.secondary">{event.local} · {formatarData(event.data)} às {formatarHora(event.hora)}</Typography>
         </Box>
         <Box display="flex" gap={1}>
           <Button component={RouterLink} to={`/admin/eventos/${id}/editar`} variant="outlined">Editar</Button>

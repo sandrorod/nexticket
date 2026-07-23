@@ -14,6 +14,8 @@ const emptyForm: EventPayload = {
   mapaUrl: "",
   imagemUrl: "",
   transmissaoUrl: "",
+  vendaInicio: "",
+  vendaFim: "",
   maximoPorCpf: 4,
   maximoPorUsuario: 4,
 };
@@ -44,6 +46,8 @@ export default function EventFormPage() {
         mapaUrl: existing.mapaUrl ?? "",
         imagemUrl: existing.imagemUrl ?? "",
         transmissaoUrl: existing.transmissaoUrl ?? "",
+        vendaInicio: existing.vendaInicio.slice(0, 16),
+        vendaFim: existing.vendaFim.slice(0, 16),
         maximoPorCpf: existing.maximoPorCpf,
         maximoPorUsuario: existing.maximoPorUsuario,
       });
@@ -70,6 +74,8 @@ export default function EventFormPage() {
         mapaUrl: form.mapaUrl || undefined,
         imagemUrl: form.imagemUrl || undefined,
         transmissaoUrl: form.transmissaoUrl || undefined,
+        vendaInicio: new Date(form.vendaInicio).toISOString(),
+        vendaFim: new Date(form.vendaFim).toISOString(),
       };
       const result = isEdit ? await updateEvent(id!, payload) : await createEvent(payload);
       navigate(`/admin/eventos/${result.id}`);
@@ -81,7 +87,7 @@ export default function EventFormPage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
+    <Container maxWidth={false} sx={{ py: 4 }}>
       <Typography variant="h4" fontWeight={700} mb={3}>
         {isEdit ? "Editar evento" : "Novo evento"}
       </Typography>
@@ -91,17 +97,11 @@ export default function EventFormPage() {
 
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={8}>
               <Typography variant="overline" color="text.secondary">Informações do evento</Typography>
               <Grid container spacing={2} mt={0.5}>
-                <Grid item xs={12}>
-                  <TextField label="Nome do evento" value={form.nome} onChange={update("nome")} required fullWidth />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField label="Descrição" value={form.descricao} onChange={update("descricao")} required fullWidth multiline minRows={4} />
-                </Grid>
                 <Grid item xs={12} sm={8}>
-                  <TextField label="Local" value={form.local} onChange={update("local")} required fullWidth />
+                  <TextField label="Nome do evento" value={form.nome} onChange={update("nome")} required fullWidth />
                 </Grid>
                 <Grid item xs={6} sm={2}>
                   <TextField label="Data" type="date" value={form.data} onChange={update("data")} required fullWidth InputLabelProps={{ shrink: true }} />
@@ -109,10 +109,16 @@ export default function EventFormPage() {
                 <Grid item xs={6} sm={2}>
                   <TextField label="Hora" type="time" value={form.hora} onChange={update("hora")} required fullWidth InputLabelProps={{ shrink: true }} />
                 </Grid>
+                <Grid item xs={12}>
+                  <TextField label="Local" value={form.local} onChange={update("local")} required fullWidth />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField label="Descrição" value={form.descricao} onChange={update("descricao")} required fullWidth multiline minRows={4} />
+                </Grid>
               </Grid>
             </Grid>
 
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={4}>
               <Typography variant="overline" color="text.secondary">Capa do evento</Typography>
               <Box mt={0.5}>
                 <ImageUpload value={form.imagemUrl || undefined} onChange={handleImageChange} />
@@ -122,19 +128,31 @@ export default function EventFormPage() {
 
           <Divider sx={{ my: 4 }} />
 
-          <Typography variant="overline" color="text.secondary">Links adicionais (opcional)</Typography>
+          <Typography variant="overline" color="text.secondary">Período de venda</Typography>
           <Grid container spacing={2} mt={0.5} mb={4}>
-            <Grid item xs={12} sm={6}>
-              <TextField label="URL do mapa" value={form.mapaUrl} onChange={update("mapaUrl")} fullWidth />
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                label="Início das vendas"
+                type="datetime-local"
+                value={form.vendaInicio}
+                onChange={update("vendaInicio")}
+                required
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+              />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField label="URL da transmissão" value={form.transmissaoUrl} onChange={update("transmissaoUrl")} fullWidth />
+            <Grid item xs={12} sm={6} md={3}>
+              <TextField
+                label="Fim das vendas"
+                type="datetime-local"
+                value={form.vendaFim}
+                onChange={update("vendaFim")}
+                required
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+              />
             </Grid>
-          </Grid>
-
-          <Typography variant="overline" color="text.secondary">Limites de compra</Typography>
-          <Grid container spacing={2} mt={0.5} mb={4}>
-            <Grid item xs={6} sm={3}>
+            <Grid item xs={6} sm={3} md={3}>
               <TextField
                 label="Máximo por CPF"
                 type="number"
@@ -145,7 +163,7 @@ export default function EventFormPage() {
                 inputProps={{ min: 1 }}
               />
             </Grid>
-            <Grid item xs={6} sm={3}>
+            <Grid item xs={6} sm={3} md={3}>
               <TextField
                 label="Máximo por usuário"
                 type="number"
@@ -155,6 +173,16 @@ export default function EventFormPage() {
                 fullWidth
                 inputProps={{ min: 1 }}
               />
+            </Grid>
+          </Grid>
+
+          <Typography variant="overline" color="text.secondary">Links adicionais (opcional)</Typography>
+          <Grid container spacing={2} mt={0.5} mb={4}>
+            <Grid item xs={12} sm={6}>
+              <TextField label="URL do mapa" value={form.mapaUrl} onChange={update("mapaUrl")} fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="URL da transmissão" value={form.transmissaoUrl} onChange={update("transmissaoUrl")} fullWidth />
             </Grid>
           </Grid>
 

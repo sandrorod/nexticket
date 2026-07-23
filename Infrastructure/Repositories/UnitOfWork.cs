@@ -5,6 +5,20 @@ using NexTicket.Infrastructure.Data;
 
 namespace NexTicket.Infrastructure.Repositories;
 
+public class UnitOfWorkTransaction : IUnitOfWorkTransaction
+{
+    private readonly IDbContextTransaction _transaction;
+
+    public UnitOfWorkTransaction(IDbContextTransaction transaction)
+    {
+        _transaction = transaction;
+    }
+
+    public Task CommitAsync(CancellationToken ct = default) => _transaction.CommitAsync(ct);
+
+    public ValueTask DisposeAsync() => _transaction.DisposeAsync();
+}
+
 public class UnitOfWork : IUnitOfWork
 {
     private readonly NexTicketDbContext _context;
@@ -32,9 +46,9 @@ public class UnitOfWork : IUnitOfWork
     public Task<int> SaveChangesAsync(CancellationToken ct = default) =>
         _context.SaveChangesAsync(ct);
 
-    public async Task<IDisposable> BeginTransactionAsync(CancellationToken ct = default)
+    public async Task<IUnitOfWorkTransaction> BeginTransactionAsync(CancellationToken ct = default)
     {
         IDbContextTransaction transaction = await _context.Database.BeginTransactionAsync(ct);
-        return transaction;
+        return new UnitOfWorkTransaction(transaction);
     }
 }

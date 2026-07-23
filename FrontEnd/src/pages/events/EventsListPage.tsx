@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Card, CardActionArea, CardContent, CardMedia, Chip, Container, Grid, Typography } from "@mui/material";
 import { getEvents } from "../../api/events";
+import { formatarData, formatarHora } from "../../utils/date";
 
 export default function EventsListPage() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function EventsListPage() {
                   <Typography variant="h6" fontWeight={600}>{ev.nome}</Typography>
                   <Typography variant="body2" color="text.secondary">{ev.local}</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {ev.data} às {ev.hora}
+                    {formatarData(ev.data)} às {formatarHora(ev.hora)}
                   </Typography>
                 </CardContent>
               </CardActionArea>

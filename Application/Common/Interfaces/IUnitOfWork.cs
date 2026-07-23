@@ -2,6 +2,11 @@ using NexTicket.Domain.Entities;
 
 namespace NexTicket.Application.Common.Interfaces;
 
+public interface IUnitOfWorkTransaction : IAsyncDisposable
+{
+    Task CommitAsync(CancellationToken ct = default);
+}
+
 public interface IUnitOfWork
 {
     IRepository<User> Users { get; }
@@ -13,5 +18,5 @@ public interface IUnitOfWork
     IRepository<Coupon> Coupons { get; }
 
     Task<int> SaveChangesAsync(CancellationToken ct = default);
-    Task<IDisposable> BeginTransactionAsync(CancellationToken ct = default);
+    Task<IUnitOfWorkTransaction> BeginTransactionAsync(CancellationToken ct = default);
 }

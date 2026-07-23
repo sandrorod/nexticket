@@ -37,7 +37,7 @@ public class OrderService : IOrderService
 
         var totalIngressosNoPedido = request.Itens.Sum(i => i.Ingressos.Count);
 
-        using var transaction = await _uow.BeginTransactionAsync(ct);
+        await using var transaction = await _uow.BeginTransactionAsync(ct);
 
         var order = new Order
         {
@@ -121,7 +121,7 @@ public class OrderService : IOrderService
             await _uow.Tickets.AddAsync(ticket, ct);
 
         await _uow.SaveChangesAsync(ct);
-        transaction.Dispose();
+        await transaction.CommitAsync(ct);
 
         return _mapper.Map<OrderDto>(order);
     }

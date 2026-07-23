@@ -73,7 +73,7 @@ public class TicketService : ITicketService
 
     public async Task<ValidateTicketPreviewResponse> ConfirmValidationAsync(string token, Guid validadorId, CancellationToken ct = default)
     {
-        using var transaction = await _uow.BeginTransactionAsync(ct);
+        await using var transaction = await _uow.BeginTransactionAsync(ct);
 
         var ticket = await _uow.Tickets.Query()
             .Include(t => t.Event)
@@ -95,7 +95,7 @@ public class TicketService : ITicketService
 
         _uow.Tickets.Update(ticket);
         await _uow.SaveChangesAsync(ct);
-        transaction.Dispose();
+        await transaction.CommitAsync(ct);
 
         return new ValidateTicketPreviewResponse(
             true, "Ingresso validado com sucesso.", ticket.Id, ticket.Nome, ticket.Event.Nome,
