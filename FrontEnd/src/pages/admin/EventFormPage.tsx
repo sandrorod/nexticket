@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Container, Typography, TextField, Button, Paper, Box, Alert, Grid, Divider } from "@mui/material";
+import {
+  Container, Typography, TextField, Button, Paper, Box, Alert, Grid, Divider,
+  IconButton, MenuItem,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { getEventById, createEvent, updateEvent, type EventPayload } from "../../api/events";
 import ImageUpload from "../../components/ImageUpload";
+
+const classificacoes = ["Livre", "10", "12", "14", "16", "18"];
 
 const emptyForm: EventPayload = {
   nome: "",
@@ -20,12 +27,43 @@ const emptyForm: EventPayload = {
   maximoPorUsuario: 4,
 };
 
+// Campos abaixo (endereço detalhado, orientações, contato, classificação) ainda não
+// existem no backend/banco — ficam só no formulário até serem persistidos futuramente.
+interface ExtraForm {
+  cep: string;
+  endereco: string;
+  numero: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  classificacao: string;
+  contatoWhatsapp: string;
+  contatoTelefone: string;
+  contatoEmail: string;
+  orientacoes: string[];
+}
+
+const emptyExtra: ExtraForm = {
+  cep: "",
+  endereco: "",
+  numero: "",
+  bairro: "",
+  cidade: "",
+  estado: "",
+  classificacao: "Livre",
+  contatoWhatsapp: "",
+  contatoTelefone: "",
+  contatoEmail: "",
+  orientacoes: [""],
+};
+
 export default function EventFormPage() {
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
   const navigate = useNavigate();
 
   const [form, setForm] = useState<EventPayload>(emptyForm);
+  const [extra, setExtra] = useState<ExtraForm>(emptyExtra);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -58,6 +96,23 @@ export default function EventFormPage() {
     const value = e.target.type === "number" ? Number(e.target.value) : e.target.value;
     setForm((f) => ({ ...f, [field]: value }));
   };
+
+  const updateExtra = (field: keyof ExtraForm) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setExtra((f) => ({ ...f, [field]: e.target.value }));
+  };
+
+  const updateOrientacao = (index: number, value: string) => {
+    setExtra((f) => {
+      const next = [...f.orientacoes];
+      next[index] = value;
+      return { ...f, orientacoes: next };
+    });
+  };
+
+  const addOrientacao = () => setExtra((f) => ({ ...f, orientacoes: [...f.orientacoes, ""] }));
+
+  const removeOrientacao = (index: number) =>
+    setExtra((f) => ({ ...f, orientacoes: f.orientacoes.filter((_, i) => i !== index) }));
 
   const handleImageChange = (url: string | undefined) => {
     setForm((f) => ({ ...f, imagemUrl: url ?? "" }));
@@ -105,13 +160,26 @@ export default function EventFormPage() {
                   <TextField label="Nome do evento" value={form.nome} onChange={update("nome")} required fullWidth />
                 </Grid>
                 <Grid item xs={6} sm={2}>
-                  <TextField label="Data" type="date" value={form.data} onChange={update("data")} required fullWidth InputLabelProps={{ shrink: true }} />
+                  <TextField
+                    label="Classificação"
+                    select
+                    value={extra.classificacao}
+                    onChange={updateExtra("classificacao")}
+                    fullWidth
+                  >
+                    {classificacoes.map((c) => (
+                      <MenuItem key={c} value={c}>{c === "Livre" ? "Livre" : `+${c}`}</MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
                 <Grid item xs={6} sm={2}>
                   <TextField label="Hora" type="time" value={form.hora} onChange={update("hora")} required fullWidth InputLabelProps={{ shrink: true }} />
                 </Grid>
+                <Grid item xs={6} sm={4}>
+                  <TextField label="Data" type="date" value={form.data} onChange={update("data")} required fullWidth InputLabelProps={{ shrink: true }} />
+                </Grid>
                 <Grid item xs={12}>
-                  <TextField label="Local" value={form.local} onChange={update("local")} required fullWidth />
+                  <TextField label="Nome do local" value={form.local} onChange={update("local")} required fullWidth />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField label="Descrição" value={form.descricao} onChange={update("descricao")} required fullWidth multiline minRows={4} />
@@ -126,6 +194,70 @@ export default function EventFormPage() {
               </Box>
             </Grid>
           </Grid>
+
+          <Divider sx={{ my: 4 }} />
+
+          <Typography variant="overline" color="text.secondary">Localização</Typography>
+          <Grid container spacing={2} mt={0.5} mb={4}>
+            <Grid item xs={12} sm={4} md={2}>
+              <TextField label="CEP" value={extra.cep} onChange={updateExtra("cep")} fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={8} md={6}>
+              <TextField label="Endereço" value={extra.endereco} onChange={updateExtra("endereco")} fullWidth />
+            </Grid>
+            <Grid item xs={6} sm={4} md={2}>
+              <TextField label="Número" value={extra.numero} onChange={updateExtra("numero")} fullWidth />
+            </Grid>
+            <Grid item xs={6} sm={4} md={2}>
+              <TextField label="Bairro" value={extra.bairro} onChange={updateExtra("bairro")} fullWidth />
+            </Grid>
+            <Grid item xs={6} sm={4} md={3}>
+              <TextField label="Cidade" value={extra.cidade} onChange={updateExtra("cidade")} fullWidth />
+            </Grid>
+            <Grid item xs={6} sm={4} md={2}>
+              <TextField label="Estado (UF)" value={extra.estado} onChange={updateExtra("estado")} fullWidth inputProps={{ maxLength: 2 }} />
+            </Grid>
+            <Grid item xs={12} md={7}>
+              <TextField label="URL do mapa" value={form.mapaUrl} onChange={update("mapaUrl")} fullWidth />
+            </Grid>
+          </Grid>
+
+          <Divider sx={{ my: 4 }} />
+
+          <Typography variant="overline" color="text.secondary">Contato do organizador</Typography>
+          <Grid container spacing={2} mt={0.5} mb={4}>
+            <Grid item xs={12} sm={4}>
+              <TextField label="WhatsApp" value={extra.contatoWhatsapp} onChange={updateExtra("contatoWhatsapp")} fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField label="Telefone" value={extra.contatoTelefone} onChange={updateExtra("contatoTelefone")} fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField label="Email" type="email" value={extra.contatoEmail} onChange={updateExtra("contatoEmail")} fullWidth />
+            </Grid>
+          </Grid>
+
+          <Divider sx={{ my: 4 }} />
+
+          <Typography variant="overline" color="text.secondary">Orientações gerais</Typography>
+          <Box mt={1} mb={4}>
+            {extra.orientacoes.map((orientacao, i) => (
+              <Box key={i} display="flex" gap={1} mb={1.5} alignItems="center">
+                <TextField
+                  value={orientacao}
+                  onChange={(e) => updateOrientacao(i, e.target.value)}
+                  placeholder="Ex: É obrigatória a apresentação de documento oficial com foto."
+                  fullWidth
+                />
+                <IconButton onClick={() => removeOrientacao(i)} disabled={extra.orientacoes.length === 1}>
+                  <DeleteOutlineIcon />
+                </IconButton>
+              </Box>
+            ))}
+            <Button startIcon={<AddIcon />} onClick={addOrientacao} sx={{ borderRadius: "0.5rem" }}>
+              Adicionar orientação
+            </Button>
+          </Box>
 
           <Divider sx={{ my: 4 }} />
 
@@ -179,9 +311,6 @@ export default function EventFormPage() {
 
           <Typography variant="overline" color="text.secondary">Links adicionais (opcional)</Typography>
           <Grid container spacing={2} mt={0.5} mb={4}>
-            <Grid item xs={12} sm={6}>
-              <TextField label="URL do mapa" value={form.mapaUrl} onChange={update("mapaUrl")} fullWidth />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <TextField label="URL da transmissão" value={form.transmissaoUrl} onChange={update("transmissaoUrl")} fullWidth />
             </Grid>
