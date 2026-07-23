@@ -37,91 +37,93 @@ public class OrderService : IOrderService
 
         var totalIngressosNoPedido = request.Itens.Sum(i => i.Ingressos.Count);
 
-        await using var transaction = await _uow.BeginTransactionAsync(ct);
-
-        var order = new Order
+        var order = await _uow.ExecuteInTransactionAsync(async innerCt =>
         {
-            UserId = userId,
-            StatusPagamento = OrderPaymentStatus.Pendente
-        };
-
-        decimal valorTotal = 0;
-        var novosTickets = new List<Ticket>();
-
-        foreach (var itemRequest in request.Itens)
-        {
-            var lot = lots.First(l => l.Id == itemRequest.LotId);
-
-            if (lot.EventId != ev.Id)
-                throw new ConflictException($"O lote '{lot.Nome}' não pertence ao evento informado.");
-
-            var agora = DateTime.UtcNow;
-            if (agora < lot.DataInicio || agora > lot.DataFim)
-                throw new ConflictException($"O lote '{lot.Nome}' não está disponível no momento.");
-
-            var quantidade = itemRequest.Ingressos.Count;
-
-            if (quantidade > lot.QuantidadeDisponivel)
-                throw new ConflictException($"Quantidade indisponível no lote '{lot.Nome}'. Restam {lot.QuantidadeDisponivel}.");
-
-            if (quantidade > lot.MaximoPorUsuario)
-                throw new ConflictException($"O lote '{lot.Nome}' permite no máximo {lot.MaximoPorUsuario} ingressos por usuário.");
-
-            var orderItem = new OrderItem
+            var order = new Order
             {
-                Order = order,
-                LotId = lot.Id,
-                Quantidade = quantidade,
-                ValorUnitario = lot.Preco
+                UserId = userId,
+                StatusPagamento = OrderPaymentStatus.Pendente
             };
-            order.Items.Add(orderItem);
-            valorTotal += orderItem.ValorTotal;
 
-            lot.QuantidadeVendida += quantidade;
-            if (lot.QuantidadeDisponivel == 0)
-                lot.Status = LotStatus.Esgotado;
-            _uow.Lots.Update(lot);
+            decimal valorTotal = 0;
+            var novosTickets = new List<Ticket>();
 
-            foreach (var holder in itemRequest.Ingressos)
+            foreach (var itemRequest in request.Itens)
             {
-                await ValidarUnicidadeNoEventoAsync(ev.Id, holder.Email, holder.Nome, holder.Telefone, ct);
+                var lot = lots.First(l => l.Id == itemRequest.LotId);
 
-                novosTickets.Add(new Ticket
+                if (lot.EventId != ev.Id)
+                    throw new ConflictException($"O lote '{lot.Nome}' não pertence ao evento informado.");
+
+                var agora = DateTime.UtcNow;
+                if (agora < lot.DataInicio || agora > lot.DataFim)
+                    throw new ConflictException($"O lote '{lot.Nome}' não está disponível no momento.");
+
+                var quantidade = itemRequest.Ingressos.Count;
+
+                if (quantidade > lot.QuantidadeDisponivel)
+                    throw new ConflictException($"Quantidade indisponível no lote '{lot.Nome}'. Restam {lot.QuantidadeDisponivel}.");
+
+                if (quantidade > lot.MaximoPorUsuario)
+                    throw new ConflictException($"O lote '{lot.Nome}' permite no máximo {lot.MaximoPorUsuario} ingressos por usuário.");
+
+                var orderItem = new OrderItem
                 {
-                    Codigo = _tokenGenerator.GenerateCode(),
-                    Token = _tokenGenerator.GenerateToken(),
                     Order = order,
-                    EventId = ev.Id,
                     LotId = lot.Id,
-                    Nome = holder.Nome,
-                    Email = holder.Email,
-                    Telefone = holder.Telefone,
-                    Cpf = holder.Cpf,
-                    Status = TicketStatus.Disponivel
-                });
+                    Quantidade = quantidade,
+                    ValorUnitario = lot.Preco
+                };
+                order.Items.Add(orderItem);
+                valorTotal += orderItem.ValorTotal;
+
+                lot.QuantidadeVendida += quantidade;
+                if (lot.QuantidadeDisponivel == 0)
+                    lot.Status = LotStatus.Esgotado;
+                _uow.Lots.Update(lot);
+
+                foreach (var holder in itemRequest.Ingressos)
+                {
+                    await ValidarUnicidadeNoEventoAsync(ev.Id, holder.Email, holder.Nome, holder.Telefone, innerCt);
+
+                    novosTickets.Add(new Ticket
+                    {
+                        Codigo = _tokenGenerator.GenerateCode(),
+                        Token = _tokenGenerator.GenerateToken(),
+                        Order = order,
+                        EventId = ev.Id,
+                        LotId = lot.Id,
+                        Nome = holder.Nome,
+                        Email = holder.Email,
+                        Telefone = holder.Telefone,
+                        Cpf = holder.Cpf,
+                        Status = TicketStatus.Disponivel
+                    });
+                }
             }
-        }
 
-        ValidarUnicidadeDentroDoPedido(request);
+            ValidarUnicidadeDentroDoPedido(request);
 
-        if (ev.MaximoPorUsuario > 0)
-        {
-            var jaComprados = await _uow.Tickets.Query()
-                .Where(t => t.EventId == ev.Id && t.Order.UserId == userId && t.Status != TicketStatus.Cancelado)
-                .CountAsync(ct);
+            if (ev.MaximoPorUsuario > 0)
+            {
+                var jaComprados = await _uow.Tickets.Query()
+                    .Where(t => t.EventId == ev.Id && t.Order.UserId == userId && t.Status != TicketStatus.Cancelado)
+                    .CountAsync(innerCt);
 
-            if (jaComprados + totalIngressosNoPedido > ev.MaximoPorUsuario)
-                throw new ConflictException($"Limite de {ev.MaximoPorUsuario} ingressos por usuário para este evento.");
-        }
+                if (jaComprados + totalIngressosNoPedido > ev.MaximoPorUsuario)
+                    throw new ConflictException($"Limite de {ev.MaximoPorUsuario} ingressos por usuário para este evento.");
+            }
 
-        order.ValorTotal = valorTotal;
+            order.ValorTotal = valorTotal;
 
-        await _uow.Orders.AddAsync(order, ct);
-        foreach (var ticket in novosTickets)
-            await _uow.Tickets.AddAsync(ticket, ct);
+            await _uow.Orders.AddAsync(order, innerCt);
+            foreach (var ticket in novosTickets)
+                await _uow.Tickets.AddAsync(ticket, innerCt);
 
-        await _uow.SaveChangesAsync(ct);
-        await transaction.CommitAsync(ct);
+            await _uow.SaveChangesAsync(innerCt);
+
+            return order;
+        }, ct);
 
         return _mapper.Map<OrderDto>(order);
     }

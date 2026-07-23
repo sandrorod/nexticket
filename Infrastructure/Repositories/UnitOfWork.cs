@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NexTicket.Application.Common.Interfaces;
 using NexTicket.Domain.Entities;
@@ -50,5 +51,22 @@ public class UnitOfWork : IUnitOfWork
     {
         IDbContextTransaction transaction = await _context.Database.BeginTransactionAsync(ct);
         return new UnitOfWorkTransaction(transaction);
+    }
+
+    public async Task<TResult> ExecuteInTransactionAsync<TResult>(
+        Func<CancellationToken, Task<TResult>> operation, CancellationToken ct = default)
+    {
+        var strategy = _context.Database.CreateExecutionStrategy();
+        return await strategy.ExecuteAsync(
+            state: (Context: _context, Operation: operation),
+            operation: async (_, state, innerCt) =>
+            {
+                await using var transaction = await state.Context.Database.BeginTransactionAsync(innerCt);
+                var result = await state.Operation(innerCt);
+                await transaction.CommitAsync(innerCt);
+                return result;
+            },
+            verifySucceeded: null,
+            cancellationToken: ct);
     }
 }

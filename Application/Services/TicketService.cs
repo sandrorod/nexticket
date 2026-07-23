@@ -73,32 +73,32 @@ public class TicketService : ITicketService
 
     public async Task<ValidateTicketPreviewResponse> ConfirmValidationAsync(string token, Guid validadorId, CancellationToken ct = default)
     {
-        await using var transaction = await _uow.BeginTransactionAsync(ct);
-
-        var ticket = await _uow.Tickets.Query()
-            .Include(t => t.Event)
-            .FirstOrDefaultAsync(t => t.Token == token, ct);
-
-        if (ticket is null)
-            return new ValidateTicketPreviewResponse(false, "Ingresso não encontrado.", null, null, null, null, null, null, null);
-
-        if (ticket.Status != TicketStatus.Disponivel)
+        return await _uow.ExecuteInTransactionAsync(async innerCt =>
         {
+            var ticket = await _uow.Tickets.Query()
+                .Include(t => t.Event)
+                .FirstOrDefaultAsync(t => t.Token == token, innerCt);
+
+            if (ticket is null)
+                return new ValidateTicketPreviewResponse(false, "Ingresso não encontrado.", null, null, null, null, null, null, null);
+
+            if (ticket.Status != TicketStatus.Disponivel)
+            {
+                return new ValidateTicketPreviewResponse(
+                    false, "Ingresso já utilizado ou inválido.", ticket.Id, ticket.Nome, ticket.Event.Nome,
+                    ticket.Event.Hora, ticket.Status.ToString(), ticket.DataUso, null);
+            }
+
+            ticket.Status = TicketStatus.Utilizado;
+            ticket.DataUso = DateTime.UtcNow;
+            ticket.UsuarioValidadorId = validadorId;
+
+            _uow.Tickets.Update(ticket);
+            await _uow.SaveChangesAsync(innerCt);
+
             return new ValidateTicketPreviewResponse(
-                false, "Ingresso já utilizado ou inválido.", ticket.Id, ticket.Nome, ticket.Event.Nome,
+                true, "Ingresso validado com sucesso.", ticket.Id, ticket.Nome, ticket.Event.Nome,
                 ticket.Event.Hora, ticket.Status.ToString(), ticket.DataUso, null);
-        }
-
-        ticket.Status = TicketStatus.Utilizado;
-        ticket.DataUso = DateTime.UtcNow;
-        ticket.UsuarioValidadorId = validadorId;
-
-        _uow.Tickets.Update(ticket);
-        await _uow.SaveChangesAsync(ct);
-        await transaction.CommitAsync(ct);
-
-        return new ValidateTicketPreviewResponse(
-            true, "Ingresso validado com sucesso.", ticket.Id, ticket.Nome, ticket.Event.Nome,
-            ticket.Event.Hora, ticket.Status.ToString(), ticket.DataUso, null);
+        }, ct);
     }
 }
