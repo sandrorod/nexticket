@@ -17,28 +17,18 @@ export default function ValidateTicketPage() {
   const [preview, setPreview] = useState<ValidateTicketPreviewResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchPreview = async (scannedToken: string) => {
+  const handleScan = async (scannedToken: string) => {
     setLoading(true);
     setToken(scannedToken);
     try {
-      const { data } = await api.post<ValidateTicketPreviewResponse>("/tickets/validate/preview", { token: scannedToken });
+      const { data } = await api.post<ValidateTicketPreviewResponse>("/tickets/validate/confirm", { token: scannedToken });
       setPreview(data);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleManualSearch = () => fetchPreview(token);
-
-  const handleConfirm = async () => {
-    setLoading(true);
-    try {
-      const { data } = await api.post<ValidateTicketPreviewResponse>("/tickets/validate/confirm", { token });
-      setPreview(data);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleManualSearch = () => handleScan(token);
 
   const handleNovaLeitura = () => {
     setPreview(null);
@@ -62,7 +52,7 @@ export default function ValidateTicketPage() {
       </ToggleButtonGroup>
 
       {mode === "camera" && !preview && (
-        <QrScanner active={mode === "camera" && !preview} onScan={fetchPreview} />
+        <QrScanner active={mode === "camera" && !preview} onScan={handleScan} />
       )}
 
       {mode === "manual" && !preview && (
@@ -86,12 +76,6 @@ export default function ValidateTicketPage() {
               <Typography><strong>Status:</strong> {preview.status}</Typography>
               {preview.dataUso && <Typography><strong>Usado em:</strong> {preview.dataUso}</Typography>}
             </Box>
-          )}
-
-          {preview.valido && preview.status !== "Utilizado" && (
-            <Button variant="contained" color="success" fullWidth sx={{ mt: 2, borderRadius: "0.5rem" }} onClick={handleConfirm} disabled={loading}>
-              VALIDAR
-            </Button>
           )}
 
           <Button variant="text" fullWidth sx={{ mt: 1 }} onClick={handleNovaLeitura}>

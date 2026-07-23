@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using NexTicket.Application.Common.Interfaces;
 using NexTicket.Infrastructure.Auth;
 using NexTicket.Infrastructure.Data;
@@ -15,9 +16,17 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(configuration.GetConnectionString("DefaultConnection"))
+        {
+            // The Supabase Transaction Pooler (PgBouncer) doesn't support server-side
+            // prepared statements; Npgsql's auto-prepare cache silently breaks queries
+            // against it, causing them to hang until CommandTimeout. Disable it.
+            MaxAutoPrepare = 0,
+        };
+
         services.AddDbContext<NexTicketDbContext>(options =>
             options.UseNpgsql(
-                configuration.GetConnectionString("DefaultConnection"),
+                connectionStringBuilder.ConnectionString,
                 npgsql =>
                 {
                     npgsql.MigrationsHistoryTable("__EFMigrationsHistory", "nexticket_app");
