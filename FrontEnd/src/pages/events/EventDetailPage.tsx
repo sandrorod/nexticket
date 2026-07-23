@@ -143,19 +143,19 @@ export default function EventDetailPage() {
                   {event.contatoWhatsapp && (
                     <Stack direction="row" spacing={1} alignItems="center">
                       <WhatsAppIcon sx={{ fontSize: "1.1rem", color: "#00a650" }} />
-                      <Typography variant="body2" color="text.primary">{event.contatoWhatsapp}</Typography>
+                      <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoWhatsapp}</Typography>
                     </Stack>
                   )}
                   {event.contatoTelefone && (
                     <Stack direction="row" spacing={1} alignItems="center">
                       <PhoneIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
-                      <Typography variant="body2" color="text.primary">{event.contatoTelefone}</Typography>
+                      <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoTelefone}</Typography>
                     </Stack>
                   )}
                   {event.contatoEmail && (
                     <Stack direction="row" spacing={1} alignItems="center">
                       <EmailIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
-                      <Typography variant="body2" color="text.primary">{event.contatoEmail}</Typography>
+                      <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoEmail}</Typography>
                     </Stack>
                   )}
                 </Stack>
@@ -209,15 +209,12 @@ export default function EventDetailPage() {
                     return (
                       <Box key={lot.id} display="flex" justifyContent="space-between" alignItems="center" py={1}>
                         <Box>
-                          <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.9rem", letterSpacing: "0.01em" }}>
+                          <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.81rem", letterSpacing: "0.01em" }}>
                             {lot.nome}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ textTransform: "uppercase" }}>
-                            {lot.quantidadeDisponivel > 0 ? `${lot.quantidadeDisponivel} disponíveis` : "Esgotado"}
                           </Typography>
                         </Box>
                         <Stack direction="row" spacing={2} alignItems="center">
-                          <Typography fontWeight={700} color="text.primary">R$ {lot.preco.toFixed(2)}</Typography>
+                          <Typography fontWeight={700} color="text.primary" sx={{ fontSize: "0.7875rem" }}>R$ {lot.preco.toFixed(2)}</Typography>
                           <Stack direction="row" alignItems="center" spacing={1}>
                             <IconButton
                               size="small"
@@ -245,13 +242,19 @@ export default function EventDetailPage() {
               </CardContent>
             </Card>
 
+            {loteSelecionado && quantidadeSelecionada > 0 && (
+              <Box sx={{ mb: 3 }}>
+                <CheckoutForm event={event} lot={loteSelecionado} quantity={quantidadeSelecionada} />
+              </Box>
+            )}
+
             <Card sx={{ mb: 3 }}>
               <CardContent>
                 <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                   Informações sobre o evento
                 </Typography>
                 <Divider sx={{ my: 1.5 }} />
-                <Typography variant="body2" color="text.primary" sx={{ whiteSpace: "pre-line", lineHeight: 1.8, textAlign: "left" }}>{event.descricao}</Typography>
+                <Typography variant="body2" color="text.primary" sx={{ whiteSpace: "pre-line", lineHeight: 1.8, textAlign: "left", fontSize: "0.7875rem" }}>{event.descricao}</Typography>
               </CardContent>
             </Card>
 
@@ -264,17 +267,13 @@ export default function EventDetailPage() {
                   <Divider sx={{ my: 1.5 }} />
                   <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
                     {event.orientacoesGerais.split("\n").filter(Boolean).map((linha, i) => (
-                      <Typography key={i} component="li" variant="body2" color="text.primary" sx={{ mb: 1.2, textAlign: "left" }}>
+                      <Typography key={i} component="li" variant="body2" color="text.primary" sx={{ mb: 1.2, textAlign: "left", fontSize: "0.7875rem" }}>
                         {linha}
                       </Typography>
                     ))}
                   </Box>
                 </CardContent>
               </Card>
-            )}
-
-            {loteSelecionado && quantidadeSelecionada > 0 && (
-              <CheckoutForm event={event} lot={loteSelecionado} quantity={quantidadeSelecionada} />
             )}
           </Grid>
         </Grid>
