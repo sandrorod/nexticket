@@ -113,8 +113,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 
-app.UseHttpsRedirection();
-
 app.UseCors(CorsPolicy);
 
 app.UseAuthentication();
