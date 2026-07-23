@@ -82,7 +82,7 @@ export default function EventDetailPage() {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={1.5} justifyContent="center" mb={3}>
+            <Stack direction="row" spacing={1.5} mb={1} justifyContent="flex-start">
               <IconButton sx={{ backgroundColor: "rgba(55, 125, 255, 0.08)", color: "primary.main" }}>
                 <FacebookIcon />
               </IconButton>
@@ -90,7 +90,7 @@ export default function EventDetailPage() {
                 <WhatsAppIcon />
               </IconButton>
             </Stack>
-            <Typography variant="caption" display="block" textAlign="center" color="text.secondary" mb={3}>
+            <Typography variant="caption" display="block" textAlign="left" color="text.secondary" mb={3}>
               Compartilhe este evento
             </Typography>
 
