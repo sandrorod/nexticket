@@ -49,10 +49,10 @@ export default function EventDetailPage() {
 
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
-      <Container sx={{ py: 4 }}>
-        <Grid container spacing={4}>
+      <Container maxWidth="xl" sx={{ py: 4, pb: 6 }}>
+        <Grid container spacing={3}>
           {/* Coluna esquerda */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3}>
             {event.imagemUrl && (
               <Box
                 sx={{
@@ -95,7 +95,7 @@ export default function EventDetailPage() {
             </Typography>
 
             <Card sx={{ p: 2.5, mb: 3 }}>
-              <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em">
+              <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                 Localização
               </Typography>
               <Typography variant="body2" color="text.primary" mt={1}>
@@ -136,7 +136,7 @@ export default function EventDetailPage() {
 
             {(event.contatoWhatsapp || event.contatoTelefone || event.contatoEmail) && (
               <Card sx={{ p: 2.5, mb: 3 }}>
-                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em">
+                <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                   Contato
                 </Typography>
                 <Stack spacing={1} mt={1.5}>
@@ -164,9 +164,9 @@ export default function EventDetailPage() {
           </Grid>
 
           {/* Coluna direita */}
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={9}>
             <Stack direction="row" spacing={1.5} alignItems="center" mb={0.5}>
-              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase" }}>
+              <Typography variant="h5" fontWeight={700} color="text.primary">
                 {event.nome}
               </Typography>
               {event.classificacao && event.classificacao !== "Livre" && (
@@ -177,7 +177,7 @@ export default function EventDetailPage() {
                 />
               )}
             </Stack>
-            <Typography variant="body2" color="primary.main" fontWeight={600} mb={3}>
+            <Typography variant="body1" color="primary.main" fontWeight={600} mb={3}>
               {formatarData(event.data).toUpperCase()} · {formatarHora(event.hora)}
             </Typography>
 
@@ -198,7 +198,7 @@ export default function EventDetailPage() {
 
             <Card sx={{ mb: 3 }}>
               <CardContent>
-                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em">
+                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                   Ingressos
                 </Typography>
                 <Divider sx={{ my: 1.5 }} />
@@ -247,24 +247,24 @@ export default function EventDetailPage() {
 
             <Card sx={{ mb: 3 }}>
               <CardContent>
-                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em">
+                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                   Informações sobre o evento
                 </Typography>
                 <Divider sx={{ my: 1.5 }} />
-                <Typography color="text.primary" sx={{ whiteSpace: "pre-line" }}>{event.descricao}</Typography>
+                <Typography variant="body2" color="text.primary" sx={{ whiteSpace: "pre-line", lineHeight: 1.8 }}>{event.descricao}</Typography>
               </CardContent>
             </Card>
 
             {event.orientacoesGerais && (
               <Card sx={{ mb: 3 }}>
                 <CardContent>
-                  <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em">
+                  <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                     Orientações gerais
                   </Typography>
                   <Divider sx={{ my: 1.5 }} />
                   <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
                     {event.orientacoesGerais.split("\n").filter(Boolean).map((linha, i) => (
-                      <Typography key={i} component="li" color="text.primary" sx={{ mb: 1 }}>
+                      <Typography key={i} component="li" variant="body2" color="text.primary" sx={{ mb: 1.2 }}>
                         {linha}
                       </Typography>
                     ))}

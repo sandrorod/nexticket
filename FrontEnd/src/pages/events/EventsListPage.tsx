@@ -50,7 +50,7 @@ export default function EventsListPage() {
 
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
-      <Container sx={{ py: 3 }}>
+      <Container maxWidth="xl" sx={{ py: 3 }}>
         <Box
           sx={{
             display: "flex",

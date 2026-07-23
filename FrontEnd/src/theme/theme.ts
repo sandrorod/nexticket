@@ -9,10 +9,18 @@ export const theme = createTheme({
     text: { primary: "#132144", secondary: "#677788" },
   },
   shape: { borderRadius: 12 },
+  breakpoints: {
+    values: { xs: 0, sm: 600, md: 900, lg: 1200, xl: 1440 },
+  },
   typography: {
     fontFamily: `"Plus Jakarta Sans", "Inter", "Roboto", "Helvetica", "Arial", sans-serif`,
   },
   components: {
+    MuiContainer: {
+      styleOverrides: {
+        maxWidthXl: { maxWidth: "90rem" },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: { textTransform: "none", fontWeight: 600, borderRadius: 10 },
@@ -37,7 +45,8 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 12,
-          boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)",
+          boxShadow: "none",
+          border: "1px solid rgba(231, 234, 243, 0.95)",
         },
       },
     },
