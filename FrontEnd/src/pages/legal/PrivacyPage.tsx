@@ -71,10 +71,10 @@ export default function PrivacyPage() {
 function Section({ title, children }: { title: string; children: string }) {
   return (
     <Box>
-      <Typography variant="h6" fontWeight={700} color="text.primary" mb={1}>
+      <Typography variant="h6" fontWeight={700} color="text.primary" mb={1} sx={{ textAlign: "left" }}>
         {title}
       </Typography>
-      <Typography variant="body2" color="text.primary" sx={{ lineHeight: 1.8 }}>
+      <Typography variant="body2" color="text.primary" sx={{ lineHeight: 1.8, textAlign: "left", fontSize: "0.7875rem" }}>
         {children}
       </Typography>
     </Box>

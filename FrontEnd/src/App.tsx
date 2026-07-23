@@ -9,6 +9,7 @@ import EventsListPage from "./pages/events/EventsListPage";
 import EventDetailPage from "./pages/events/EventDetailPage";
 import OrderConfirmationPage from "./pages/checkout/OrderConfirmationPage";
 import MyTicketsPage from "./pages/tickets/MyTicketsPage";
+import MyTicketsEventPage from "./pages/tickets/MyTicketsEventPage";
 import ValidateTicketPage from "./pages/admin/ValidateTicketPage";
 import AdminEventsListPage from "./pages/admin/AdminEventsListPage";
 import EventFormPage from "./pages/admin/EventFormPage";
@@ -35,6 +36,7 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route path="/pedidos/:id" element={<OrderConfirmationPage />} />
           <Route path="/meus-ingressos" element={<MyTicketsPage />} />
+          <Route path="/meus-ingressos/:eventId" element={<MyTicketsEventPage />} />
           <Route path="/conta" element={<AccountPage />} />
         </Route>
 
