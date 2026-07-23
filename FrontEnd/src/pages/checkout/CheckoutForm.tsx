@@ -53,8 +53,16 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-      <Typography variant="h6" fontWeight={700} color="text.primary" mb={2}>Dados dos ingressos</Typography>
-      <Typography variant="body2" color="text.secondary" mb={3}>
+      <Typography
+        variant="overline"
+        fontWeight={700}
+        color="text.secondary"
+        letterSpacing="0.04em"
+        sx={{ display: "block", textAlign: "left", mb: 1 }}
+      >
+        Dados dos ingressos
+      </Typography>
+      <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.7875rem" }}>
         Cada ingresso deve ter dados próprios. Não é permitido repetir email, celular, ou a combinação nome + celular.
       </Typography>
 
