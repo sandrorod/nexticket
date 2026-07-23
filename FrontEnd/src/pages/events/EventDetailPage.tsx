@@ -98,11 +98,11 @@ export default function EventDetailPage() {
               <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                 Localização
               </Typography>
-              <Typography variant="body2" color="text.primary" mt={1} sx={{ textAlign: "left" }}>
+              <Typography variant="body2" color="text.primary" mt={1} sx={{ textAlign: "left", fontSize: "0.7875rem" }}>
                 <strong>Local:</strong> {event.local}
               </Typography>
               {(event.endereco || event.cidade) && (
-                <Typography variant="body2" color="text.secondary" mt={0.5} sx={{ textAlign: "left" }}>
+                <Typography variant="body2" color="text.secondary" mt={0.5} sx={{ textAlign: "left", fontSize: "0.7875rem" }}>
                   <strong>Endereço:</strong> {[
                     event.endereco && event.numero ? `${event.endereco}, ${event.numero}` : event.endereco,
                     event.bairro,
