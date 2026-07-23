@@ -1,6 +1,13 @@
 import { Outlet, Link as RouterLink, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
+import LoginIcon from "@mui/icons-material/Login";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { useAuthStore } from "../store/authStore";
+import Footer from "./Footer";
 
 const navLinkSx = {
   color: "text.secondary",
@@ -8,6 +15,7 @@ const navLinkSx = {
   fontSize: "0.875rem",
   borderRadius: "0.375rem",
   px: 1.25,
+  gap: 0.5,
   "&:hover": { color: "primary.main", backgroundColor: "rgba(55, 125, 255, 0.06)" },
 };
 
@@ -29,54 +37,69 @@ export default function Layout() {
         sx={{
           backgroundColor: "#fff",
           borderBottom: "1px solid rgba(231, 234, 243, 0.9)",
-          boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.1)",
         }}
       >
-        <Toolbar sx={{ gap: 1, minHeight: "4.75rem" }}>
+        <Toolbar sx={{ gap: 0.5, minHeight: "4.75rem", px: { xs: 2, md: 4 } }}>
           <Typography
             variant="h6"
             fontWeight={800}
             component={RouterLink}
             to="/eventos"
-            sx={{ textDecoration: "none", color: "primary.main", flexGrow: 1 }}
+            sx={{ textDecoration: "none", color: "text.primary", flexGrow: 1, letterSpacing: "-0.02em" }}
           >
-            NexTicket
+            <Box component="span" sx={{ color: "primary.main" }}>X</Box>next
           </Typography>
 
-          {role !== "Validador" && (
-            <Button component={RouterLink} to="/eventos" sx={navLinkSx}>Eventos</Button>
-          )}
-
-          {token && role !== "Validador" && (
-            <Button component={RouterLink} to="/meus-ingressos" sx={navLinkSx}>Meus ingressos</Button>
+          {role === "Administrador" && (
+            <Button component={RouterLink} to="/admin/eventos/novo" startIcon={<AddCircleOutlineIcon />} sx={navLinkSx}>
+              Criar evento
+            </Button>
           )}
           {role === "Administrador" && (
-            <Button component={RouterLink} to="/admin/eventos" sx={navLinkSx}>Meus eventos</Button>
+            <Button component={RouterLink} to="/admin/eventos" startIcon={<EventNoteIcon />} sx={navLinkSx}>
+              Meus eventos
+            </Button>
           )}
           {role === "Administrador" && (
-            <Button component={RouterLink} to="/admin/funcionarios" sx={navLinkSx}>Funcionários</Button>
+            <Button component={RouterLink} to="/admin/funcionarios" startIcon={<PeopleAltOutlinedIcon />} sx={navLinkSx}>
+              Funcionários
+            </Button>
           )}
           {(role === "Administrador" || role === "Validador") && (
-            <Button component={RouterLink} to="/admin/validar" sx={navLinkSx}>Validar ingresso</Button>
+            <Button component={RouterLink} to="/admin/validar" startIcon={<QrCodeScannerIcon />} sx={navLinkSx}>
+              Validar ingresso
+            </Button>
+          )}
+          {token && role !== "Validador" && (
+            <Button component={RouterLink} to="/meus-ingressos" startIcon={<ConfirmationNumberOutlinedIcon />} sx={navLinkSx}>
+              Meus ingressos
+            </Button>
           )}
 
           <Box flexGrow={0} />
 
           {token ? (
             <>
-              <Typography variant="body2" color="text.secondary" alignSelf="center" sx={{ mr: 1 }}>
+              <Typography variant="body2" color="text.secondary" alignSelf="center" sx={{ mx: 1.5 }}>
                 {nome}
               </Typography>
               <Button onClick={handleLogout} sx={navLinkSx}>Sair</Button>
             </>
           ) : (
-            <Button component={RouterLink} to="/login" variant="contained" sx={{ borderRadius: "0.5rem", px: 2.5 }}>
+            <Button
+              component={RouterLink}
+              to="/login"
+              variant="contained"
+              startIcon={<LoginIcon />}
+              sx={{ borderRadius: "0.5rem", px: 2.5, ml: 1 }}
+            >
               Entrar
             </Button>
           )}
         </Toolbar>
       </AppBar>
       <Outlet />
+      <Footer />
     </>
   );
 }

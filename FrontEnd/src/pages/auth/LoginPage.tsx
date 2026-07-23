@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { Box, Button, Container, Paper, TextField, Typography, Alert, Link } from "@mui/material";
+import { Box, Button, Container, Paper, TextField, Typography, Alert, Divider } from "@mui/material";
 import { loginUser } from "../../api/auth";
 import { useAuthStore } from "../../store/authStore";
 
@@ -38,23 +38,43 @@ export default function LoginPage() {
           }}
           elevation={0}
         >
-          <Typography variant="h5" fontWeight={800} color="text.primary" mb={3} textAlign="center">
-            Entrar no NexTicket
+          <Typography variant="h5" fontWeight={800} color="text.primary" mb={3}>
+            Acessar conta
           </Typography>
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
           <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
-            <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required fullWidth />
+            <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required fullWidth size="medium" />
             <TextField label="Senha" type="password" value={senha} onChange={(e) => setSenha(e.target.value)} required fullWidth />
-            <Button type="submit" variant="contained" size="large" disabled={loading} sx={{ borderRadius: "0.5rem", py: 1.2 }}>
-              {loading ? "Entrando..." : "Entrar"}
+            <Typography variant="body2" textAlign="right">
+              <Box component={RouterLink} to="/esqueci-senha" sx={{ color: "primary.main", textDecoration: "none" }}>
+                Esqueceu sua senha?
+              </Box>
+            </Typography>
+            <Button type="submit" variant="contained" size="large" disabled={loading} fullWidth sx={{ borderRadius: "0.5rem", py: 1.4 }}>
+              {loading ? "Entrando..." : "Acessar"}
+            </Button>
+
+            <Divider sx={{ my: 1 }}>
+              <Typography variant="body2" color="text.secondary">Ainda não tem conta?</Typography>
+            </Divider>
+
+            <Button
+              component={RouterLink}
+              to="/registro"
+              variant="text"
+              fullWidth
+              sx={{
+                borderRadius: "0.5rem",
+                py: 1.4,
+                backgroundColor: "rgba(55, 125, 255, 0.08)",
+                color: "primary.main",
+                fontWeight: 700,
+                "&:hover": { backgroundColor: "rgba(55, 125, 255, 0.16)" },
+              }}
+            >
+              Cadastrar-se
             </Button>
           </Box>
-          <Typography variant="body2" mt={2} textAlign="center">
-            <Link component={RouterLink} to="/esqueci-senha" color="primary.main">Esqueceu sua senha?</Link>
-          </Typography>
-          <Typography variant="body2" mt={1} textAlign="center" color="text.secondary">
-            Não tem conta? <Link component={RouterLink} to="/registro" color="primary.main">Cadastre-se</Link>
-          </Typography>
         </Paper>
       </Container>
     </Box>

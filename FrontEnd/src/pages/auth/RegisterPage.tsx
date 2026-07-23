@@ -36,8 +36,8 @@ export default function RegisterPage() {
         sx={{ p: { xs: 3, md: 5 }, borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }}
         elevation={0}
       >
-        <Typography variant="h5" fontWeight={800} color="text.primary" mb={3} textAlign="center">
-          Criar conta
+        <Typography variant="h5" fontWeight={800} color="text.primary" mb={3}>
+          Criar sua conta
         </Typography>
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         <Box component="form" onSubmit={handleSubmit}>
