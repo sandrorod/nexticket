@@ -98,42 +98,43 @@ export default function AdminEventDetailPage() {
   };
 
   return (
+    <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container sx={{ py: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={3}>
         <Box>
-          <Chip label={event.status} size="small" sx={{ mb: 1 }} />
-          <Typography variant="h4" fontWeight={700}>{event.nome}</Typography>
+          <Chip label={event.status} size="small" sx={{ mb: 1, fontWeight: 700 }} />
+          <Typography variant="h4" fontWeight={800} color="text.primary">{event.nome}</Typography>
           <Typography color="text.secondary">{event.local} · {formatarData(event.data)} às {formatarHora(event.hora)}</Typography>
         </Box>
         <Box display="flex" gap={1}>
-          <Button component={RouterLink} to={`/admin/eventos/${id}/editar`} variant="outlined">Editar</Button>
+          <Button component={RouterLink} to={`/admin/eventos/${id}/editar`} variant="outlined" sx={{ borderRadius: "0.5rem" }}>Editar</Button>
           {event.status !== "Cancelado" && (
-            <Button color="error" variant="outlined" onClick={handleCancelEvent}>Cancelar evento</Button>
+            <Button color="error" variant="outlined" onClick={handleCancelEvent} sx={{ borderRadius: "0.5rem" }}>Cancelar evento</Button>
           )}
         </Box>
       </Box>
 
       <Grid container spacing={2} mb={4}>
         <Grid item xs={6} sm={3}>
-          <Paper variant="outlined" sx={{ p: 2, textAlign: "center" }}>
-            <Typography variant="h5" fontWeight={700}>{event.totalIngressosVendidos}</Typography>
+          <Paper sx={{ p: 2, textAlign: "center", borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
+            <Typography variant="h5" fontWeight={700} color="text.primary">{event.totalIngressosVendidos}</Typography>
             <Typography variant="body2" color="text.secondary">Ingressos vendidos</Typography>
           </Paper>
         </Grid>
         <Grid item xs={6} sm={3}>
-          <Paper variant="outlined" sx={{ p: 2, textAlign: "center" }}>
-            <Typography variant="h5" fontWeight={700}>R$ {event.receitaTotal.toFixed(2)}</Typography>
+          <Paper sx={{ p: 2, textAlign: "center", borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
+            <Typography variant="h5" fontWeight={700} color="primary.main">R$ {event.receitaTotal.toFixed(2)}</Typography>
             <Typography variant="body2" color="text.secondary">Receita total</Typography>
           </Paper>
         </Grid>
       </Grid>
 
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6" fontWeight={600}>Lotes</Typography>
-        <Button startIcon={<AddIcon />} variant="contained" onClick={openNewLot}>Novo lote</Button>
+        <Typography variant="h6" fontWeight={700} color="text.primary">Lotes</Typography>
+        <Button startIcon={<AddIcon />} variant="contained" onClick={openNewLot} sx={{ borderRadius: "0.5rem" }}>Novo lote</Button>
       </Box>
 
-      <Paper variant="outlined">
+      <Paper sx={{ borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
         <Table>
           <TableHead>
             <TableRow>
@@ -152,7 +153,7 @@ export default function AdminEventDetailPage() {
                 <TableCell align="right">R$ {lot.preco.toFixed(2)}</TableCell>
                 <TableCell align="right">{lot.quantidadeVendida} / {lot.quantidade}</TableCell>
                 <TableCell align="right">{lot.maximoPorUsuario}</TableCell>
-                <TableCell><Chip label={lot.status} size="small" /></TableCell>
+                <TableCell><Chip label={lot.status} size="small" sx={{ fontWeight: 700 }} /></TableCell>
                 <TableCell align="right">
                   <Button size="small" onClick={() => openEditLot(lot)}>Editar</Button>
                 </TableCell>
@@ -170,6 +171,7 @@ export default function AdminEventDetailPage() {
           </TableBody>
         </Table>
       </Paper>
+    </Container>
 
       <Dialog open={lotDialogOpen} onClose={() => setLotDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{editingLot ? "Editar lote" : "Novo lote"}</DialogTitle>
@@ -211,6 +213,6 @@ export default function AdminEventDetailPage() {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </Box>
   );
 }

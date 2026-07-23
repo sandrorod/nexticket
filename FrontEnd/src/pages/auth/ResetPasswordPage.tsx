@@ -37,21 +37,30 @@ export default function ResetPasswordPage() {
 
   if (!token) {
     return (
-      <Container maxWidth="xs" sx={{ mt: 10 }}>
-        <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: 3 }} elevation={0} variant="outlined">
+      <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)", display: "flex", alignItems: "center" }}>
+      <Container maxWidth="xs">
+        <Paper
+          sx={{ p: { xs: 3, md: 5 }, borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }}
+          elevation={0}
+        >
           <Alert severity="error">Link de redefinição inválido.</Alert>
           <Typography variant="body2" mt={3} textAlign="center">
-            <Link component={RouterLink} to="/esqueci-senha">Solicitar novo link</Link>
+            <Link component={RouterLink} to="/esqueci-senha" color="primary.main">Solicitar novo link</Link>
           </Typography>
         </Paper>
       </Container>
+      </Box>
     );
   }
 
   return (
-    <Container maxWidth="xs" sx={{ mt: 10 }}>
-      <Paper sx={{ p: 4 }} elevation={2}>
-        <Typography variant="h5" fontWeight={700} mb={3}>
+    <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)", display: "flex", alignItems: "center" }}>
+    <Container maxWidth="xs">
+      <Paper
+        sx={{ p: { xs: 3, md: 5 }, borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }}
+        elevation={0}
+      >
+        <Typography variant="h5" fontWeight={800} color="text.primary" mb={3} textAlign="center">
           Criar nova senha
         </Typography>
 
@@ -77,12 +86,13 @@ export default function ResetPasswordPage() {
               required
               fullWidth
             />
-            <Button type="submit" variant="contained" size="large" disabled={loading}>
+            <Button type="submit" variant="contained" size="large" disabled={loading} sx={{ borderRadius: "0.5rem", py: 1.2 }}>
               {loading ? "Salvando..." : "Redefinir senha"}
             </Button>
           </Box>
         )}
       </Paper>
     </Container>
+    </Box>
   );
 }

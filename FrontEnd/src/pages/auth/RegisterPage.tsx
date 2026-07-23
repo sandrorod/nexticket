@@ -30,9 +30,13 @@ export default function RegisterPage() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 6 }}>
-      <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: 3 }} elevation={0} variant="outlined">
-        <Typography variant="h5" fontWeight={700} mb={3}>
+    <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)", py: 6 }}>
+    <Container maxWidth="sm">
+      <Paper
+        sx={{ p: { xs: 3, md: 5 }, borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }}
+        elevation={0}
+      >
+        <Typography variant="h5" fontWeight={800} color="text.primary" mb={3} textAlign="center">
           Criar conta
         </Typography>
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -62,14 +66,15 @@ export default function RegisterPage() {
               <TextField label="CPF (opcional)" value={form.cpf} onChange={update("cpf")} fullWidth />
             </Grid>
           </Grid>
-          <Button type="submit" variant="contained" size="large" fullWidth disabled={loading} sx={{ mt: 3 }}>
+          <Button type="submit" variant="contained" size="large" fullWidth disabled={loading} sx={{ mt: 3, borderRadius: "0.5rem", py: 1.2 }}>
             {loading ? "Criando..." : "Criar conta"}
           </Button>
         </Box>
-        <Typography variant="body2" mt={3} textAlign="center">
-          Já tem conta? <Link component={RouterLink} to="/login">Entrar</Link>
+        <Typography variant="body2" mt={3} textAlign="center" color="text.secondary">
+          Já tem conta? <Link component={RouterLink} to="/login" color="primary.main">Entrar</Link>
         </Typography>
       </Paper>
     </Container>
+    </Box>
   );
 }

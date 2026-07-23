@@ -53,7 +53,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-      <Typography variant="h6" fontWeight={600} mb={2}>Dados dos ingressos</Typography>
+      <Typography variant="h6" fontWeight={700} color="text.primary" mb={2}>Dados dos ingressos</Typography>
       <Typography variant="body2" color="text.secondary" mb={3}>
         Cada ingresso deve ter dados próprios. Não é permitido repetir email, celular, ou a combinação nome + celular.
       </Typography>
@@ -62,9 +62,9 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
 
       <Box display="flex" flexDirection="column" gap={2} mb={3}>
         {holders.map((holder, i) => (
-          <Card key={i} variant="outlined">
+          <Card key={i} sx={{ border: "1px solid rgba(231, 234, 243, 0.9)" }}>
             <CardContent>
-              <Typography fontWeight={600} mb={2}>Ingresso {i + 1}</Typography>
+              <Typography fontWeight={700} color="text.primary" mb={2}>Ingresso {i + 1}</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={7}>
                   <TextField label="Nome completo" value={holder.nome} onChange={(e) => updateHolder(i, "nome", e.target.value)} required fullWidth />
@@ -86,11 +86,11 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
 
       <Divider sx={{ mb: 2 }} />
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h6">Total</Typography>
-        <Typography variant="h6" fontWeight={700}>R$ {total.toFixed(2)}</Typography>
+        <Typography variant="h6" color="text.primary">Total</Typography>
+        <Typography variant="h6" fontWeight={700} color="primary.main">R$ {total.toFixed(2)}</Typography>
       </Box>
 
-      <Button type="submit" variant="contained" size="large" fullWidth disabled={loading}>
+      <Button type="submit" variant="contained" size="large" fullWidth disabled={loading} sx={{ borderRadius: "0.5rem", py: 1.2 }}>
         {loading ? "Processando..." : "Finalizar compra"}
       </Button>
     </Box>

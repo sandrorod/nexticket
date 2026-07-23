@@ -14,19 +14,25 @@ export default function MyTicketsPage() {
   const { data: tickets, isLoading } = useQuery({ queryKey: ["myTickets"], queryFn: getMyTickets });
 
   return (
+    <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container sx={{ py: 4 }}>
-      <Typography variant="h4" fontWeight={700} mb={3}>Meus ingressos</Typography>
+      <Typography variant="h4" fontWeight={800} color="text.primary" mb={3}>Meus ingressos</Typography>
 
-      {isLoading && <Typography>Carregando...</Typography>}
+      {isLoading && <Typography color="text.secondary">Carregando...</Typography>}
       {!isLoading && tickets?.length === 0 && <Typography color="text.secondary">Você ainda não possui ingressos.</Typography>}
 
       <Grid container spacing={3}>
         {tickets?.map((ticket) => (
           <Grid item xs={12} sm={6} md={4} key={ticket.id}>
-            <Card elevation={2}>
+            <Card>
               <CardContent>
-                <Chip label={ticket.status} color={statusColor[ticket.status] ?? "default"} size="small" sx={{ mb: 1 }} />
-                <Typography variant="h6" fontWeight={600}>{ticket.eventNome}</Typography>
+                <Chip
+                  label={ticket.status}
+                  color={statusColor[ticket.status] ?? "default"}
+                  size="small"
+                  sx={{ mb: 1, fontWeight: 700 }}
+                />
+                <Typography variant="h6" fontWeight={700} color="text.primary">{ticket.eventNome}</Typography>
                 <Typography variant="body2" color="text.secondary">{ticket.eventLocal}</Typography>
                 <Typography variant="body2" color="text.secondary" mb={2}>
                   {formatarData(ticket.eventData)} às {formatarHora(ticket.eventHora)}
@@ -34,8 +40,8 @@ export default function MyTicketsPage() {
 
                 <Divider sx={{ mb: 2 }} />
 
-                <Typography variant="body2"><strong>Nome:</strong> {ticket.nome}</Typography>
-                <Typography variant="body2" mb={2}><strong>Setor:</strong> {ticket.lotNome}</Typography>
+                <Typography variant="body2" color="text.primary"><strong>Nome:</strong> {ticket.nome}</Typography>
+                <Typography variant="body2" color="text.primary" mb={2}><strong>Setor:</strong> {ticket.lotNome}</Typography>
 
                 <Box display="flex" justifyContent="center" mb={1}>
                   <QRCodeSVG value={ticket.token} size={160} />
@@ -49,5 +55,6 @@ export default function MyTicketsPage() {
         ))}
       </Grid>
     </Container>
+    </Box>
   );
 }

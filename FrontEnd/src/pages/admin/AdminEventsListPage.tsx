@@ -19,18 +19,19 @@ export default function AdminEventsListPage() {
   const { data: events, isLoading } = useQuery({ queryKey: ["admin-events"], queryFn: getEvents });
 
   return (
+    <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container sx={{ py: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" fontWeight={700}>Meus eventos</Typography>
-        <Button component={RouterLink} to="/admin/eventos/novo" variant="contained" startIcon={<AddIcon />}>
+        <Typography variant="h4" fontWeight={800} color="text.primary">Meus eventos</Typography>
+        <Button component={RouterLink} to="/admin/eventos/novo" variant="contained" startIcon={<AddIcon />} sx={{ borderRadius: "0.5rem" }}>
           Novo evento
         </Button>
       </Box>
 
-      {isLoading && <Typography>Carregando...</Typography>}
+      {isLoading && <Typography color="text.secondary">Carregando...</Typography>}
 
       {!isLoading && (
-        <Paper variant="outlined">
+        <Paper sx={{ borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
           <Table>
             <TableHead>
               <TableRow>
@@ -50,7 +51,7 @@ export default function AdminEventsListPage() {
                   <TableCell>{formatarData(ev.data)}</TableCell>
                   <TableCell>{ev.local}</TableCell>
                   <TableCell>
-                    <Chip label={ev.status} size="small" color={statusColor[ev.status] ?? "default"} />
+                    <Chip label={ev.status} size="small" color={statusColor[ev.status] ?? "default"} sx={{ fontWeight: 700 }} />
                   </TableCell>
                   <TableCell align="right">{ev.totalIngressosVendidos}</TableCell>
                   <TableCell align="right">R$ {ev.receitaTotal.toFixed(2)}</TableCell>
@@ -75,5 +76,6 @@ export default function AdminEventsListPage() {
         </Paper>
       )}
     </Container>
+    </Box>
   );
 }

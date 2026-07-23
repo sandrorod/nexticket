@@ -52,23 +52,24 @@ export default function StaffPage() {
   };
 
   return (
+    <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container sx={{ py: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Box>
-          <Typography variant="h4" fontWeight={700}>Funcionários</Typography>
+          <Typography variant="h4" fontWeight={800} color="text.primary">Funcionários</Typography>
           <Typography variant="body2" color="text.secondary">
             Contas responsáveis apenas pela validação de ingressos.
           </Typography>
         </Box>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={openDialog}>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={openDialog} sx={{ borderRadius: "0.5rem" }}>
           Novo funcionário
         </Button>
       </Box>
 
-      {isLoading && <Typography>Carregando...</Typography>}
+      {isLoading && <Typography color="text.secondary">Carregando...</Typography>}
 
       {!isLoading && (
-        <Paper variant="outlined">
+        <Paper sx={{ borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
           <Table>
             <TableHead>
               <TableRow>
@@ -86,7 +87,7 @@ export default function StaffPage() {
                   <TableCell>{s.email}</TableCell>
                   <TableCell>{s.telefone}</TableCell>
                   <TableCell>
-                    <Chip label={s.ativo ? "Ativo" : "Inativo"} size="small" color={s.ativo ? "success" : "default"} />
+                    <Chip label={s.ativo ? "Ativo" : "Inativo"} size="small" color={s.ativo ? "success" : "default"} sx={{ fontWeight: 700 }} />
                   </TableCell>
                   <TableCell align="right">
                     <Button size="small" color={s.ativo ? "error" : "success"} onClick={() => handleToggleActive(s.id, s.ativo)}>
@@ -108,6 +109,7 @@ export default function StaffPage() {
           </Table>
         </Paper>
       )}
+    </Container>
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Novo funcionário</DialogTitle>
@@ -143,6 +145,6 @@ export default function StaffPage() {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </Box>
   );
 }

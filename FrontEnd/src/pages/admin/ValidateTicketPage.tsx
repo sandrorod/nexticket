@@ -46,8 +46,9 @@ export default function ValidateTicketPage() {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
-      <Typography variant="h4" fontWeight={700} mb={3}>Validar ingresso</Typography>
+    <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)", py: 4 }}>
+    <Container maxWidth="sm">
+      <Typography variant="h4" fontWeight={800} color="text.primary" mb={3}>Validar ingresso</Typography>
 
       <ToggleButtonGroup
         exclusive
@@ -72,23 +73,23 @@ export default function ValidateTicketPage() {
       )}
 
       {preview && (
-        <Paper sx={{ p: 3, mt: 3 }} elevation={2}>
+        <Paper sx={{ p: 3, mt: 3, borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
           <Alert severity={preview.valido ? "success" : "error"} sx={{ mb: 2 }}>
             {preview.mensagem}
           </Alert>
 
           {preview.nome && (
-            <>
+            <Box color="text.primary">
               <Typography><strong>Nome:</strong> {preview.nome}</Typography>
               <Typography><strong>Evento:</strong> {preview.eventoNome}</Typography>
               <Typography><strong>Horário:</strong> {preview.hora}</Typography>
               <Typography><strong>Status:</strong> {preview.status}</Typography>
               {preview.dataUso && <Typography><strong>Usado em:</strong> {preview.dataUso}</Typography>}
-            </>
+            </Box>
           )}
 
           {preview.valido && preview.status !== "Utilizado" && (
-            <Button variant="contained" color="success" fullWidth sx={{ mt: 2 }} onClick={handleConfirm} disabled={loading}>
+            <Button variant="contained" color="success" fullWidth sx={{ mt: 2, borderRadius: "0.5rem" }} onClick={handleConfirm} disabled={loading}>
               VALIDAR
             </Button>
           )}
@@ -99,5 +100,6 @@ export default function ValidateTicketPage() {
         </Paper>
       )}
     </Container>
+    </Box>
   );
 }

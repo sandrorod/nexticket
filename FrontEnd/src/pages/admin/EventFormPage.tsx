@@ -87,12 +87,13 @@ export default function EventFormPage() {
   };
 
   return (
+    <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container maxWidth={false} sx={{ py: 4 }}>
-      <Typography variant="h4" fontWeight={700} mb={3}>
+      <Typography variant="h4" fontWeight={800} color="text.primary" mb={3}>
         {isEdit ? "Editar evento" : "Novo evento"}
       </Typography>
 
-      <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: 3 }} elevation={0} variant="outlined">
+      <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
         {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
         <Box component="form" onSubmit={handleSubmit}>
@@ -188,12 +189,13 @@ export default function EventFormPage() {
 
           <Box display="flex" justifyContent="flex-end" gap={2}>
             <Button variant="text" onClick={() => navigate(-1)}>Cancelar</Button>
-            <Button type="submit" variant="contained" size="large" disabled={loading} sx={{ px: 4 }}>
+            <Button type="submit" variant="contained" size="large" disabled={loading} sx={{ px: 4, borderRadius: "0.5rem" }}>
               {loading ? "Salvando..." : isEdit ? "Salvar alterações" : "Criar evento"}
             </Button>
           </Box>
         </Box>
       </Paper>
     </Container>
+    </Box>
   );
 }
