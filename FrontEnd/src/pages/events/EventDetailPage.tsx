@@ -98,11 +98,11 @@ export default function EventDetailPage() {
               <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                 Localização
               </Typography>
-              <Typography variant="body2" color="text.primary" mt={1}>
+              <Typography variant="body2" color="text.primary" mt={1} sx={{ textAlign: "left" }}>
                 <strong>Local:</strong> {event.local}
               </Typography>
               {(event.endereco || event.cidade) && (
-                <Typography variant="body2" color="text.secondary" mt={0.5}>
+                <Typography variant="body2" color="text.secondary" mt={0.5} sx={{ textAlign: "left" }}>
                   <strong>Endereço:</strong> {[
                     event.endereco && event.numero ? `${event.endereco}, ${event.numero}` : event.endereco,
                     event.bairro,
@@ -264,7 +264,7 @@ export default function EventDetailPage() {
                   <Divider sx={{ my: 1.5 }} />
                   <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
                     {event.orientacoesGerais.split("\n").filter(Boolean).map((linha, i) => (
-                      <Typography key={i} component="li" variant="body2" color="text.primary" sx={{ mb: 1.2 }}>
+                      <Typography key={i} component="li" variant="body2" color="text.primary" sx={{ mb: 1.2, textAlign: "left" }}>
                         {linha}
                       </Typography>
                     ))}
