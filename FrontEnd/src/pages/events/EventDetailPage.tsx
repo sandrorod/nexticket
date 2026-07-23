@@ -177,7 +177,7 @@ export default function EventDetailPage() {
                 />
               )}
             </Stack>
-            <Typography variant="body1" color="primary.main" fontWeight={600} mb={3}>
+            <Typography variant="body1" color="primary.main" fontWeight={600} mb={3} sx={{ textAlign: "left", fontSize: "0.9rem" }}>
               {formatarData(event.data).toUpperCase()} · {formatarHora(event.hora)}
             </Typography>
 
