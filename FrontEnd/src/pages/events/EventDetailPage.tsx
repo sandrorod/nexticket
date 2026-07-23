@@ -251,7 +251,7 @@ export default function EventDetailPage() {
                   Informações sobre o evento
                 </Typography>
                 <Divider sx={{ my: 1.5 }} />
-                <Typography variant="body2" color="text.primary" sx={{ whiteSpace: "pre-line", lineHeight: 1.8 }}>{event.descricao}</Typography>
+                <Typography variant="body2" color="text.primary" sx={{ whiteSpace: "pre-line", lineHeight: 1.8, textAlign: "left" }}>{event.descricao}</Typography>
               </CardContent>
             </Card>
 
