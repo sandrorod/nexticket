@@ -143,7 +143,7 @@ export default function EventsListPage() {
                       component="img"
                       image={ev.imagemUrl}
                       alt={ev.nome}
-                      sx={{ aspectRatio: "1 / 1", objectFit: "cover" }}
+                      sx={{ width: "100%", height: "auto", display: "block" }}
                     />
                   )}
                   <CardContent>

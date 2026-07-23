@@ -103,7 +103,7 @@ export default function AdminEventDetailPage() {
       <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={3}>
         <Box>
           <Chip label={event.status} size="small" sx={{ mb: 1, fontWeight: 700 }} />
-          <Typography variant="h4" fontWeight={800} color="text.primary">{event.nome}</Typography>
+          <Typography variant="h4" fontWeight={800} color="text.primary" sx={{ fontSize: "1.7rem" }}>{event.nome}</Typography>
           <Typography color="text.secondary">{event.local} · {formatarData(event.data)} às {formatarHora(event.hora)}</Typography>
         </Box>
         <Box display="flex" gap={1}>

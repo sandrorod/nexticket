@@ -18,7 +18,7 @@ export default function MyTicketsPage() {
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
       <Container sx={{ py: 4 }}>
-        <Typography variant="h4" fontWeight={800} color="text.primary" mb={3}>Meus ingressos</Typography>
+        <Typography variant="h4" fontWeight={800} color="text.primary" mb={3} sx={{ fontSize: "1.7rem" }}>Meus ingressos</Typography>
 
         {isLoading && <Typography color="text.secondary">Carregando...</Typography>}
         {!isLoading && tickets?.length === 0 && <Typography color="text.secondary">Você ainda não possui ingressos.</Typography>}

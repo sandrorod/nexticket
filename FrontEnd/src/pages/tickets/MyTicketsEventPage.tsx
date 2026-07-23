@@ -104,7 +104,7 @@ export default function MyTicketsEventPage() {
 
         {primeiro && (
           <>
-            <Typography variant="h4" fontWeight={800} color="text.primary" mb={0.5}>
+            <Typography variant="h4" fontWeight={800} color="text.primary" mb={0.5} sx={{ fontSize: "1.53rem" }}>
               {primeiro.eventNome}
             </Typography>
             <Typography variant="body2" color="text.secondary" mb={3}>

@@ -145,7 +145,7 @@ export default function EventFormPage() {
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container maxWidth={false} sx={{ py: 4, maxWidth: "86.4rem" }}>
-      <Typography variant="h4" fontWeight={800} color="text.primary" mb={3}>
+      <Typography variant="h4" fontWeight={800} color="text.primary" mb={3} sx={{ fontSize: "1.7rem" }}>
         {isEdit ? "Editar evento" : "Novo evento"}
       </Typography>
 

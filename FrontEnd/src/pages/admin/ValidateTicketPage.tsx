@@ -48,7 +48,7 @@ export default function ValidateTicketPage() {
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)", py: 4 }}>
     <Container maxWidth="sm">
-      <Typography variant="h4" fontWeight={800} color="text.primary" mb={3}>Validar ingresso</Typography>
+      <Typography variant="h4" fontWeight={800} color="text.primary" mb={3} sx={{ fontSize: "1.7rem" }}>Validar ingresso</Typography>
 
       <ToggleButtonGroup
         exclusive

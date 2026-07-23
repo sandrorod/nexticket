@@ -56,7 +56,7 @@ export default function StaffPage() {
     <Container sx={{ py: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Box>
-          <Typography variant="h4" fontWeight={800} color="text.primary">Funcionários</Typography>
+          <Typography variant="h4" fontWeight={800} color="text.primary" sx={{ fontSize: "1.7rem" }}>Funcionários</Typography>
           <Typography variant="body2" color="text.secondary">
             Contas responsáveis apenas pela validação de ingressos.
           </Typography>

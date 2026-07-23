@@ -22,7 +22,7 @@ export default function AdminEventsListPage() {
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container sx={{ py: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" fontWeight={800} color="text.primary">Meus eventos</Typography>
+        <Typography variant="h4" fontWeight={800} color="text.primary" sx={{ fontSize: "1.7rem" }}>Meus eventos</Typography>
         <Button component={RouterLink} to="/admin/eventos/novo" variant="contained" startIcon={<AddIcon />} sx={{ borderRadius: "0.5rem" }}>
           Novo evento
         </Button>

@@ -4,7 +4,7 @@ export default function PrivacyPage() {
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
       <Container maxWidth="md" sx={{ py: 4 }}>
-        <Typography variant="h4" fontWeight={800} color="text.primary" mb={1}>
+        <Typography variant="h4" fontWeight={800} color="text.primary" mb={1} sx={{ fontSize: "1.7rem" }}>
           Política de Privacidade
         </Typography>
         <Typography variant="body2" color="text.secondary" mb={4}>
