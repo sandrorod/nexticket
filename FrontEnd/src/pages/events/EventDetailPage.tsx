@@ -57,14 +57,13 @@ export default function EventDetailPage() {
               <Box
                 sx={{
                   width: "100%",
-                  aspectRatio: "1 / 1",
                   borderRadius: "0.75rem",
                   overflow: "hidden",
                   mb: 3,
                   boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)",
                 }}
               >
-                <Box component="img" src={event.imagemUrl} alt={event.nome} sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <Box component="img" src={event.imagemUrl} alt={event.nome} sx={{ width: "100%", height: "auto", display: "block" }} />
               </Box>
             )}
 

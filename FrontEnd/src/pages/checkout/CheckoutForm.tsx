@@ -75,16 +75,44 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
               <Typography fontWeight={700} color="text.primary" mb={2}>Ingresso {i + 1}</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={7}>
-                  <TextField label="Nome completo" value={holder.nome} onChange={(e) => updateHolder(i, "nome", e.target.value)} required fullWidth />
+                  <TextField
+                    label="Nome completo"
+                    value={holder.nome}
+                    onChange={(e) => updateHolder(i, "nome", e.target.value)}
+                    required
+                    fullWidth
+                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={5}>
-                  <TextField label="Telefone" value={holder.telefone} onChange={(e) => updateHolder(i, "telefone", e.target.value)} required fullWidth />
+                  <TextField
+                    label="Telefone"
+                    value={holder.telefone}
+                    onChange={(e) => updateHolder(i, "telefone", e.target.value)}
+                    required
+                    fullWidth
+                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={8}>
-                  <TextField label="Email" type="email" value={holder.email} onChange={(e) => updateHolder(i, "email", e.target.value)} required fullWidth />
+                  <TextField
+                    label="Email"
+                    type="email"
+                    value={holder.email}
+                    onChange={(e) => updateHolder(i, "email", e.target.value)}
+                    required
+                    fullWidth
+                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <TextField label="CPF (opcional)" value={holder.cpf} onChange={(e) => updateHolder(i, "cpf", e.target.value)} fullWidth />
+                  <TextField
+                    label="CPF (opcional)"
+                    value={holder.cpf}
+                    onChange={(e) => updateHolder(i, "cpf", e.target.value)}
+                    fullWidth
+                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                  />
                 </Grid>
               </Grid>
             </CardContent>
