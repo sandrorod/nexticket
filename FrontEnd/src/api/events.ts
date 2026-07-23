@@ -22,6 +22,17 @@ export interface EventPayload {
   vendaFim: string;
   maximoPorCpf: number;
   maximoPorUsuario: number;
+  cep?: string;
+  endereco?: string;
+  numero?: string;
+  bairro?: string;
+  cidade?: string;
+  estado?: string;
+  classificacao?: string;
+  contatoWhatsapp?: string;
+  contatoTelefone?: string;
+  contatoEmail?: string;
+  orientacoesGerais?: string;
 }
 
 export const createEvent = (payload: EventPayload) =>

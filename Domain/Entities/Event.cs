@@ -19,6 +19,18 @@ public class Event : BaseEntity
     public int MaximoPorCpf { get; set; }
     public int MaximoPorUsuario { get; set; }
 
+    public string? Cep { get; set; }
+    public string? Endereco { get; set; }
+    public string? Numero { get; set; }
+    public string? Bairro { get; set; }
+    public string? Cidade { get; set; }
+    public string? Estado { get; set; }
+    public string Classificacao { get; set; } = "Livre";
+    public string? ContatoWhatsapp { get; set; }
+    public string? ContatoTelefone { get; set; }
+    public string? ContatoEmail { get; set; }
+    public string? OrientacoesGerais { get; set; }
+
     public ICollection<Lot> Lots { get; set; } = new List<Lot>();
     public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     public ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();

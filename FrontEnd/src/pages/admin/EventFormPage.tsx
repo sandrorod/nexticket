@@ -25,25 +25,6 @@ const emptyForm: EventPayload = {
   vendaFim: "",
   maximoPorCpf: 4,
   maximoPorUsuario: 4,
-};
-
-// Campos abaixo (endereço detalhado, orientações, contato, classificação) ainda não
-// existem no backend/banco — ficam só no formulário até serem persistidos futuramente.
-interface ExtraForm {
-  cep: string;
-  endereco: string;
-  numero: string;
-  bairro: string;
-  cidade: string;
-  estado: string;
-  classificacao: string;
-  contatoWhatsapp: string;
-  contatoTelefone: string;
-  contatoEmail: string;
-  orientacoes: string[];
-}
-
-const emptyExtra: ExtraForm = {
   cep: "",
   endereco: "",
   numero: "",
@@ -54,7 +35,7 @@ const emptyExtra: ExtraForm = {
   contatoWhatsapp: "",
   contatoTelefone: "",
   contatoEmail: "",
-  orientacoes: [""],
+  orientacoesGerais: "",
 };
 
 export default function EventFormPage() {
@@ -63,7 +44,7 @@ export default function EventFormPage() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState<EventPayload>(emptyForm);
-  const [extra, setExtra] = useState<ExtraForm>(emptyExtra);
+  const [orientacoes, setOrientacoes] = useState<string[]>([""]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -88,7 +69,21 @@ export default function EventFormPage() {
         vendaFim: existing.vendaFim.slice(0, 16),
         maximoPorCpf: existing.maximoPorCpf,
         maximoPorUsuario: existing.maximoPorUsuario,
+        cep: existing.cep ?? "",
+        endereco: existing.endereco ?? "",
+        numero: existing.numero ?? "",
+        bairro: existing.bairro ?? "",
+        cidade: existing.cidade ?? "",
+        estado: existing.estado ?? "",
+        classificacao: existing.classificacao ?? "Livre",
+        contatoWhatsapp: existing.contatoWhatsapp ?? "",
+        contatoTelefone: existing.contatoTelefone ?? "",
+        contatoEmail: existing.contatoEmail ?? "",
+        orientacoesGerais: existing.orientacoesGerais ?? "",
       });
+      setOrientacoes(
+        existing.orientacoesGerais ? existing.orientacoesGerais.split("\n").filter(Boolean) : [""]
+      );
     }
   }, [existing]);
 
@@ -97,22 +92,18 @@ export default function EventFormPage() {
     setForm((f) => ({ ...f, [field]: value }));
   };
 
-  const updateExtra = (field: keyof ExtraForm) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setExtra((f) => ({ ...f, [field]: e.target.value }));
-  };
-
   const updateOrientacao = (index: number, value: string) => {
-    setExtra((f) => {
-      const next = [...f.orientacoes];
+    setOrientacoes((prev) => {
+      const next = [...prev];
       next[index] = value;
-      return { ...f, orientacoes: next };
+      return next;
     });
   };
 
-  const addOrientacao = () => setExtra((f) => ({ ...f, orientacoes: [...f.orientacoes, ""] }));
+  const addOrientacao = () => setOrientacoes((prev) => [...prev, ""]);
 
   const removeOrientacao = (index: number) =>
-    setExtra((f) => ({ ...f, orientacoes: f.orientacoes.filter((_, i) => i !== index) }));
+    setOrientacoes((prev) => prev.filter((_, i) => i !== index));
 
   const handleImageChange = (url: string | undefined) => {
     setForm((f) => ({ ...f, imagemUrl: url ?? "" }));
@@ -131,6 +122,16 @@ export default function EventFormPage() {
         transmissaoUrl: form.transmissaoUrl || undefined,
         vendaInicio: new Date(form.vendaInicio).toISOString(),
         vendaFim: new Date(form.vendaFim).toISOString(),
+        cep: form.cep || undefined,
+        endereco: form.endereco || undefined,
+        numero: form.numero || undefined,
+        bairro: form.bairro || undefined,
+        cidade: form.cidade || undefined,
+        estado: form.estado || undefined,
+        contatoWhatsapp: form.contatoWhatsapp || undefined,
+        contatoTelefone: form.contatoTelefone || undefined,
+        contatoEmail: form.contatoEmail || undefined,
+        orientacoesGerais: orientacoes.filter((o) => o.trim() !== "").join("\n") || undefined,
       };
       const result = isEdit ? await updateEvent(id!, payload) : await createEvent(payload);
       navigate(`/admin/eventos/${result.id}`);
@@ -163,8 +164,8 @@ export default function EventFormPage() {
                   <TextField
                     label="Classificação"
                     select
-                    value={extra.classificacao}
-                    onChange={updateExtra("classificacao")}
+                    value={form.classificacao}
+                    onChange={update("classificacao")}
                     fullWidth
                   >
                     {classificacoes.map((c) => (
@@ -200,22 +201,22 @@ export default function EventFormPage() {
           <Typography variant="overline" color="text.secondary">Localização</Typography>
           <Grid container spacing={2} mt={0.5} mb={4}>
             <Grid item xs={12} sm={4} md={2}>
-              <TextField label="CEP" value={extra.cep} onChange={updateExtra("cep")} fullWidth />
+              <TextField label="CEP" value={form.cep} onChange={update("cep")} fullWidth />
             </Grid>
             <Grid item xs={12} sm={8} md={6}>
-              <TextField label="Endereço" value={extra.endereco} onChange={updateExtra("endereco")} fullWidth />
+              <TextField label="Endereço" value={form.endereco} onChange={update("endereco")} fullWidth />
             </Grid>
             <Grid item xs={6} sm={4} md={2}>
-              <TextField label="Número" value={extra.numero} onChange={updateExtra("numero")} fullWidth />
+              <TextField label="Número" value={form.numero} onChange={update("numero")} fullWidth />
             </Grid>
             <Grid item xs={6} sm={4} md={2}>
-              <TextField label="Bairro" value={extra.bairro} onChange={updateExtra("bairro")} fullWidth />
+              <TextField label="Bairro" value={form.bairro} onChange={update("bairro")} fullWidth />
             </Grid>
             <Grid item xs={6} sm={4} md={3}>
-              <TextField label="Cidade" value={extra.cidade} onChange={updateExtra("cidade")} fullWidth />
+              <TextField label="Cidade" value={form.cidade} onChange={update("cidade")} fullWidth />
             </Grid>
             <Grid item xs={6} sm={4} md={2}>
-              <TextField label="Estado (UF)" value={extra.estado} onChange={updateExtra("estado")} fullWidth inputProps={{ maxLength: 2 }} />
+              <TextField label="Estado (UF)" value={form.estado} onChange={update("estado")} fullWidth inputProps={{ maxLength: 2 }} />
             </Grid>
             <Grid item xs={12} md={7}>
               <TextField label="URL do mapa" value={form.mapaUrl} onChange={update("mapaUrl")} fullWidth />
@@ -227,13 +228,13 @@ export default function EventFormPage() {
           <Typography variant="overline" color="text.secondary">Contato do organizador</Typography>
           <Grid container spacing={2} mt={0.5} mb={4}>
             <Grid item xs={12} sm={4}>
-              <TextField label="WhatsApp" value={extra.contatoWhatsapp} onChange={updateExtra("contatoWhatsapp")} fullWidth />
+              <TextField label="WhatsApp" value={form.contatoWhatsapp} onChange={update("contatoWhatsapp")} fullWidth />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField label="Telefone" value={extra.contatoTelefone} onChange={updateExtra("contatoTelefone")} fullWidth />
+              <TextField label="Telefone" value={form.contatoTelefone} onChange={update("contatoTelefone")} fullWidth />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField label="Email" type="email" value={extra.contatoEmail} onChange={updateExtra("contatoEmail")} fullWidth />
+              <TextField label="Email" type="email" value={form.contatoEmail} onChange={update("contatoEmail")} fullWidth />
             </Grid>
           </Grid>
 
@@ -241,7 +242,7 @@ export default function EventFormPage() {
 
           <Typography variant="overline" color="text.secondary">Orientações gerais</Typography>
           <Box mt={1} mb={4}>
-            {extra.orientacoes.map((orientacao, i) => (
+            {orientacoes.map((orientacao, i) => (
               <Box key={i} display="flex" gap={1} mb={1.5} alignItems="center">
                 <TextField
                   value={orientacao}
@@ -249,7 +250,7 @@ export default function EventFormPage() {
                   placeholder="Ex: É obrigatória a apresentação de documento oficial com foto."
                   fullWidth
                 />
-                <IconButton onClick={() => removeOrientacao(i)} disabled={extra.orientacoes.length === 1}>
+                <IconButton onClick={() => removeOrientacao(i)} disabled={orientacoes.length === 1}>
                   <DeleteOutlineIcon />
                 </IconButton>
               </Box>

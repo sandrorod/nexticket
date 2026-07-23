@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   Box, Container, Typography, Card, CardContent, Button, IconButton,
-  Divider, Alert, Grid, Stack,
+  Divider, Alert, Grid, Stack, Chip,
 } from "@mui/material";
 import LiveTvIcon from "@mui/icons-material/LiveTv";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -14,6 +14,8 @@ import ScheduleIcon from "@mui/icons-material/Schedule";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import PhoneIcon from "@mui/icons-material/Phone";
+import EmailIcon from "@mui/icons-material/Email";
 import { getEventById, getLotsByEvent } from "../../api/events";
 import type { LotDto } from "../../types";
 import CheckoutForm from "../checkout/CheckoutForm";
@@ -99,27 +101,84 @@ export default function EventDetailPage() {
               <Typography variant="body2" color="text.primary" mt={1}>
                 <strong>Local:</strong> {event.local}
               </Typography>
-              {event.mapaUrl && (
-                <Button
-                  href={event.mapaUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  startIcon={<MapIcon />}
-                  variant="outlined"
-                  fullWidth
-                  sx={{ mt: 2, borderRadius: "0.5rem" }}
-                >
-                  Ver mapa
-                </Button>
+              {(event.endereco || event.cidade) && (
+                <Typography variant="body2" color="text.secondary" mt={0.5}>
+                  <strong>Endereço:</strong> {[
+                    event.endereco && event.numero ? `${event.endereco}, ${event.numero}` : event.endereco,
+                    event.bairro,
+                    event.cidade && event.estado ? `${event.cidade}/${event.estado}` : event.cidade,
+                    event.cep,
+                  ].filter(Boolean).join(" — ")}
+                </Typography>
               )}
             </Card>
+
+            {event.mapaUrl && (
+              <Button
+                href={event.mapaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                startIcon={<MapIcon />}
+                fullWidth
+                sx={{
+                  mb: 3,
+                  py: 1.2,
+                  borderRadius: "0.5rem",
+                  backgroundColor: "rgba(55, 125, 255, 0.08)",
+                  color: "primary.main",
+                  fontWeight: 700,
+                  "&:hover": { backgroundColor: "rgba(55, 125, 255, 0.16)" },
+                }}
+              >
+                Ver mapa de setores
+              </Button>
+            )}
+
+            {(event.contatoWhatsapp || event.contatoTelefone || event.contatoEmail) && (
+              <Card sx={{ p: 2.5, mb: 3 }}>
+                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em">
+                  Contato
+                </Typography>
+                <Stack spacing={1} mt={1.5}>
+                  {event.contatoWhatsapp && (
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <WhatsAppIcon sx={{ fontSize: "1.1rem", color: "#00a650" }} />
+                      <Typography variant="body2" color="text.primary">{event.contatoWhatsapp}</Typography>
+                    </Stack>
+                  )}
+                  {event.contatoTelefone && (
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <PhoneIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
+                      <Typography variant="body2" color="text.primary">{event.contatoTelefone}</Typography>
+                    </Stack>
+                  )}
+                  {event.contatoEmail && (
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <EmailIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
+                      <Typography variant="body2" color="text.primary">{event.contatoEmail}</Typography>
+                    </Stack>
+                  )}
+                </Stack>
+              </Card>
+            )}
           </Grid>
 
           {/* Coluna direita */}
           <Grid item xs={12} md={8}>
-            <Typography variant="h4" fontWeight={800} color="text.primary">{event.nome}</Typography>
-            <Typography color="primary.main" fontWeight={600} mb={3}>
-              {formatarData(event.data)} · {formatarHora(event.hora)}
+            <Stack direction="row" spacing={1.5} alignItems="center" mb={0.5}>
+              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase" }}>
+                {event.nome}
+              </Typography>
+              {event.classificacao && event.classificacao !== "Livre" && (
+                <Chip
+                  label={`+${event.classificacao}`}
+                  size="small"
+                  sx={{ backgroundColor: "#132144", color: "#fff", fontWeight: 700 }}
+                />
+              )}
+            </Stack>
+            <Typography variant="body2" color="primary.main" fontWeight={600} mb={3}>
+              {formatarData(event.data).toUpperCase()} · {formatarHora(event.hora)}
             </Typography>
 
             {event.transmissaoUrl && (
@@ -150,10 +209,10 @@ export default function EventDetailPage() {
                     return (
                       <Box key={lot.id} display="flex" justifyContent="space-between" alignItems="center" py={1}>
                         <Box>
-                          <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.9rem" }}>
+                          <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.9rem", letterSpacing: "0.01em" }}>
                             {lot.nome}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" color="text.secondary" sx={{ textTransform: "uppercase" }}>
                             {lot.quantidadeDisponivel > 0 ? `${lot.quantidadeDisponivel} disponíveis` : "Esgotado"}
                           </Typography>
                         </Box>
@@ -195,6 +254,24 @@ export default function EventDetailPage() {
                 <Typography color="text.primary" sx={{ whiteSpace: "pre-line" }}>{event.descricao}</Typography>
               </CardContent>
             </Card>
+
+            {event.orientacoesGerais && (
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em">
+                    Orientações gerais
+                  </Typography>
+                  <Divider sx={{ my: 1.5 }} />
+                  <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
+                    {event.orientacoesGerais.split("\n").filter(Boolean).map((linha, i) => (
+                      <Typography key={i} component="li" color="text.primary" sx={{ mb: 1 }}>
+                        {linha}
+                      </Typography>
+                    ))}
+                  </Box>
+                </CardContent>
+              </Card>
+            )}
 
             {loteSelecionado && quantidadeSelecionada > 0 && (
               <CheckoutForm event={event} lot={loteSelecionado} quantity={quantidadeSelecionada} />

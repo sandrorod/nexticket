@@ -34,6 +34,17 @@ export interface EventDto {
   maximoPorUsuario: number;
   totalIngressosVendidos: number;
   receitaTotal: number;
+  cep?: string;
+  endereco?: string;
+  numero?: string;
+  bairro?: string;
+  cidade?: string;
+  estado?: string;
+  classificacao: string;
+  contatoWhatsapp?: string;
+  contatoTelefone?: string;
+  contatoEmail?: string;
+  orientacoesGerais?: string;
 }
 
 export interface LotDto {

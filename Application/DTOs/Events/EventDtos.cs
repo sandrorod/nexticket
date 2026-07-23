@@ -16,7 +16,18 @@ public record EventDto(
     int MaximoPorCpf,
     int MaximoPorUsuario,
     int TotalIngressosVendidos,
-    decimal ReceitaTotal);
+    decimal ReceitaTotal,
+    string? Cep,
+    string? Endereco,
+    string? Numero,
+    string? Bairro,
+    string? Cidade,
+    string? Estado,
+    string Classificacao,
+    string? ContatoWhatsapp,
+    string? ContatoTelefone,
+    string? ContatoEmail,
+    string? OrientacoesGerais);
 
 public record CreateEventRequest(
     string Nome,
@@ -30,7 +41,18 @@ public record CreateEventRequest(
     DateTime VendaInicio,
     DateTime VendaFim,
     int MaximoPorCpf,
-    int MaximoPorUsuario);
+    int MaximoPorUsuario,
+    string? Cep,
+    string? Endereco,
+    string? Numero,
+    string? Bairro,
+    string? Cidade,
+    string? Estado,
+    string? Classificacao,
+    string? ContatoWhatsapp,
+    string? ContatoTelefone,
+    string? ContatoEmail,
+    string? OrientacoesGerais);
 
 public record UpdateEventRequest(
     string Nome,
@@ -44,4 +66,15 @@ public record UpdateEventRequest(
     DateTime VendaInicio,
     DateTime VendaFim,
     int MaximoPorCpf,
-    int MaximoPorUsuario);
+    int MaximoPorUsuario,
+    string? Cep,
+    string? Endereco,
+    string? Numero,
+    string? Bairro,
+    string? Cidade,
+    string? Estado,
+    string? Classificacao,
+    string? ContatoWhatsapp,
+    string? ContatoTelefone,
+    string? ContatoEmail,
+    string? OrientacoesGerais);

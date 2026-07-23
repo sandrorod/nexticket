@@ -63,7 +63,18 @@ public class EventService : IEventService
             VendaFim = request.VendaFim,
             MaximoPorCpf = request.MaximoPorCpf,
             MaximoPorUsuario = request.MaximoPorUsuario,
-            Status = EventStatus.Publicado
+            Status = EventStatus.Publicado,
+            Cep = request.Cep,
+            Endereco = request.Endereco,
+            Numero = request.Numero,
+            Bairro = request.Bairro,
+            Cidade = request.Cidade,
+            Estado = request.Estado,
+            Classificacao = request.Classificacao ?? "Livre",
+            ContatoWhatsapp = request.ContatoWhatsapp,
+            ContatoTelefone = request.ContatoTelefone,
+            ContatoEmail = request.ContatoEmail,
+            OrientacoesGerais = request.OrientacoesGerais
         };
 
         await _uow.Events.AddAsync(ev, ct);
@@ -89,6 +100,17 @@ public class EventService : IEventService
         ev.VendaFim = request.VendaFim;
         ev.MaximoPorCpf = request.MaximoPorCpf;
         ev.MaximoPorUsuario = request.MaximoPorUsuario;
+        ev.Cep = request.Cep;
+        ev.Endereco = request.Endereco;
+        ev.Numero = request.Numero;
+        ev.Bairro = request.Bairro;
+        ev.Cidade = request.Cidade;
+        ev.Estado = request.Estado;
+        ev.Classificacao = request.Classificacao ?? "Livre";
+        ev.ContatoWhatsapp = request.ContatoWhatsapp;
+        ev.ContatoTelefone = request.ContatoTelefone;
+        ev.ContatoEmail = request.ContatoEmail;
+        ev.OrientacoesGerais = request.OrientacoesGerais;
 
         _uow.Events.Update(ev);
         await _uow.SaveChangesAsync(ct);
