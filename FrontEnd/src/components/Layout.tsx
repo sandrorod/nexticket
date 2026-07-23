@@ -81,7 +81,7 @@ export default function Layout() {
           {token ? (
             <>
               <Typography variant="body2" color="text.secondary" alignSelf="center" sx={{ mx: 1.5 }}>
-                {nome}
+                {nome?.split(" ")[0]}
               </Typography>
               <Button onClick={handleLogout} sx={navLinkSx}>Sair</Button>
             </>
