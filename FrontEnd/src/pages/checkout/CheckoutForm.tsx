@@ -32,9 +32,21 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
     });
   };
 
+  const temNomeESobrenome = (nome: string) => {
+    const partes = nome.trim().split(/\s+/).filter(Boolean);
+    return partes.length >= 2 && partes.every((p) => p.length >= 2);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    const indiceInvalido = holders.findIndex((h) => !temNomeESobrenome(h.nome));
+    if (indiceInvalido !== -1) {
+      setError(`Informe nome e sobrenome completos no Ingresso ${indiceInvalido + 1}.`);
+      return;
+    }
+
     setLoading(true);
     try {
       const order = await createOrder({
@@ -63,7 +75,8 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
         Dados dos ingressos
       </Typography>
       <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.7875rem" }}>
-        Cada ingresso deve ter dados próprios. Não é permitido repetir email, celular, ou a combinação nome + celular.
+        Informe nome e sobrenome completos. Cada ingresso deve ter dados próprios: não é permitido repetir email
+        ou celular já utilizados neste evento.
       </Typography>
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -77,6 +90,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
                 <Grid item xs={12} sm={7}>
                   <TextField
                     label="Nome completo"
+                    placeholder="Nome e sobrenome"
                     value={holder.nome}
                     onChange={(e) => updateHolder(i, "nome", e.target.value)}
                     required

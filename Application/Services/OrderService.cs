@@ -149,13 +149,20 @@ public class OrderService : IOrderService
 
     private async Task ValidarUnicidadeNoEventoAsync(Guid eventId, string email, string nome, string telefone, CancellationToken ct)
     {
+        var emailNormalizado = email.Trim().ToLowerInvariant();
+        var nomeNormalizado = nome.Trim().ToLowerInvariant();
+        var telefoneNormalizado = telefone.Trim();
+
         var conflito = await _uow.Tickets.Query()
             .Where(t => t.EventId == eventId && t.Status != TicketStatus.Cancelado)
-            .Where(t => t.Email == email || (t.Nome == nome && t.Telefone == telefone))
+            .Where(t =>
+                t.Email.Trim().ToLower() == emailNormalizado ||
+                t.Telefone.Trim() == telefoneNormalizado ||
+                (t.Nome.Trim().ToLower() == nomeNormalizado && t.Telefone.Trim() == telefoneNormalizado))
             .AnyAsync(ct);
 
         if (conflito)
-            throw new ConflictException("Já existe um ingresso emitido para este evento com o mesmo email, ou mesma combinação de nome e celular.");
+            throw new ConflictException("Já existe um ingresso emitido para este evento com o mesmo email, celular, ou mesma combinação de nome e celular.");
     }
 
     public async Task<List<OrderDto>> GetByUserIdAsync(Guid userId, CancellationToken ct = default)

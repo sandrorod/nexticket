@@ -1,4 +1,5 @@
 using System.Text;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NexTicket.API.Middleware;
@@ -20,6 +21,11 @@ builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddFluentValidationAutoValidation(config =>
+{
+    config.DisableBuiltInModelValidation = true;
+    config.OverrideDefaultResultFactoryWith<NexTicket.API.Validation.ThrowingValidationResultFactory>();
+});
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);

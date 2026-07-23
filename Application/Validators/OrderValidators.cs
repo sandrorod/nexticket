@@ -1,5 +1,6 @@
 using FluentValidation;
 using NexTicket.Application.DTOs.Orders;
+using System.Linq;
 
 namespace NexTicket.Application.Validators;
 
@@ -8,9 +9,19 @@ public class TicketHolderRequestValidator : AbstractValidator<TicketHolderReques
     public TicketHolderRequestValidator()
     {
         RuleFor(x => x.Nome).NotEmpty().MaximumLength(200);
+        RuleFor(x => x.Nome)
+            .Must(TerNomeESobrenome)
+            .WithMessage("Informe nome e sobrenome completos.")
+            .When(x => !string.IsNullOrWhiteSpace(x.Nome));
         RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(200);
         RuleFor(x => x.Telefone).NotEmpty().MaximumLength(20);
         RuleFor(x => x.Cpf).Length(11).When(x => !string.IsNullOrEmpty(x.Cpf));
+    }
+
+    private static bool TerNomeESobrenome(string nome)
+    {
+        var partes = nome.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return partes.Length >= 2 && partes.All(p => p.Length >= 2);
     }
 }
 
