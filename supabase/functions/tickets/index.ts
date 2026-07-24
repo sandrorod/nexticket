@@ -11,7 +11,7 @@ const ticketStatusNames = ["Disponivel", "Utilizado", "Cancelado"];
 const eventStatusPublicado = 1;
 
 // deno-lint-ignore no-explicit-any
-function mapTicketToDto(t: any) {
+function mapTicketToDto(t: any, valorPago: number | null = null) {
   return {
     id: t.Id,
     codigo: t.Codigo,
@@ -26,6 +26,7 @@ function mapTicketToDto(t: any) {
     email: t.Email,
     telefone: t.Telefone,
     idade: t.Idade,
+    valorPago,
     status: ticketStatusNames[t.Status],
     dataUso: t.DataUso,
   };
@@ -119,6 +120,15 @@ Deno.serve(async (req) => {
     // Demais rotas exigem apenas usuário autenticado
     const auth = await requireAuth(req);
 
+    if (req.method === "POST" && first && parts[1] === "cancel") {
+      requireRole(auth, "Administrador");
+
+      const { data, error } = await supabaseAdmin.rpc("cancel_ticket", { p_ticket_id: first });
+      if (error) throw error;
+
+      return json(data, 200, headers);
+    }
+
     if (req.method === "GET" && !first) {
       requireRole(auth, "Administrador");
 
@@ -133,7 +143,24 @@ Deno.serve(async (req) => {
         .eq("EventId", eventId)
         .order("CreatedAt", { ascending: false });
       if (error) throw error;
-      return json((data ?? []).map(mapTicketToDto), 200, headers);
+
+      const orderIds = [...new Set((data ?? []).map((t) => t.OrderId))];
+      const { data: orderItems, error: orderItemsError } = await supabaseAdmin
+        .from("OrderItems")
+        .select("OrderId, LotId, ValorUnitario")
+        .in("OrderId", orderIds.length > 0 ? orderIds : [""]);
+      if (orderItemsError) throw orderItemsError;
+
+      const precoPorPedidoLote = new Map<string, number>();
+      for (const oi of orderItems ?? []) {
+        precoPorPedidoLote.set(`${oi.OrderId}|${oi.LotId}`, Number(oi.ValorUnitario));
+      }
+
+      return json(
+        (data ?? []).map((t) => mapTicketToDto(t, precoPorPedidoLote.get(`${t.OrderId}|${t.LotId}`) ?? null)),
+        200,
+        headers,
+      );
     }
 
     if (req.method === "GET" && first === "me") {

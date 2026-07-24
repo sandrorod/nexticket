@@ -18,13 +18,16 @@ import AddIcon from "@mui/icons-material/Add";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import { getEventById, getLotsByEvent } from "../../api/events";
+import { getMyTickets } from "../../api/orders";
 import type { LotDto } from "../../types";
 import CheckoutForm from "../checkout/CheckoutForm";
 import { formatarData, formatarHora } from "../../utils/date";
+import { useAuthStore } from "../../store/authStore";
 
 export default function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [quantidades, setQuantidades] = useState<Record<string, number>>({});
+  const isAuthenticated = useAuthStore((s) => !!s.token);
 
   const { data: event } = useQuery({
     queryKey: ["event", id],
@@ -38,10 +41,23 @@ export default function EventDetailPage() {
     enabled: !!id,
   });
 
+  const { data: meusIngressos } = useQuery({
+    queryKey: ["my-tickets"],
+    queryFn: getMyTickets,
+    enabled: isAuthenticated,
+  });
+
   if (!event) return null;
 
+  const jaComprados = (meusIngressos ?? []).filter(
+    (t) => t.eventId === event.id && t.status !== "Cancelado"
+  ).length;
+  const restanteNoEvento = event.maximoPorUsuario > 0
+    ? Math.max(0, event.maximoPorUsuario - jaComprados)
+    : Infinity;
+
   const setQuantidade = (lot: LotDto, value: number) => {
-    const max = Math.min(lot.maximoPorUsuario, lot.quantidadeDisponivel, 10);
+    const max = Math.min(lot.maximoPorUsuario, lot.quantidadeDisponivel, restanteNoEvento, 10);
     setQuantidades((prev) => ({ ...prev, [lot.id]: Math.max(0, Math.min(value, max)) }));
   };
 
@@ -255,10 +271,15 @@ export default function EventDetailPage() {
                   Ingressos
                 </Typography>
                 <Divider sx={{ my: 1.5 }} />
+                {restanteNoEvento === 0 && (
+                  <Alert severity="warning" sx={{ mb: 2 }}>
+                    Você já atingiu o limite de {event.maximoPorUsuario} ingresso(s) por pessoa para este evento.
+                  </Alert>
+                )}
                 <Stack divider={<Divider />} spacing={2}>
                   {lots?.map((lot) => {
                     const qtd = quantidades[lot.id] ?? 0;
-                    const max = Math.min(lot.maximoPorUsuario, lot.quantidadeDisponivel, 10);
+                    const max = Math.min(lot.maximoPorUsuario, lot.quantidadeDisponivel, restanteNoEvento, 10);
                     return (
                       <Box key={lot.id} display="flex" justifyContent="space-between" alignItems="center" py={1}>
                         <Box>

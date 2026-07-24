@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { Box, Button, Card, CardContent, TextField, Typography, Alert, Divider, Grid, MenuItem } from "@mui/material";
 import type { EventDto, LotDto, TicketHolder } from "../../types";
 import { createOrder } from "../../api/orders";
@@ -16,6 +17,7 @@ const emptyHolder: TicketHolder = { nome: "", email: "", telefone: "", cpf: "", 
 
 export default function CheckoutForm({ event, lot, quantity }: Props) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [holders, setHolders] = useState<TicketHolder[]>(
     Array.from({ length: quantity }, () => ({ ...emptyHolder }))
   );
@@ -63,6 +65,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
         eventId: event.id,
         itens: [{ lotId: lot.id, ingressos: holders.map((h) => ({ ...h, cpf: h.cpf || undefined })) }],
       });
+      await queryClient.invalidateQueries({ queryKey: ["my-tickets"] });
       navigate(`/pedidos/${order.id}`);
     } catch (err: any) {
       setError(err?.response?.data?.errors?.join(" ") ?? "Não foi possível concluir a compra.");
@@ -118,7 +121,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
                     sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={9} sm={7}>
                   <TextField
                     label="Email"
                     type="email"
@@ -129,16 +132,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
                     sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    label="CPF (opcional)"
-                    value={holder.cpf}
-                    onChange={(e) => updateHolder(i, "cpf", e.target.value)}
-                    fullWidth
-                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={3} sm={1}>
                   <TextField
                     select
                     label="Idade"
@@ -151,6 +145,15 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
                       <MenuItem key={idade} value={idade}>{idade}</MenuItem>
                     ))}
                   </TextField>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    label="CPF (opcional)"
+                    value={holder.cpf}
+                    onChange={(e) => updateHolder(i, "cpf", e.target.value)}
+                    fullWidth
+                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                  />
                 </Grid>
               </Grid>
             </CardContent>

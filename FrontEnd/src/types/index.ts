@@ -104,6 +104,7 @@ export interface TicketDto {
   email: string;
   telefone: string;
   idade: number;
+  valorPago: number | null;
   status: string;
   dataUso?: string;
 }

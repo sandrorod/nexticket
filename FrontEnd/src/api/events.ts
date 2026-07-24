@@ -12,6 +12,9 @@ export const getLotsByEvent = (eventId: string) =>
 export const getTicketsByEvent = (eventId: string) =>
   api.get<TicketDto[]>("/tickets", { params: { eventId } }).then((r) => r.data);
 
+export const cancelTicket = (ticketId: string) =>
+  api.post(`/tickets/${ticketId}/cancel`).then((r) => r.data);
+
 export interface EventPayload {
   nome: string;
   descricao: string;
