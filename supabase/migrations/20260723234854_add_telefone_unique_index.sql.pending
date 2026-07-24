@@ -1,0 +1,7 @@
+-- Anti-fraude: fecha o gap onde o mesmo telefone (com nomes diferentes)
+-- podia ser usado em dois tickets do mesmo evento. Já existiam índices
+-- únicos para (EventId, Email) e (EventId, Nome, Telefone); faltava um
+-- para telefone sozinho.
+CREATE UNIQUE INDEX IF NOT EXISTS "IX_Tickets_EventId_Telefone"
+  ON nexticket_app."Tickets" ("EventId", "Telefone")
+  WHERE "Status" <> 2;

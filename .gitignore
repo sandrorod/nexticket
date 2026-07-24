@@ -16,3 +16,6 @@ FrontEnd/.env.local
 
 # OS
 .DS_Store
+
+# Local tooling
+.tools/
