@@ -5,6 +5,6 @@ export const uploadEventImage = (file: File) => {
   formData.append("file", file);
 
   return api
-    .post<{ url: string }>("/uploads/event-image", formData)
+    .post<{ url: string }>("/uploads-event-image", formData)
     .then((r) => r.data.url);
 };

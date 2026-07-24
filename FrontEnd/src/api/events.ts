@@ -7,7 +7,7 @@ export const getEventById = (id: string) =>
   api.get<EventDto>(`/events/${id}`).then((r) => r.data);
 
 export const getLotsByEvent = (eventId: string) =>
-  api.get<LotDto[]>(`/events/${eventId}/lots`).then((r) => r.data);
+  api.get<LotDto[]>(`/lots/${eventId}`).then((r) => r.data);
 
 export interface EventPayload {
   nome: string;
@@ -53,7 +53,7 @@ export interface LotPayload {
 }
 
 export const createLot = (eventId: string, payload: LotPayload) =>
-  api.post<LotDto>(`/events/${eventId}/lots`, payload).then((r) => r.data);
+  api.post<LotDto>(`/lots/${eventId}`, payload).then((r) => r.data);
 
 export const updateLot = (eventId: string, lotId: string, payload: LotPayload) =>
-  api.put<LotDto>(`/events/${eventId}/lots/${lotId}`, payload).then((r) => r.data);
+  api.put<LotDto>(`/lots/${eventId}/${lotId}`, payload).then((r) => r.data);
