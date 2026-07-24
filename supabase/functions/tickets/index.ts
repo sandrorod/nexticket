@@ -25,6 +25,7 @@ function mapTicketToDto(t: any) {
     nome: t.Nome,
     email: t.Email,
     telefone: t.Telefone,
+    idade: t.Idade,
     status: ticketStatusNames[t.Status],
     dataUso: t.DataUso,
   };
@@ -117,6 +118,23 @@ Deno.serve(async (req) => {
 
     // Demais rotas exigem apenas usuário autenticado
     const auth = await requireAuth(req);
+
+    if (req.method === "GET" && !first) {
+      requireRole(auth, "Administrador");
+
+      const eventId = url.searchParams.get("eventId");
+      const v = new Validator();
+      v.notEmpty(eventId, "EventId");
+      v.throwIfInvalid();
+
+      const { data, error } = await supabaseAdmin
+        .from("Tickets")
+        .select("*, Events(Nome, Local, Data, Hora), Lots(Nome)")
+        .eq("EventId", eventId)
+        .order("CreatedAt", { ascending: false });
+      if (error) throw error;
+      return json((data ?? []).map(mapTicketToDto), 200, headers);
+    }
 
     if (req.method === "GET" && first === "me") {
       const { data, error } = await supabaseAdmin

@@ -32,6 +32,8 @@ export function mapEventToDto(ev: any) {
     contatoWhatsapp: ev.ContatoWhatsapp,
     contatoTelefone: ev.ContatoTelefone,
     contatoEmail: ev.ContatoEmail,
+    contatoFacebook: ev.ContatoFacebook,
+    contatoInstagram: ev.ContatoInstagram,
     orientacoesGerais: ev.OrientacoesGerais,
   };
 }

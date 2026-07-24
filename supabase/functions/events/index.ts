@@ -28,6 +28,8 @@ function validateEventRequest(body: Record<string, unknown>): void {
   if (body.contatoEmail) {
     v.maxLength(body.contatoEmail as string, 200, "ContatoEmail").email(body.contatoEmail as string, "ContatoEmail");
   }
+  v.maxLength(body.contatoFacebook as string, 300, "ContatoFacebook");
+  v.maxLength(body.contatoInstagram as string, 300, "ContatoInstagram");
   v.throwIfInvalid();
 }
 
@@ -100,6 +102,8 @@ Deno.serve(async (req) => {
         ContatoWhatsapp: body.contatoWhatsapp ?? null,
         ContatoTelefone: body.contatoTelefone ?? null,
         ContatoEmail: body.contatoEmail ?? null,
+        ContatoFacebook: body.contatoFacebook ?? null,
+        ContatoInstagram: body.contatoInstagram ?? null,
         OrientacoesGerais: body.orientacoesGerais ?? null,
         CreatedAt: new Date().toISOString(),
       });
@@ -139,6 +143,8 @@ Deno.serve(async (req) => {
         ContatoWhatsapp: body.contatoWhatsapp ?? null,
         ContatoTelefone: body.contatoTelefone ?? null,
         ContatoEmail: body.contatoEmail ?? null,
+        ContatoFacebook: body.contatoFacebook ?? null,
+        ContatoInstagram: body.contatoInstagram ?? null,
         OrientacoesGerais: body.orientacoesGerais ?? null,
       }).eq("Id", id);
       if (error) throw error;

@@ -35,6 +35,7 @@ interface TicketHolderRequest {
   email: string;
   telefone: string;
   cpf?: string;
+  idade: number;
 }
 
 interface CreateOrderItemRequest {
@@ -59,6 +60,7 @@ function validateCreateOrderRequest(body: { eventId?: string; itens?: CreateOrde
       v.notEmpty(holder.email, "Email").email(holder.email, "Email").maxLength(holder.email, 200, "Email");
       v.notEmpty(holder.telefone, "Telefone").maxLength(holder.telefone, 20, "Telefone");
       if (holder.cpf) v.exactLength(holder.cpf, 11, "Cpf");
+      v.inclusiveBetween(holder.idade, 0, 99, "Idade");
     }
   }
   v.throwIfInvalid();

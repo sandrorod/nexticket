@@ -40,6 +40,13 @@ export class Validator {
     return this;
   }
 
+  inclusiveBetween(value: number | undefined | null, min: number, max: number, field: string): this {
+    if (value === undefined || value === null || value < min || value > max) {
+      this.errors.push(`${field} deve estar entre ${min} e ${max}.`);
+    }
+    return this;
+  }
+
   greaterThanDate(value: string | undefined | null, other: string | undefined | null, field: string): this {
     if (value && other && new Date(value) <= new Date(other)) {
       this.errors.push(`${field} deve ser posterior à data inicial.`);
