@@ -27,6 +27,8 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.Property(e => e.ContatoWhatsapp).HasMaxLength(20);
         builder.Property(e => e.ContatoTelefone).HasMaxLength(20);
         builder.Property(e => e.ContatoEmail).HasMaxLength(200);
+        builder.Property(e => e.ContatoFacebook).HasMaxLength(300);
+        builder.Property(e => e.ContatoInstagram).HasMaxLength(300);
         builder.Property(e => e.OrientacoesGerais).HasColumnType("text");
 
         builder.HasMany(e => e.Lots)

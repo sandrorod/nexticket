@@ -97,6 +97,7 @@ public class OrderService : IOrderService
                         Email = holder.Email,
                         Telefone = holder.Telefone,
                         Cpf = holder.Cpf,
+                        Idade = holder.Idade,
                         Status = TicketStatus.Disponivel
                     });
                 }

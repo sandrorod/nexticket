@@ -30,6 +30,18 @@ public class TicketService : ITicketService
         return _mapper.Map<List<TicketDto>>(tickets);
     }
 
+    public async Task<List<TicketDto>> GetByEventIdAsync(Guid eventId, CancellationToken ct = default)
+    {
+        var tickets = await _uow.Tickets.Query()
+            .Include(t => t.Event)
+            .Include(t => t.Lot)
+            .Where(t => t.EventId == eventId)
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync(ct);
+
+        return _mapper.Map<List<TicketDto>>(tickets);
+    }
+
     public async Task<TicketDto> GetByIdAsync(Guid ticketId, CancellationToken ct = default)
     {
         var ticket = await _uow.Tickets.Query()

@@ -4,12 +4,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Container, Typography, Button, Box, Chip, Paper, Table, TableHead,
   TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent,
-  TextField, DialogActions, Alert, Grid,
+  TextField, DialogActions, Alert, Grid, ButtonBase,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { getEventById, getLotsByEvent, cancelEvent, createLot, updateLot, type LotPayload } from "../../api/events";
 import type { LotDto } from "../../types";
 import { formatarData, formatarHora } from "../../utils/date";
+import TicketsDialog from "./TicketsDialog";
 
 const emptyLotForm: LotPayload = {
   nome: "",
@@ -30,6 +31,7 @@ export default function AdminEventDetailPage() {
   const queryClient = useQueryClient();
 
   const [lotDialogOpen, setLotDialogOpen] = useState(false);
+  const [ticketsDialogOpen, setTicketsDialogOpen] = useState(false);
   const [editingLot, setEditingLot] = useState<LotDto | null>(null);
   const [lotForm, setLotForm] = useState<LotPayload>(emptyLotForm);
   const [error, setError] = useState<string | null>(null);
@@ -116,10 +118,15 @@ export default function AdminEventDetailPage() {
 
       <Grid container spacing={2} mb={4}>
         <Grid item xs={6} sm={3}>
-          <Paper sx={{ p: 2, textAlign: "center", borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
-            <Typography variant="h5" fontWeight={700} color="text.primary">{event.totalIngressosVendidos}</Typography>
-            <Typography variant="body2" color="text.secondary">Ingressos vendidos</Typography>
-          </Paper>
+          <ButtonBase
+            onClick={() => setTicketsDialogOpen(true)}
+            sx={{ width: "100%", borderRadius: "0.75rem", display: "block", textAlign: "center" }}
+          >
+            <Paper sx={{ p: 2, textAlign: "center", borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)", width: "100%" }} elevation={0}>
+              <Typography variant="h5" fontWeight={700} color="text.primary">{event.totalIngressosVendidos}</Typography>
+              <Typography variant="body2" color="text.secondary">Ingressos vendidos</Typography>
+            </Paper>
+          </ButtonBase>
         </Grid>
         <Grid item xs={6} sm={3}>
           <Paper sx={{ p: 2, textAlign: "center", borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
@@ -213,6 +220,8 @@ export default function AdminEventDetailPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <TicketsDialog eventId={id!} open={ticketsDialogOpen} onClose={() => setTicketsDialogOpen(false)} />
     </Box>
   );
 }

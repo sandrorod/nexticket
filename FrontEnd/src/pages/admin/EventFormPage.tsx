@@ -35,6 +35,8 @@ const emptyForm: EventPayload = {
   contatoWhatsapp: "",
   contatoTelefone: "",
   contatoEmail: "",
+  contatoFacebook: "",
+  contatoInstagram: "",
   orientacoesGerais: "",
 };
 
@@ -79,6 +81,8 @@ export default function EventFormPage() {
         contatoWhatsapp: existing.contatoWhatsapp ?? "",
         contatoTelefone: existing.contatoTelefone ?? "",
         contatoEmail: existing.contatoEmail ?? "",
+        contatoFacebook: existing.contatoFacebook ?? "",
+        contatoInstagram: existing.contatoInstagram ?? "",
         orientacoesGerais: existing.orientacoesGerais ?? "",
       });
       setOrientacoes(
@@ -131,6 +135,8 @@ export default function EventFormPage() {
         contatoWhatsapp: form.contatoWhatsapp || undefined,
         contatoTelefone: form.contatoTelefone || undefined,
         contatoEmail: form.contatoEmail || undefined,
+        contatoFacebook: form.contatoFacebook || undefined,
+        contatoInstagram: form.contatoInstagram || undefined,
         orientacoesGerais: orientacoes.filter((o) => o.trim() !== "").join("\n") || undefined,
       };
       const result = isEdit ? await updateEvent(id!, payload) : await createEvent(payload);
@@ -235,6 +241,12 @@ export default function EventFormPage() {
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField label="Email" type="email" value={form.contatoEmail} onChange={update("contatoEmail")} fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="Facebook" placeholder="https://facebook.com/seu-evento" value={form.contatoFacebook} onChange={update("contatoFacebook")} fullWidth />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField label="Instagram" placeholder="https://instagram.com/seu-evento" value={form.contatoInstagram} onChange={update("contatoInstagram")} fullWidth />
             </Grid>
           </Grid>
 

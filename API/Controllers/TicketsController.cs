@@ -26,6 +26,11 @@ public class TicketsController : ControllerBase
     public async Task<ActionResult<TicketDto>> GetById(Guid id, CancellationToken ct) =>
         Ok(await _ticketService.GetByIdAsync(id, ct));
 
+    [Authorize(Policy = "Administrador")]
+    [HttpGet]
+    public async Task<ActionResult<List<TicketDto>>> GetByEvent([FromQuery] Guid eventId, CancellationToken ct) =>
+        Ok(await _ticketService.GetByEventIdAsync(eventId, ct));
+
     [Authorize(Policy = "PodeValidarIngressos")]
     [HttpPost("validate/preview")]
     public async Task<ActionResult<ValidateTicketPreviewResponse>> PreviewValidation(ValidateTicketRequest request, CancellationToken ct) =>

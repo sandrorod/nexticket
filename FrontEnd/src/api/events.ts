@@ -1,5 +1,5 @@
 import { api } from "./client";
-import type { EventDto, LotDto } from "../types";
+import type { EventDto, LotDto, TicketDto } from "../types";
 
 export const getEvents = () => api.get<EventDto[]>("/events").then((r) => r.data);
 
@@ -8,6 +8,9 @@ export const getEventById = (id: string) =>
 
 export const getLotsByEvent = (eventId: string) =>
   api.get<LotDto[]>(`/lots/${eventId}`).then((r) => r.data);
+
+export const getTicketsByEvent = (eventId: string) =>
+  api.get<TicketDto[]>("/tickets", { params: { eventId } }).then((r) => r.data);
 
 export interface EventPayload {
   nome: string;
@@ -32,6 +35,8 @@ export interface EventPayload {
   contatoWhatsapp?: string;
   contatoTelefone?: string;
   contatoEmail?: string;
+  contatoFacebook?: string;
+  contatoInstagram?: string;
   orientacoesGerais?: string;
 }
 

@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import LiveTvIcon from "@mui/icons-material/LiveTv";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import MapIcon from "@mui/icons-material/Map";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -147,14 +148,23 @@ export default function EventDetailPage() {
               </Button>
             )}
 
-            {(event.contatoWhatsapp || event.contatoTelefone || event.contatoEmail) && (
+            {(event.contatoWhatsapp || event.contatoTelefone || event.contatoEmail || event.contatoFacebook || event.contatoInstagram) && (
               <Card sx={{ p: 2.5, mb: 3 }}>
                 <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                   Contato
                 </Typography>
                 <Stack spacing={1} mt={1.5}>
                   {event.contatoWhatsapp && (
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      alignItems="center"
+                      component="a"
+                      href={`https://wa.me/${event.contatoWhatsapp.replace(/\D/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{ textDecoration: "none" }}
+                    >
                       <WhatsAppIcon sx={{ fontSize: "1.1rem", color: "#00a650" }} />
                       <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoWhatsapp}</Typography>
                     </Stack>
@@ -169,6 +179,36 @@ export default function EventDetailPage() {
                     <Stack direction="row" spacing={1} alignItems="center">
                       <EmailIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
                       <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoEmail}</Typography>
+                    </Stack>
+                  )}
+                  {event.contatoFacebook && (
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      alignItems="center"
+                      component="a"
+                      href={event.contatoFacebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{ textDecoration: "none" }}
+                    >
+                      <FacebookIcon sx={{ fontSize: "1.1rem", color: "primary.main" }} />
+                      <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoFacebook}</Typography>
+                    </Stack>
+                  )}
+                  {event.contatoInstagram && (
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      alignItems="center"
+                      component="a"
+                      href={event.contatoInstagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{ textDecoration: "none" }}
+                    >
+                      <InstagramIcon sx={{ fontSize: "1.1rem", color: "#c13584" }} />
+                      <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoInstagram}</Typography>
                     </Stack>
                   )}
                 </Stack>

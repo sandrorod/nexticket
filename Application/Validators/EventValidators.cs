@@ -26,6 +26,8 @@ public class CreateEventRequestValidator : AbstractValidator<CreateEventRequest>
         RuleFor(x => x.ContatoWhatsapp).MaximumLength(20);
         RuleFor(x => x.ContatoTelefone).MaximumLength(20);
         RuleFor(x => x.ContatoEmail).MaximumLength(200).EmailAddress().When(x => !string.IsNullOrEmpty(x.ContatoEmail));
+        RuleFor(x => x.ContatoFacebook).MaximumLength(300);
+        RuleFor(x => x.ContatoInstagram).MaximumLength(300);
     }
 }
 
@@ -51,5 +53,7 @@ public class UpdateEventRequestValidator : AbstractValidator<UpdateEventRequest>
         RuleFor(x => x.ContatoWhatsapp).MaximumLength(20);
         RuleFor(x => x.ContatoTelefone).MaximumLength(20);
         RuleFor(x => x.ContatoEmail).MaximumLength(200).EmailAddress().When(x => !string.IsNullOrEmpty(x.ContatoEmail));
+        RuleFor(x => x.ContatoFacebook).MaximumLength(300);
+        RuleFor(x => x.ContatoInstagram).MaximumLength(300);
     }
 }

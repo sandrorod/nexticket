@@ -74,6 +74,8 @@ public class EventService : IEventService
             ContatoWhatsapp = request.ContatoWhatsapp,
             ContatoTelefone = request.ContatoTelefone,
             ContatoEmail = request.ContatoEmail,
+            ContatoFacebook = request.ContatoFacebook,
+            ContatoInstagram = request.ContatoInstagram,
             OrientacoesGerais = request.OrientacoesGerais
         };
 
@@ -110,6 +112,8 @@ public class EventService : IEventService
         ev.ContatoWhatsapp = request.ContatoWhatsapp;
         ev.ContatoTelefone = request.ContatoTelefone;
         ev.ContatoEmail = request.ContatoEmail;
+        ev.ContatoFacebook = request.ContatoFacebook;
+        ev.ContatoInstagram = request.ContatoInstagram;
         ev.OrientacoesGerais = request.OrientacoesGerais;
 
         _uow.Events.Update(ev);

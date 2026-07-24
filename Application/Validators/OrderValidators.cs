@@ -16,6 +16,7 @@ public class TicketHolderRequestValidator : AbstractValidator<TicketHolderReques
         RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(200);
         RuleFor(x => x.Telefone).NotEmpty().MaximumLength(20);
         RuleFor(x => x.Cpf).Length(11).When(x => !string.IsNullOrEmpty(x.Cpf));
+        RuleFor(x => x.Idade).InclusiveBetween(0, 99);
     }
 
     private static bool TerNomeESobrenome(string nome)

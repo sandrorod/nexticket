@@ -44,6 +44,8 @@ export interface EventDto {
   contatoWhatsapp?: string;
   contatoTelefone?: string;
   contatoEmail?: string;
+  contatoFacebook?: string;
+  contatoInstagram?: string;
   orientacoesGerais?: string;
 }
 
@@ -66,6 +68,7 @@ export interface TicketHolder {
   email: string;
   telefone: string;
   cpf?: string;
+  idade: number;
 }
 
 export interface OrderItemDto {
@@ -100,6 +103,7 @@ export interface TicketDto {
   nome: string;
   email: string;
   telefone: string;
+  idade: number;
   status: string;
   dataUso?: string;
 }

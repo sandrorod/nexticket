@@ -1,6 +1,6 @@
 namespace NexTicket.Application.DTOs.Orders;
 
-public record TicketHolderRequest(string Nome, string Email, string Telefone, string? Cpf);
+public record TicketHolderRequest(string Nome, string Email, string Telefone, string? Cpf, int Idade);
 
 public record CreateOrderItemRequest(Guid LotId, List<TicketHolderRequest> Ingressos);
 

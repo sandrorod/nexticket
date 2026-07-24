@@ -21,6 +21,7 @@ public class Ticket : BaseEntity
     public string Email { get; set; } = string.Empty;
     public string Telefone { get; set; } = string.Empty;
     public string? Cpf { get; set; }
+    public int Idade { get; set; }
 
     public TicketStatus Status { get; set; } = TicketStatus.Disponivel;
     public DateTime? DataUso { get; set; }

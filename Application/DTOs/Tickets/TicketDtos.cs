@@ -13,6 +13,7 @@ public record TicketDto(
     string Nome,
     string Email,
     string Telefone,
+    int Idade,
     string Status,
     DateTime? DataUso);
 

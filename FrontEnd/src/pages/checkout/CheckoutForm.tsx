@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Card, CardContent, TextField, Typography, Alert, Divider, Grid } from "@mui/material";
+import { Box, Button, Card, CardContent, TextField, Typography, Alert, Divider, Grid, MenuItem } from "@mui/material";
 import type { EventDto, LotDto, TicketHolder } from "../../types";
 import { createOrder } from "../../api/orders";
 
@@ -10,7 +10,9 @@ interface Props {
   quantity: number;
 }
 
-const emptyHolder: TicketHolder = { nome: "", email: "", telefone: "", cpf: "" };
+const idades = Array.from({ length: 100 }, (_, i) => i);
+
+const emptyHolder: TicketHolder = { nome: "", email: "", telefone: "", cpf: "", idade: "" as unknown as number };
 
 export default function CheckoutForm({ event, lot, quantity }: Props) {
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
     setHolders(Array.from({ length: quantity }, (_, i) => holders[i] ?? { ...emptyHolder }));
   }
 
-  const updateHolder = (index: number, field: keyof TicketHolder, value: string) => {
+  const updateHolder = (index: number, field: keyof TicketHolder, value: string | number) => {
     setHolders((prev) => {
       const next = [...prev];
       next[index] = { ...next[index], [field]: value };
@@ -44,6 +46,14 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
     const indiceInvalido = holders.findIndex((h) => !temNomeESobrenome(h.nome));
     if (indiceInvalido !== -1) {
       setError(`Informe nome e sobrenome completos no Ingresso ${indiceInvalido + 1}.`);
+      return;
+    }
+
+    const indiceSemIdade = holders.findIndex(
+      (h) => h.idade === undefined || h.idade === null || (h.idade as unknown as string) === "" || h.idade < 0 || h.idade > 99
+    );
+    if (indiceSemIdade !== -1) {
+      setError(`Informe a idade no Ingresso ${indiceSemIdade + 1}.`);
       return;
     }
 
@@ -127,6 +137,20 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
                     fullWidth
                     sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
                   />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    select
+                    label="Idade"
+                    value={holder.idade === undefined || holder.idade === null ? "" : holder.idade}
+                    onChange={(e) => updateHolder(i, "idade", Number(e.target.value))}
+                    required
+                    fullWidth
+                  >
+                    {idades.map((idade) => (
+                      <MenuItem key={idade} value={idade}>{idade}</MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
               </Grid>
             </CardContent>

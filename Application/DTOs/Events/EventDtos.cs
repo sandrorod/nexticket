@@ -27,6 +27,8 @@ public record EventDto(
     string? ContatoWhatsapp,
     string? ContatoTelefone,
     string? ContatoEmail,
+    string? ContatoFacebook,
+    string? ContatoInstagram,
     string? OrientacoesGerais);
 
 public record CreateEventRequest(
@@ -52,6 +54,8 @@ public record CreateEventRequest(
     string? ContatoWhatsapp,
     string? ContatoTelefone,
     string? ContatoEmail,
+    string? ContatoFacebook,
+    string? ContatoInstagram,
     string? OrientacoesGerais);
 
 public record UpdateEventRequest(
@@ -77,4 +81,6 @@ public record UpdateEventRequest(
     string? ContatoWhatsapp,
     string? ContatoTelefone,
     string? ContatoEmail,
+    string? ContatoFacebook,
+    string? ContatoInstagram,
     string? OrientacoesGerais);

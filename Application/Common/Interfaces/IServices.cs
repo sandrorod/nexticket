@@ -44,6 +44,7 @@ public interface IOrderService
 public interface ITicketService
 {
     Task<List<TicketDto>> GetByUserIdAsync(Guid userId, CancellationToken ct = default);
+    Task<List<TicketDto>> GetByEventIdAsync(Guid eventId, CancellationToken ct = default);
     Task<TicketDto> GetByIdAsync(Guid ticketId, CancellationToken ct = default);
     Task<ValidateTicketPreviewResponse> PreviewValidationAsync(string token, CancellationToken ct = default);
     Task<ValidateTicketPreviewResponse> ConfirmValidationAsync(string token, Guid validadorId, CancellationToken ct = default);

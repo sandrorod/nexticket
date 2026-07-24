@@ -29,6 +29,8 @@ public class Event : BaseEntity
     public string? ContatoWhatsapp { get; set; }
     public string? ContatoTelefone { get; set; }
     public string? ContatoEmail { get; set; }
+    public string? ContatoFacebook { get; set; }
+    public string? ContatoInstagram { get; set; }
     public string? OrientacoesGerais { get; set; }
 
     public ICollection<Lot> Lots { get; set; } = new List<Lot>();
