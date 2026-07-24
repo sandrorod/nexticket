@@ -49,7 +49,7 @@ export default function EventDetailPage() {
 
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
-      <Container maxWidth="xl" sx={{ py: 4, pb: 6 }}>
+      <Container maxWidth="xl" sx={{ pt: 4, pb: 1.2 }}>
         <Grid container spacing={3}>
           {/* Coluna esquerda */}
           <Grid item xs={12} md={3}>
@@ -272,7 +272,7 @@ export default function EventDetailPage() {
             </Card>
 
             {event.orientacoesGerais && (
-              <Card sx={{ mb: 3 }}>
+              <Card sx={{ mb: 0.6 }}>
                 <CardContent>
                   <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                     Orientações gerais
