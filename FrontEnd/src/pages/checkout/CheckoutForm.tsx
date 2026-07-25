@@ -47,7 +47,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
 
     const indiceInvalido = holders.findIndex((h) => !temNomeESobrenome(h.nome));
     if (indiceInvalido !== -1) {
-      setError(`Informe nome e sobrenome completos no Ingresso ${indiceInvalido + 1}.`);
+      setError(`Informe nome e sobrenome completos no Ingresso ${indiceInvalido + 1} — ${lot.nome}.`);
       return;
     }
 
@@ -55,7 +55,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
       (h) => h.idade === undefined || h.idade === null || (h.idade as unknown as string) === "" || h.idade < 0 || h.idade > 99
     );
     if (indiceSemIdade !== -1) {
-      setError(`Informe a idade no Ingresso ${indiceSemIdade + 1}.`);
+      setError(`Informe a idade no Ingresso ${indiceSemIdade + 1} — ${lot.nome}.`);
       return;
     }
 
@@ -98,7 +98,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
         {holders.map((holder, i) => (
           <Card key={i} sx={{ border: "1px solid rgba(231, 234, 243, 0.9)" }}>
             <CardContent>
-              <Typography fontWeight={700} color="text.primary" mb={2}>Ingresso {i + 1}</Typography>
+              <Typography fontWeight={700} color="text.primary" mb={2}>Ingresso {i + 1} — {lot.nome}</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={7}>
                   <TextField
