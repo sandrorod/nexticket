@@ -87,6 +87,19 @@ export default function EventDetailPage() {
               </Box>
             )}
 
+            <Stack direction="row" spacing={1.5} alignItems="center" mb={2} sx={{ display: { xs: "flex", md: "none" } }}>
+              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ fontSize: "1.2rem" }}>
+                {event.nome}
+              </Typography>
+              {event.classificacao && event.classificacao !== "Livre" && (
+                <Chip
+                  label={`+${event.classificacao}`}
+                  size="small"
+                  sx={{ backgroundColor: "#132144", color: "#fff", fontWeight: 700 }}
+                />
+              )}
+            </Stack>
+
             <Stack spacing={1} mb={3}>
               <Stack direction="row" spacing={1} alignItems="center">
                 <CalendarTodayIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
@@ -235,8 +248,8 @@ export default function EventDetailPage() {
 
           {/* Coluna direita */}
           <Grid item xs={12} md={9}>
-            <Stack direction="row" spacing={1.5} alignItems="center" mb={0.5}>
-              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ fontSize: { xs: "1.2rem", md: "1.5rem" } }}>
+            <Stack direction="row" spacing={1.5} alignItems="center" mb={0.5} sx={{ display: { xs: "none", md: "flex" } }}>
+              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ fontSize: "1.5rem" }}>
                 {event.nome}
               </Typography>
               {event.classificacao && event.classificacao !== "Livre" && (
@@ -287,7 +300,7 @@ export default function EventDetailPage() {
                       <Box key={lot.id} py={1}>
                         <Box display="flex" justifyContent="space-between" alignItems="center">
                           <Box>
-                            <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.81rem", letterSpacing: "0.01em" }}>
+                            <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.729rem", letterSpacing: "0.01em" }}>
                               {lot.nome}
                             </Typography>
                           </Box>
