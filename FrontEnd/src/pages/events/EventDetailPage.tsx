@@ -22,6 +22,7 @@ import { getMyTickets } from "../../api/orders";
 import type { LotDto } from "../../types";
 import CheckoutForm from "../checkout/CheckoutForm";
 import { formatarData, formatarHora } from "../../utils/date";
+import { paraLinkWhatsapp } from "../../utils/whatsapp";
 import { useAuthStore } from "../../store/authStore";
 
 export default function EventDetailPage() {
@@ -176,7 +177,7 @@ export default function EventDetailPage() {
                       spacing={1}
                       alignItems="center"
                       component="a"
-                      href={`https://wa.me/${event.contatoWhatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Olá! Tenho uma dúvida sobre o evento "${event.nome}".`)}`}
+                      href={`https://wa.me/${paraLinkWhatsapp(event.contatoWhatsapp)}?text=${encodeURIComponent(`Olá! Tenho uma dúvida sobre o evento "${event.nome}".`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       sx={{ textDecoration: "none" }}
