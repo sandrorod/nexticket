@@ -15,6 +15,16 @@ import type { TicketDto } from "../../types";
 
 const contentFontSize = "0.7875rem";
 
+const statusOrder: Record<string, number> = { Disponivel: 0, Utilizado: 1, Cancelado: 2 };
+
+function ordenarTickets(tickets: TicketDto[]): TicketDto[] {
+  return [...tickets].sort((a, b) => {
+    const statusDiff = (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99);
+    if (statusDiff !== 0) return statusDiff;
+    return a.nome.localeCompare(b.nome, "pt-BR");
+  });
+}
+
 function formatarValor(valor: number | null) {
   return valor === null || valor === undefined ? "-" : `R$ ${valor.toFixed(2)}`;
 }
@@ -137,11 +147,13 @@ export default function TicketsDialog({
   const [ticketCancelando, setTicketCancelando] = useState<string | null>(null);
   const [exportando, setExportando] = useState(false);
 
-  const { data: tickets, isLoading } = useQuery({
+  const { data: ticketsData, isLoading } = useQuery({
     queryKey: ["tickets", eventId],
     queryFn: () => getTicketsByEvent(eventId),
     enabled: open && !!eventId,
   });
+
+  const tickets = ticketsData ? ordenarTickets(ticketsData) : ticketsData;
 
   const handleCancel = async (ticket: TicketDto) => {
     if (!confirm(`Excluir o ingresso de ${ticket.nome}? Esta ação não pode ser desfeita.`)) return;
