@@ -26,7 +26,7 @@ export default function Footer() {
 
   return (
     <Box component="footer" sx={{ backgroundColor: "#f8fafc", borderTop: "1px solid rgba(231, 234, 243, 0.9)", mt: { xs: 0.16, sm: 1.6 } }}>
-      <Container sx={{ py: 6 }}>
+      <Container sx={{ pt: { xs: 0.6, sm: 6 }, pb: 6 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
             <Typography variant="h6" fontWeight={800} color="text.primary" mb={1.5}>
