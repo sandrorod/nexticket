@@ -132,6 +132,7 @@ export default function TicketsDialog({
 }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const queryClient = useQueryClient();
   const [ticketCancelando, setTicketCancelando] = useState<string | null>(null);
   const [exportando, setExportando] = useState(false);
@@ -225,7 +226,7 @@ export default function TicketsDialog({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth={isMobile ? "sm" : "lg"} fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth={isMobile ? "sm" : "lg"} fullWidth fullScreen={isSmallScreen}>
       <DialogTitle>Ingressos vendidos</DialogTitle>
       <DialogContent>
         {isLoading && (
@@ -246,7 +247,7 @@ export default function TicketsDialog({
           </Box>
         )}
         {!isLoading && !isMobile && <Divider sx={{ mb: 0.5 }} />}
-        <Box sx={{ maxHeight: "22rem", overflowY: "auto" }}>
+        <Box sx={{ maxHeight: isSmallScreen ? "none" : "22rem", overflowY: "auto", overflowX: "hidden" }}>
           <Box display="flex" flexDirection="column" gap={0.5}>
             {tickets?.map((ticket, idx) => (
               <Box key={ticket.id}>

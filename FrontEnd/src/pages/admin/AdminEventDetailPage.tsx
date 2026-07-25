@@ -4,8 +4,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Container, Typography, Button, Box, Chip, Paper, Table, TableHead,
   TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent,
-  TextField, DialogActions, Alert, Grid, ButtonBase,
+  TextField, DialogActions, Alert, Grid, ButtonBase, useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import { getEventById, getLotsByEvent, cancelEvent, createLot, updateLot, type LotPayload } from "../../api/events";
 import type { LotDto } from "../../types";
@@ -29,6 +30,8 @@ function toLocalInput(iso?: string) {
 export default function AdminEventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [lotDialogOpen, setLotDialogOpen] = useState(false);
   const [ticketsDialogOpen, setTicketsDialogOpen] = useState(false);
@@ -180,7 +183,7 @@ export default function AdminEventDetailPage() {
       </Paper>
     </Container>
 
-      <Dialog open={lotDialogOpen} onClose={() => setLotDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog open={lotDialogOpen} onClose={() => setLotDialogOpen(false)} maxWidth="sm" fullWidth fullScreen={isSmallScreen}>
         <DialogTitle>{editingLot ? "Editar lote" : "Novo lote"}</DialogTitle>
         <DialogContent>
           {error && <Alert severity="error" sx={{ mb: 2, mt: 1 }}>{error}</Alert>}
@@ -205,10 +208,10 @@ export default function AdminEventDetailPage() {
             <Grid item xs={6}>
               <TextField label="Quantidade" type="number" value={lotForm.quantidade} onChange={updateLotField("quantidade")} required fullWidth inputProps={{ min: 1 }} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <TextField label="Início das vendas" type="datetime-local" value={lotForm.dataInicio} onChange={updateLotField("dataInicio")} required fullWidth InputLabelProps={{ shrink: true }} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <TextField label="Fim das vendas" type="datetime-local" value={lotForm.dataFim} onChange={updateLotField("dataFim")} required fullWidth InputLabelProps={{ shrink: true }} />
             </Grid>
           </Grid>

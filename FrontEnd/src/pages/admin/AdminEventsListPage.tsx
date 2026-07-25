@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Container, Typography, Button, Table, TableHead, TableRow, TableCell,
-  TableBody, Chip, Box, Paper,
+  TableBody, Chip, Box, Paper, TableContainer, useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import { getEvents } from "../../api/events";
 import { formatarData } from "../../utils/date";
@@ -17,14 +18,22 @@ const statusColor: Record<string, "success" | "default" | "error" | "warning"> =
 
 export default function AdminEventsListPage() {
   const { data: events, isLoading } = useQuery({ queryKey: ["admin-events"], queryFn: getEvents });
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container sx={{ py: 4 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" fontWeight={800} color="text.primary" sx={{ fontSize: "1.7rem" }}>Meus eventos</Typography>
-        <Button component={RouterLink} to="/admin/eventos/novo" variant="contained" startIcon={<AddIcon />} sx={{ borderRadius: "0.5rem" }}>
-          Novo evento
+        <Button
+          component={RouterLink}
+          to="/admin/eventos/novo"
+          variant="contained"
+          startIcon={!isMobile ? <AddIcon /> : undefined}
+          sx={{ borderRadius: "0.5rem", minWidth: isMobile ? 0 : undefined, px: isMobile ? 1.5 : undefined }}
+        >
+          {isMobile ? <AddIcon /> : "Novo evento"}
         </Button>
       </Box>
 
@@ -32,7 +41,8 @@ export default function AdminEventsListPage() {
 
       {!isLoading && (
         <Paper sx={{ borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
-          <Table>
+          <TableContainer sx={{ overflowX: "auto" }}>
+          <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
                 <TableCell>Nome</TableCell>
@@ -73,6 +83,7 @@ export default function AdminEventsListPage() {
               )}
             </TableBody>
           </Table>
+          </TableContainer>
         </Paper>
       )}
     </Container>

@@ -3,8 +3,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Container, Typography, Button, Box, Paper, Table, TableHead, TableRow,
   TableCell, TableBody, Chip, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Alert, Grid,
+  TextField, Alert, Grid, useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import { getStaff, createStaff, deactivateStaff, reactivateStaff, type CreateStaffPayload } from "../../api/staff";
 
@@ -12,6 +13,8 @@ const emptyForm: CreateStaffPayload = { nome: "", email: "", senha: "", telefone
 
 export default function StaffPage() {
   const queryClient = useQueryClient();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const { data: staff, isLoading } = useQuery({ queryKey: ["staff"], queryFn: getStaff });
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -111,7 +114,7 @@ export default function StaffPage() {
       )}
     </Container>
 
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth fullScreen={isSmallScreen}>
         <DialogTitle>Novo funcionário</DialogTitle>
         <DialogContent>
           {error && <Alert severity="error" sx={{ mb: 2, mt: 1 }}>{error}</Alert>}
