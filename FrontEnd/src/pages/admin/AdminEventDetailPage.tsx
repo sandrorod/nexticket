@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Container, Typography, Button, Box, Chip, Paper, Table, TableHead,
   TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent,
-  TextField, DialogActions, Alert, Grid, ButtonBase, useMediaQuery,
+  TextField, DialogActions, Alert, Grid, ButtonBase, useMediaQuery, TableContainer,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
@@ -105,13 +105,20 @@ export default function AdminEventDetailPage() {
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container sx={{ py: 4 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={3}>
+      <Box
+        display="flex"
+        flexDirection={{ xs: "column", sm: "row" }}
+        justifyContent="space-between"
+        alignItems={{ xs: "stretch", sm: "flex-start" }}
+        gap={2}
+        mb={3}
+      >
         <Box>
           <Chip label={event.status} size="small" sx={{ mb: 1, fontWeight: 700 }} />
           <Typography variant="h4" fontWeight={800} color="text.primary" sx={{ fontSize: "1.7rem" }}>{event.nome}</Typography>
           <Typography color="text.secondary">{event.local} · {formatarData(event.data)} às {formatarHora(event.hora)}</Typography>
         </Box>
-        <Box display="flex" gap={1}>
+        <Box display="flex" flexDirection={{ xs: "column", sm: "row" }} gap={1}>
           <Button component={RouterLink} to={`/admin/eventos/${id}/editar`} variant="outlined" sx={{ borderRadius: "0.5rem" }}>Editar</Button>
           {event.status !== "Cancelado" && (
             <Button color="error" variant="outlined" onClick={handleCancelEvent} sx={{ borderRadius: "0.5rem" }}>Cancelar evento</Button>
@@ -141,11 +148,19 @@ export default function AdminEventDetailPage() {
 
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6" fontWeight={700} color="text.primary">Lotes</Typography>
-        <Button startIcon={<AddIcon />} variant="contained" onClick={openNewLot} sx={{ borderRadius: "0.5rem" }}>Novo lote</Button>
+        <Button
+          startIcon={!isSmallScreen ? <AddIcon /> : undefined}
+          variant="contained"
+          onClick={openNewLot}
+          sx={{ borderRadius: "0.5rem", minWidth: isSmallScreen ? 0 : undefined, px: isSmallScreen ? 1.5 : undefined }}
+        >
+          {isSmallScreen ? <AddIcon /> : "Novo lote"}
+        </Button>
       </Box>
 
       <Paper sx={{ borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
-        <Table>
+        <TableContainer sx={{ overflowX: "auto" }}>
+        <Table sx={{ minWidth: 560 }}>
           <TableHead>
             <TableRow>
               <TableCell>Nome</TableCell>
@@ -180,6 +195,7 @@ export default function AdminEventDetailPage() {
             )}
           </TableBody>
         </Table>
+        </TableContainer>
       </Paper>
     </Container>
 
