@@ -118,7 +118,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
           holdersDoLote(lot.id, quantity).map((holder, i) => (
             <Card key={`${lot.id}-${i}`} sx={{ border: "1px solid rgba(231, 234, 243, 0.9)" }}>
               <CardContent>
-                <Typography fontWeight={700} color="text.primary" mb={2}>Ingresso {i + 1} — {lot.nome}</Typography>
+                <Typography fontWeight={700} color="text.primary" mb={2} sx={{ fontSize: "0.9rem" }}>Ingresso {i + 1} — {lot.nome}</Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={7}>
                     <TextField
