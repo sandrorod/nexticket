@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Container, Typography, Button, Box, Paper, Table, TableHead, TableRow,
   TableCell, TableBody, Chip, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Alert, Grid, useMediaQuery,
+  TextField, Alert, Grid, useMediaQuery, TableContainer,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
@@ -73,7 +73,8 @@ export default function StaffPage() {
 
       {!isLoading && (
         <Paper sx={{ borderRadius: "0.75rem", boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)" }} elevation={0}>
-          <Table>
+          <TableContainer sx={{ overflowX: "auto" }}>
+          <Table sx={{ minWidth: 560 }}>
             <TableHead>
               <TableRow>
                 <TableCell>Nome</TableCell>
@@ -110,6 +111,7 @@ export default function StaffPage() {
               )}
             </TableBody>
           </Table>
+          </TableContainer>
         </Paper>
       )}
     </Container>
