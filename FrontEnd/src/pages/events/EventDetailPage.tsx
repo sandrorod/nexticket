@@ -62,8 +62,9 @@ export default function EventDetailPage() {
     setQuantidades((prev) => ({ ...prev, [lot.id]: Math.max(0, Math.min(value, max)) }));
   };
 
-  const loteSelecionado = lots?.find((l) => (quantidades[l.id] ?? 0) > 0);
-  const quantidadeSelecionada = loteSelecionado ? quantidades[loteSelecionado.id] : 0;
+  const lotesSelecionados = (lots ?? [])
+    .filter((l) => (quantidades[l.id] ?? 0) > 0)
+    .map((lot) => ({ lot, quantity: quantidades[lot.id] }));
 
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
@@ -320,9 +321,9 @@ export default function EventDetailPage() {
               </CardContent>
             </Card>
 
-            {loteSelecionado && quantidadeSelecionada > 0 && (
+            {lotesSelecionados.length > 0 && (
               <Box sx={{ mb: 3 }}>
-                <CheckoutForm event={event} lot={loteSelecionado} quantity={quantidadeSelecionada} />
+                <CheckoutForm event={event} selecionados={lotesSelecionados} />
               </Box>
             )}
 

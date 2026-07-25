@@ -5,34 +5,46 @@ import { Box, Button, Card, CardContent, TextField, Typography, Alert, Divider, 
 import type { EventDto, LotDto, TicketHolder } from "../../types";
 import { createOrder } from "../../api/orders";
 
-interface Props {
-  event: EventDto;
+export interface SelectedLot {
   lot: LotDto;
   quantity: number;
+}
+
+interface Props {
+  event: EventDto;
+  selecionados: SelectedLot[];
 }
 
 const idades = Array.from({ length: 100 }, (_, i) => i);
 
 const emptyHolder: TicketHolder = { nome: "", email: "", telefone: "", cpf: "", idade: "" as unknown as number };
 
-export default function CheckoutForm({ event, lot, quantity }: Props) {
+export default function CheckoutForm({ event, selecionados }: Props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [holders, setHolders] = useState<TicketHolder[]>(
-    Array.from({ length: quantity }, () => ({ ...emptyHolder }))
-  );
+  const [holdersPorLote, setHoldersPorLote] = useState<Record<string, TicketHolder[]>>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  if (holders.length !== quantity) {
-    setHolders(Array.from({ length: quantity }, (_, i) => holders[i] ?? { ...emptyHolder }));
+  const holdersDoLote = (lotId: string, quantity: number) => {
+    const atuais = holdersPorLote[lotId] ?? [];
+    if (atuais.length === quantity) return atuais;
+    return Array.from({ length: quantity }, (_, i) => atuais[i] ?? { ...emptyHolder });
+  };
+
+  for (const { lot, quantity } of selecionados) {
+    const atuais = holdersPorLote[lot.id] ?? [];
+    if (atuais.length !== quantity) {
+      const proximos = holdersDoLote(lot.id, quantity);
+      setHoldersPorLote((prev) => ({ ...prev, [lot.id]: proximos }));
+    }
   }
 
-  const updateHolder = (index: number, field: keyof TicketHolder, value: string | number) => {
-    setHolders((prev) => {
-      const next = [...prev];
+  const updateHolder = (lotId: string, index: number, field: keyof TicketHolder, value: string | number) => {
+    setHoldersPorLote((prev) => {
+      const next = [...(prev[lotId] ?? [])];
       next[index] = { ...next[index], [field]: value };
-      return next;
+      return { ...prev, [lotId]: next };
     });
   };
 
@@ -45,25 +57,32 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
     e.preventDefault();
     setError(null);
 
-    const indiceInvalido = holders.findIndex((h) => !temNomeESobrenome(h.nome));
-    if (indiceInvalido !== -1) {
-      setError(`Informe nome e sobrenome completos no Ingresso ${indiceInvalido + 1} — ${lot.nome}.`);
-      return;
-    }
+    for (const { lot, quantity } of selecionados) {
+      const holders = holdersDoLote(lot.id, quantity);
 
-    const indiceSemIdade = holders.findIndex(
-      (h) => h.idade === undefined || h.idade === null || (h.idade as unknown as string) === "" || h.idade < 0 || h.idade > 99
-    );
-    if (indiceSemIdade !== -1) {
-      setError(`Informe a idade no Ingresso ${indiceSemIdade + 1} — ${lot.nome}.`);
-      return;
+      const indiceInvalido = holders.findIndex((h) => !temNomeESobrenome(h.nome));
+      if (indiceInvalido !== -1) {
+        setError(`Informe nome e sobrenome completos no Ingresso ${indiceInvalido + 1} — ${lot.nome}.`);
+        return;
+      }
+
+      const indiceSemIdade = holders.findIndex(
+        (h) => h.idade === undefined || h.idade === null || (h.idade as unknown as string) === "" || h.idade < 0 || h.idade > 99
+      );
+      if (indiceSemIdade !== -1) {
+        setError(`Informe a idade no Ingresso ${indiceSemIdade + 1} — ${lot.nome}.`);
+        return;
+      }
     }
 
     setLoading(true);
     try {
       const order = await createOrder({
         eventId: event.id,
-        itens: [{ lotId: lot.id, ingressos: holders.map((h) => ({ ...h, cpf: h.cpf || undefined })) }],
+        itens: selecionados.map(({ lot, quantity }) => ({
+          lotId: lot.id,
+          ingressos: holdersDoLote(lot.id, quantity).map((h) => ({ ...h, cpf: h.cpf || undefined })),
+        })),
       });
       await queryClient.invalidateQueries({ queryKey: ["my-tickets"] });
       navigate(`/pedidos/${order.id}`);
@@ -74,7 +93,7 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
     }
   };
 
-  const total = lot.preco * quantity;
+  const total = selecionados.reduce((sum, { lot, quantity }) => sum + lot.preco * quantity, 0);
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
@@ -95,70 +114,72 @@ export default function CheckoutForm({ event, lot, quantity }: Props) {
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
       <Box display="flex" flexDirection="column" gap={2} mb={3}>
-        {holders.map((holder, i) => (
-          <Card key={i} sx={{ border: "1px solid rgba(231, 234, 243, 0.9)" }}>
-            <CardContent>
-              <Typography fontWeight={700} color="text.primary" mb={2}>Ingresso {i + 1} — {lot.nome}</Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={7}>
-                  <TextField
-                    label="Nome completo"
-                    placeholder="Nome e sobrenome"
-                    value={holder.nome}
-                    onChange={(e) => updateHolder(i, "nome", e.target.value)}
-                    required
-                    fullWidth
-                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                  />
+        {selecionados.map(({ lot, quantity }) =>
+          holdersDoLote(lot.id, quantity).map((holder, i) => (
+            <Card key={`${lot.id}-${i}`} sx={{ border: "1px solid rgba(231, 234, 243, 0.9)" }}>
+              <CardContent>
+                <Typography fontWeight={700} color="text.primary" mb={2}>Ingresso {i + 1} — {lot.nome}</Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={7}>
+                    <TextField
+                      label="Nome completo"
+                      placeholder="Nome e sobrenome"
+                      value={holder.nome}
+                      onChange={(e) => updateHolder(lot.id, i, "nome", e.target.value)}
+                      required
+                      fullWidth
+                      sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={5}>
+                    <TextField
+                      label="Telefone"
+                      value={holder.telefone}
+                      onChange={(e) => updateHolder(lot.id, i, "telefone", e.target.value)}
+                      required
+                      fullWidth
+                      sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                    />
+                  </Grid>
+                  <Grid item xs={9} sm={7}>
+                    <TextField
+                      label="Email"
+                      type="email"
+                      value={holder.email}
+                      onChange={(e) => updateHolder(lot.id, i, "email", e.target.value)}
+                      required
+                      fullWidth
+                      sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                    />
+                  </Grid>
+                  <Grid item xs={3} sm={1}>
+                    <TextField
+                      select
+                      label="Idade"
+                      value={holder.idade === undefined || holder.idade === null ? "" : holder.idade}
+                      onChange={(e) => updateHolder(lot.id, i, "idade", Number(e.target.value))}
+                      required
+                      fullWidth
+                    >
+                      {idades.map((idade) => (
+                        <MenuItem key={idade} value={idade}>{idade}</MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      label="CPF (opcional)"
+                      value={holder.cpf}
+                      onChange={(e) => updateHolder(lot.id, i, "cpf", e.target.value)}
+                      fullWidth
+                      sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={5}>
-                  <TextField
-                    label="Telefone"
-                    value={holder.telefone}
-                    onChange={(e) => updateHolder(i, "telefone", e.target.value)}
-                    required
-                    fullWidth
-                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                  />
-                </Grid>
-                <Grid item xs={9} sm={7}>
-                  <TextField
-                    label="Email"
-                    type="email"
-                    value={holder.email}
-                    onChange={(e) => updateHolder(i, "email", e.target.value)}
-                    required
-                    fullWidth
-                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                  />
-                </Grid>
-                <Grid item xs={3} sm={1}>
-                  <TextField
-                    select
-                    label="Idade"
-                    value={holder.idade === undefined || holder.idade === null ? "" : holder.idade}
-                    onChange={(e) => updateHolder(i, "idade", Number(e.target.value))}
-                    required
-                    fullWidth
-                  >
-                    {idades.map((idade) => (
-                      <MenuItem key={idade} value={idade}>{idade}</MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    label="CPF (opcional)"
-                    value={holder.cpf}
-                    onChange={(e) => updateHolder(i, "cpf", e.target.value)}
-                    fullWidth
-                    sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                  />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))
+        )}
       </Box>
 
       <Divider sx={{ mb: 2 }} />
