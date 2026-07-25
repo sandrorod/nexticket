@@ -297,11 +297,7 @@ export default function EventFormPage() {
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
-          </Grid>
-
-          <Typography variant="overline" color="text.secondary">Links adicionais (opcional)</Typography>
-          <Grid container spacing={2} mt={0.5} mb={4}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} md={6}>
               <TextField label="URL da transmissão" value={form.transmissaoUrl} onChange={update("transmissaoUrl")} fullWidth />
             </Grid>
           </Grid>
