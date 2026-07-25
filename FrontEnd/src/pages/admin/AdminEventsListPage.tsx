@@ -1,12 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { Link as RouterLink } from "react-router-dom";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Container, Typography, Button, Table, TableHead, TableRow, TableCell,
   TableBody, Chip, Box, Paper, TableContainer, useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
-import { getEvents } from "../../api/events";
+import { getEvents, duplicateEvent } from "../../api/events";
 import { formatarData } from "../../utils/date";
 
 const statusColor: Record<string, "success" | "default" | "error" | "warning"> = {
@@ -20,6 +21,23 @@ export default function AdminEventsListPage() {
   const { data: events, isLoading } = useQuery({ queryKey: ["admin-events"], queryFn: getEvents });
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const [duplicandoId, setDuplicandoId] = useState<string | null>(null);
+
+  const handleDuplicate = async (eventId: string) => {
+    if (!confirm("Duplicar este evento? Um novo evento (com os mesmos lotes) será criado como cópia.")) return;
+    setDuplicandoId(eventId);
+    try {
+      const created = await duplicateEvent(eventId);
+      await queryClient.invalidateQueries({ queryKey: ["admin-events"] });
+      navigate(`/admin/eventos/${created.id}`);
+    } catch (err: any) {
+      alert(err?.response?.data?.errors?.join(" ") ?? "Não foi possível duplicar o evento.");
+    } finally {
+      setDuplicandoId(null);
+    }
+  };
 
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
@@ -66,9 +84,18 @@ export default function AdminEventsListPage() {
                   <TableCell align="right">{ev.totalIngressosVendidos}</TableCell>
                   <TableCell align="right">R$ {ev.receitaTotal.toFixed(2)}</TableCell>
                   <TableCell align="right">
-                    <Button component={RouterLink} to={`/admin/eventos/${ev.id}`} size="small">
-                      Gerenciar
-                    </Button>
+                    <Box display="flex" gap={0.5} justifyContent="flex-end">
+                      <Button component={RouterLink} to={`/admin/eventos/${ev.id}`} size="small">
+                        Gerenciar
+                      </Button>
+                      <Button
+                        size="small"
+                        disabled={duplicandoId === ev.id}
+                        onClick={() => handleDuplicate(ev.id)}
+                      >
+                        {duplicandoId === ev.id ? "Duplicando..." : "Duplicar"}
+                      </Button>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
