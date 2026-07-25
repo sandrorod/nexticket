@@ -9,6 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { getEventById, createEvent, updateEvent, type EventPayload } from "../../api/events";
 import ImageUpload from "../../components/ImageUpload";
+import { isoParaDatetimeLocal } from "../../utils/date";
 
 const classificacoes = ["Livre", "10", "12", "14", "16", "18"];
 
@@ -67,8 +68,8 @@ export default function EventFormPage() {
         mapaUrl: existing.mapaUrl ?? "",
         imagemUrl: existing.imagemUrl ?? "",
         transmissaoUrl: existing.transmissaoUrl ?? "",
-        vendaInicio: existing.vendaInicio.slice(0, 16),
-        vendaFim: existing.vendaFim.slice(0, 16),
+        vendaInicio: isoParaDatetimeLocal(existing.vendaInicio),
+        vendaFim: isoParaDatetimeLocal(existing.vendaFim),
         maximoPorCpf: existing.maximoPorCpf,
         maximoPorUsuario: existing.maximoPorUsuario,
         cep: existing.cep ?? "",

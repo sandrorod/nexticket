@@ -10,7 +10,7 @@ import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import { getEventById, getLotsByEvent, cancelEvent, createLot, updateLot, type LotPayload } from "../../api/events";
 import type { LotDto } from "../../types";
-import { formatarData, formatarHora } from "../../utils/date";
+import { formatarData, formatarHora, isoParaDatetimeLocal } from "../../utils/date";
 import TicketsDialog from "./TicketsDialog";
 
 const emptyLotForm: LotPayload = {
@@ -21,11 +21,6 @@ const emptyLotForm: LotPayload = {
   dataInicio: "",
   dataFim: "",
 };
-
-function toLocalInput(iso?: string) {
-  if (!iso) return "";
-  return iso.slice(0, 16);
-}
 
 export default function AdminEventDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -59,8 +54,8 @@ export default function AdminEventDetailPage() {
       preco: lot.preco,
       quantidade: lot.quantidade,
       maximoPorUsuario: lot.maximoPorUsuario,
-      dataInicio: toLocalInput(lot.dataInicio),
-      dataFim: toLocalInput(lot.dataFim),
+      dataInicio: isoParaDatetimeLocal(lot.dataInicio),
+      dataFim: isoParaDatetimeLocal(lot.dataFim),
     });
     setError(null);
     setLotDialogOpen(true);
