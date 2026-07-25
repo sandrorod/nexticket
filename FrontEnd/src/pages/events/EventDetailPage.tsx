@@ -110,17 +110,15 @@ export default function EventDetailPage() {
               >
                 <FacebookIcon />
               </IconButton>
-              {event.contatoWhatsapp && (
-                <IconButton
-                  component="a"
-                  href={`https://wa.me/${event.contatoWhatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Confira este evento: ${window.location.href}`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{ backgroundColor: "rgba(0, 166, 80, 0.08)", color: "#00a650" }}
-                >
-                  <WhatsAppIcon />
-                </IconButton>
-              )}
+              <IconButton
+                component="a"
+                href={`https://wa.me/?text=${encodeURIComponent(`Confira este evento: ${window.location.href}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ backgroundColor: "rgba(0, 166, 80, 0.08)", color: "#00a650" }}
+              >
+                <WhatsAppIcon />
+              </IconButton>
             </Stack>
             <Typography variant="caption" display="block" textAlign="left" color="text.secondary" mb={3}>
               Compartilhe este evento
@@ -178,7 +176,7 @@ export default function EventDetailPage() {
                       spacing={1}
                       alignItems="center"
                       component="a"
-                      href={`https://wa.me/${event.contatoWhatsapp.replace(/\D/g, "")}`}
+                      href={`https://wa.me/${event.contatoWhatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Olá! Tenho uma dúvida sobre o evento "${event.nome}".`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       sx={{ textDecoration: "none" }}
