@@ -98,6 +98,7 @@ export interface TicketDto {
   eventLocal: string;
   eventData: string;
   eventHora: string;
+  lotId: string;
   lotNome: string;
   nome: string;
   email: string;

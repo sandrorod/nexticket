@@ -21,6 +21,7 @@ function mapTicketToDto(t: any, valorPago: number | null = null) {
     eventLocal: t.Events.Local,
     eventData: t.Events.Data,
     eventHora: t.Events.Hora,
+    lotId: t.LotId,
     lotNome: t.Lots.Nome,
     nome: t.Nome,
     email: t.Email,

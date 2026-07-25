@@ -49,15 +49,16 @@ export default function EventDetailPage() {
 
   if (!event) return null;
 
-  const jaComprados = (meusIngressos ?? []).filter(
-    (t) => t.eventId === event.id && t.status !== "Cancelado"
-  ).length;
-  const restanteNoEvento = event.maximoPorUsuario > 0
-    ? Math.max(0, event.maximoPorUsuario - jaComprados)
-    : Infinity;
+  const jaCompradosPorLote = (lotId: string) =>
+    (meusIngressos ?? []).filter((t) => t.lotId === lotId && t.status !== "Cancelado").length;
+
+  const restanteNoLote = (lot: LotDto) =>
+    lot.maximoPorUsuario > 0
+      ? Math.max(0, lot.maximoPorUsuario - jaCompradosPorLote(lot.id))
+      : Infinity;
 
   const setQuantidade = (lot: LotDto, value: number) => {
-    const max = Math.min(lot.maximoPorUsuario, lot.quantidadeDisponivel, restanteNoEvento, 10);
+    const max = Math.min(lot.quantidadeDisponivel, restanteNoLote(lot), 10);
     setQuantidades((prev) => ({ ...prev, [lot.id]: Math.max(0, Math.min(value, max)) }));
   };
 
@@ -271,44 +272,47 @@ export default function EventDetailPage() {
                   Ingressos
                 </Typography>
                 <Divider sx={{ my: 1.5 }} />
-                {restanteNoEvento === 0 && (
-                  <Alert severity="warning" sx={{ mb: 2 }}>
-                    Você já atingiu o limite de {event.maximoPorUsuario} ingresso(s) por login para este evento.
-                  </Alert>
-                )}
                 <Stack divider={<Divider />} spacing={2}>
                   {lots?.map((lot) => {
                     const qtd = quantidades[lot.id] ?? 0;
-                    const max = Math.min(lot.maximoPorUsuario, lot.quantidadeDisponivel, restanteNoEvento, 10);
+                    const restante = restanteNoLote(lot);
+                    const max = Math.min(lot.quantidadeDisponivel, restante, 10);
                     return (
-                      <Box key={lot.id} display="flex" justifyContent="space-between" alignItems="center" py={1}>
-                        <Box>
-                          <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.81rem", letterSpacing: "0.01em" }}>
-                            {lot.nome}
-                          </Typography>
-                        </Box>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                          <Typography fontWeight={700} color="text.primary" sx={{ fontSize: "0.7875rem" }}>R$ {lot.preco.toFixed(2)}</Typography>
-                          <Stack direction="row" alignItems="center" spacing={1}>
-                            <IconButton
-                              size="small"
-                              disabled={qtd === 0}
-                              onClick={() => setQuantidade(lot, qtd - 1)}
-                              sx={{ border: "1px solid rgba(231, 234, 243, 0.95)" }}
-                            >
-                              <RemoveIcon fontSize="small" />
-                            </IconButton>
-                            <Typography sx={{ minWidth: 20, textAlign: "center" }}>{qtd}</Typography>
-                            <IconButton
-                              size="small"
-                              disabled={qtd >= max || lot.quantidadeDisponivel === 0}
-                              onClick={() => setQuantidade(lot, qtd + 1)}
-                              sx={{ backgroundColor: "primary.main", color: "#fff", "&:hover": { backgroundColor: "primary.dark" } }}
-                            >
-                              <AddIcon fontSize="small" />
-                            </IconButton>
+                      <Box key={lot.id} py={1}>
+                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                          <Box>
+                            <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.81rem", letterSpacing: "0.01em" }}>
+                              {lot.nome}
+                            </Typography>
+                          </Box>
+                          <Stack direction="row" spacing={2} alignItems="center">
+                            <Typography fontWeight={700} color="text.primary" sx={{ fontSize: "0.7875rem" }}>R$ {lot.preco.toFixed(2)}</Typography>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                              <IconButton
+                                size="small"
+                                disabled={qtd === 0}
+                                onClick={() => setQuantidade(lot, qtd - 1)}
+                                sx={{ border: "1px solid rgba(231, 234, 243, 0.95)" }}
+                              >
+                                <RemoveIcon fontSize="small" />
+                              </IconButton>
+                              <Typography sx={{ minWidth: 20, textAlign: "center" }}>{qtd}</Typography>
+                              <IconButton
+                                size="small"
+                                disabled={qtd >= max || lot.quantidadeDisponivel === 0}
+                                onClick={() => setQuantidade(lot, qtd + 1)}
+                                sx={{ backgroundColor: "primary.main", color: "#fff", "&:hover": { backgroundColor: "primary.dark" } }}
+                              >
+                                <AddIcon fontSize="small" />
+                              </IconButton>
+                            </Stack>
                           </Stack>
-                        </Stack>
+                        </Box>
+                        {restante === 0 && (
+                          <Typography variant="caption" color="warning.main" sx={{ display: "block", mt: 0.5 }}>
+                            Você já atingiu o limite de {lot.maximoPorUsuario} ingresso(s) por login neste lote.
+                          </Typography>
+                        )}
                       </Box>
                     );
                   })}

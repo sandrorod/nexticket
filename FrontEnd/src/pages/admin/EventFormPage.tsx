@@ -297,17 +297,6 @@ export default function EventFormPage() {
                 InputLabelProps={{ shrink: true }}
               />
             </Grid>
-            <Grid item xs={6} sm={3} md={3}>
-              <TextField
-                label="Máximo por login"
-                type="number"
-                value={form.maximoPorUsuario}
-                onChange={update("maximoPorUsuario")}
-                required
-                fullWidth
-                inputProps={{ min: 1 }}
-              />
-            </Grid>
           </Grid>
 
           <Typography variant="overline" color="text.secondary">Links adicionais (opcional)</Typography>

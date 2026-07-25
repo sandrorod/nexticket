@@ -161,7 +161,7 @@ export default function AdminEventDetailPage() {
               <TableCell>Nome</TableCell>
               <TableCell align="right">Preço</TableCell>
               <TableCell align="right">Vendidos / Total</TableCell>
-              <TableCell align="right">Máx. por usuário</TableCell>
+              <TableCell align="right">Máx. por login</TableCell>
               <TableCell>Status</TableCell>
               <TableCell align="right">Ações</TableCell>
             </TableRow>
@@ -204,7 +204,7 @@ export default function AdminEventDetailPage() {
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
-                label="Máximo por usuário"
+                label="Máximo por login"
                 type="number"
                 value={lotForm.maximoPorUsuario}
                 onChange={updateLotField("maximoPorUsuario")}
