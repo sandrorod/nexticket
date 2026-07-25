@@ -25,7 +25,7 @@ export default function Footer() {
   const contaHref = token ? "/conta" : "/login";
 
   return (
-    <Box component="footer" sx={{ backgroundColor: "#f8fafc", borderTop: "1px solid rgba(231, 234, 243, 0.9)", mt: 1.6 }}>
+    <Box component="footer" sx={{ backgroundColor: "#f8fafc", borderTop: "1px solid rgba(231, 234, 243, 0.9)", mt: { xs: 0.16, sm: 1.6 } }}>
       <Container sx={{ py: 6 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
