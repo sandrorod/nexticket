@@ -236,7 +236,7 @@ export default function EventDetailPage() {
           {/* Coluna direita */}
           <Grid item xs={12} md={9}>
             <Stack direction="row" spacing={1.5} alignItems="center" mb={0.5}>
-              <Typography variant="h5" fontWeight={700} color="text.primary">
+              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ fontSize: { xs: "1.2rem", md: "1.5rem" } }}>
                 {event.nome}
               </Typography>
               {event.classificacao && event.classificacao !== "Livre" && (
@@ -247,7 +247,13 @@ export default function EventDetailPage() {
                 />
               )}
             </Stack>
-            <Typography variant="body1" color="primary.main" fontWeight={600} mb={3} sx={{ textAlign: "left", fontSize: "0.9rem" }}>
+            <Typography
+              variant="body1"
+              color="primary.main"
+              fontWeight={600}
+              mb={3}
+              sx={{ textAlign: "left", fontSize: "0.9rem", display: { xs: "none", md: "block" } }}
+            >
               {formatarData(event.data).toUpperCase()} · {formatarHora(event.hora)}
             </Typography>
 

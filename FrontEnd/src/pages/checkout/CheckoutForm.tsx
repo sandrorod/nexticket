@@ -141,7 +141,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
                       sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
                     />
                   </Grid>
-                  <Grid item xs={9} sm={7}>
+                  <Grid item xs={9} sm={6}>
                     <TextField
                       label="Email"
                       type="email"
@@ -152,7 +152,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
                       sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
                     />
                   </Grid>
-                  <Grid item xs={3} sm={1}>
+                  <Grid item xs={3} sm={2}>
                     <TextField
                       select
                       label="Idade"
