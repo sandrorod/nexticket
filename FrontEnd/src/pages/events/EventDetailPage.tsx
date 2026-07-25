@@ -273,7 +273,7 @@ export default function EventDetailPage() {
                 <Divider sx={{ my: 1.5 }} />
                 {restanteNoEvento === 0 && (
                   <Alert severity="warning" sx={{ mb: 2 }}>
-                    Você já atingiu o limite de {event.maximoPorUsuario} ingresso(s) por pessoa para este evento.
+                    Você já atingiu o limite de {event.maximoPorUsuario} ingresso(s) por login para este evento.
                   </Alert>
                 )}
                 <Stack divider={<Divider />} spacing={2}>

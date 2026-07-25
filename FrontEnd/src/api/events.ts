@@ -26,7 +26,6 @@ export interface EventPayload {
   transmissaoUrl?: string;
   vendaInicio: string;
   vendaFim: string;
-  maximoPorCpf: number;
   maximoPorUsuario: number;
   cep?: string;
   endereco?: string;
@@ -81,7 +80,6 @@ export const duplicateEvent = async (id: string): Promise<EventDto> => {
     transmissaoUrl: original.transmissaoUrl,
     vendaInicio: original.vendaInicio,
     vendaFim: original.vendaFim,
-    maximoPorCpf: original.maximoPorCpf,
     maximoPorUsuario: original.maximoPorUsuario,
     cep: original.cep,
     endereco: original.endereco,

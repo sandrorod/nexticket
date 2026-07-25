@@ -13,7 +13,6 @@ function validateEventRequest(body: Record<string, unknown>): void {
   v.notEmpty(body.nome as string, "Nome").maxLength(body.nome as string, 200, "Nome");
   v.notEmpty(body.descricao as string, "Descricao").maxLength(body.descricao as string, 4000, "Descricao");
   v.notEmpty(body.local as string, "Local").maxLength(body.local as string, 300, "Local");
-  v.greaterThan(body.maximoPorCpf as number, 0, "MaximoPorCpf");
   v.greaterThan(body.maximoPorUsuario as number, 0, "MaximoPorUsuario");
   v.greaterThanDate(body.vendaFim as string, body.vendaInicio as string, "VendaFim");
   v.maxLength(body.cep as string, 9, "Cep");
@@ -89,7 +88,7 @@ Deno.serve(async (req) => {
         TransmissaoUrl: body.transmissaoUrl ?? null,
         VendaInicio: body.vendaInicio,
         VendaFim: body.vendaFim,
-        MaximoPorCpf: body.maximoPorCpf,
+        MaximoPorCpf: body.maximoPorUsuario,
         MaximoPorUsuario: body.maximoPorUsuario,
         Status: 1, // Publicado
         Cep: body.cep ?? null,
@@ -131,7 +130,7 @@ Deno.serve(async (req) => {
         TransmissaoUrl: body.transmissaoUrl ?? null,
         VendaInicio: body.vendaInicio,
         VendaFim: body.vendaFim,
-        MaximoPorCpf: body.maximoPorCpf,
+        MaximoPorCpf: body.maximoPorUsuario,
         MaximoPorUsuario: body.maximoPorUsuario,
         Cep: body.cep ?? null,
         Endereco: body.endereco ?? null,

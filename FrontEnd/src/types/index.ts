@@ -30,7 +30,6 @@ export interface EventDto {
   vendaInicio: string;
   vendaFim: string;
   status: string;
-  maximoPorCpf: number;
   maximoPorUsuario: number;
   totalIngressosVendidos: number;
   receitaTotal: number;

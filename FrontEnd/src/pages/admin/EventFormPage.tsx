@@ -24,7 +24,6 @@ const emptyForm: EventPayload = {
   transmissaoUrl: "",
   vendaInicio: "",
   vendaFim: "",
-  maximoPorCpf: 4,
   maximoPorUsuario: 4,
   cep: "",
   endereco: "",
@@ -70,7 +69,6 @@ export default function EventFormPage() {
         transmissaoUrl: existing.transmissaoUrl ?? "",
         vendaInicio: isoParaDatetimeLocal(existing.vendaInicio),
         vendaFim: isoParaDatetimeLocal(existing.vendaFim),
-        maximoPorCpf: existing.maximoPorCpf,
         maximoPorUsuario: existing.maximoPorUsuario,
         cep: existing.cep ?? "",
         endereco: existing.endereco ?? "",
@@ -301,18 +299,7 @@ export default function EventFormPage() {
             </Grid>
             <Grid item xs={6} sm={3} md={3}>
               <TextField
-                label="Máximo por CPF"
-                type="number"
-                value={form.maximoPorCpf}
-                onChange={update("maximoPorCpf")}
-                required
-                fullWidth
-                inputProps={{ min: 1 }}
-              />
-            </Grid>
-            <Grid item xs={6} sm={3} md={3}>
-              <TextField
-                label="Máximo por usuário"
+                label="Máximo por login"
                 type="number"
                 value={form.maximoPorUsuario}
                 onChange={update("maximoPorUsuario")}

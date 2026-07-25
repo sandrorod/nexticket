@@ -17,7 +17,6 @@ export function mapEventToDto(ev: any) {
     vendaInicio: ev.VendaInicio,
     vendaFim: ev.VendaFim,
     status: eventStatusNames[ev.Status],
-    maximoPorCpf: ev.MaximoPorCpf,
     maximoPorUsuario: ev.MaximoPorUsuario,
     totalIngressosVendidos: tickets.length,
     // deno-lint-ignore no-explicit-any
