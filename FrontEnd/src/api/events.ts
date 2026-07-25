@@ -53,6 +53,8 @@ export const updateEvent = (id: string, payload: EventPayload) =>
 
 export const cancelEvent = (id: string) => api.post(`/events/${id}/cancel`);
 
+export const deleteEvent = (id: string) => api.delete(`/events/${id}`);
+
 export interface LotPayload {
   nome: string;
   preco: number;

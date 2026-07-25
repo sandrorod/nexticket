@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
-import { getAdminEvents, duplicateEvent } from "../../api/events";
+import { getAdminEvents, duplicateEvent, deleteEvent } from "../../api/events";
 import { formatarData } from "../../utils/date";
 
 const statusColor: Record<string, "success" | "default" | "error" | "warning"> = {
@@ -24,6 +24,7 @@ export default function AdminEventsListPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [duplicandoId, setDuplicandoId] = useState<string | null>(null);
+  const [excluindoId, setExcluindoId] = useState<string | null>(null);
 
   const handleDuplicate = async (eventId: string) => {
     if (!confirm("Duplicar este evento? Um novo evento (com os mesmos lotes) será criado como cópia.")) return;
@@ -36,6 +37,19 @@ export default function AdminEventsListPage() {
       alert(err?.response?.data?.errors?.join(" ") ?? "Não foi possível duplicar o evento.");
     } finally {
       setDuplicandoId(null);
+    }
+  };
+
+  const handleDelete = async (eventId: string) => {
+    if (!confirm("Excluir este evento definitivamente? Esta ação não pode ser desfeita.")) return;
+    setExcluindoId(eventId);
+    try {
+      await deleteEvent(eventId);
+      await queryClient.invalidateQueries({ queryKey: ["admin-events"] });
+    } catch (err: any) {
+      alert(err?.response?.data?.errors?.join(" ") ?? "Não foi possível excluir o evento.");
+    } finally {
+      setExcluindoId(null);
     }
   };
 
@@ -94,6 +108,14 @@ export default function AdminEventsListPage() {
                         onClick={() => handleDuplicate(ev.id)}
                       >
                         {duplicandoId === ev.id ? "Duplicando..." : "Duplicar"}
+                      </Button>
+                      <Button
+                        size="small"
+                        color="error"
+                        disabled={excluindoId === ev.id}
+                        onClick={() => handleDelete(ev.id)}
+                      >
+                        {excluindoId === ev.id ? "Excluindo..." : "Excluir"}
                       </Button>
                     </Box>
                   </TableCell>

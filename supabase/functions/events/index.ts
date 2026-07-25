@@ -1,5 +1,5 @@
 import { corsHeaders, handleOptions } from "../_shared/cors.ts";
-import { errorResponse, NotFoundError } from "../_shared/errors.ts";
+import { errorResponse, NotFoundError, ConflictError } from "../_shared/errors.ts";
 import { supabaseAdmin } from "../_shared/supabaseClient.ts";
 import { requireAuth, requireRole } from "../_shared/jwt.ts";
 import { Validator } from "../_shared/validate.ts";
@@ -173,6 +173,29 @@ Deno.serve(async (req) => {
 
       const { error } = await supabaseAdmin.from("Events").update({ Status: 2 }).eq("Id", id); // Cancelado
       if (error) throw error;
+
+      return new Response(null, { status: 204, headers });
+    }
+
+    if (req.method === "DELETE" && id) {
+      const { data: existing } = await supabaseAdmin.from("Events").select("Id").eq("Id", id).maybeSingle();
+      if (!existing) throw new NotFoundError("Evento", id);
+
+      const { count: ticketCount, error: ticketError } = await supabaseAdmin
+        .from("Tickets")
+        .select("Id", { count: "exact", head: true })
+        .eq("EventId", id)
+        .neq("Status", 2); // 2 = Cancelado
+      if (ticketError) throw ticketError;
+      if ((ticketCount ?? 0) > 0) {
+        throw new ConflictError("Este evento já possui ingressos vendidos e não pode ser excluído. Cancele o evento em vez disso.");
+      }
+
+      const { error: lotsError } = await supabaseAdmin.from("Lots").delete().eq("EventId", id);
+      if (lotsError) throw lotsError;
+
+      const { error: deleteError } = await supabaseAdmin.from("Events").delete().eq("Id", id);
+      if (deleteError) throw deleteError;
 
       return new Response(null, { status: 204, headers });
     }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, Link as RouterLink } from "react-router-dom";
+import { useParams, Link as RouterLink, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Container, Typography, Button, Box, Chip, Paper, Table, TableHead,
@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
-import { getEventById, getLotsByEvent, cancelEvent, createLot, updateLot, type LotPayload } from "../../api/events";
+import { getEventById, getLotsByEvent, cancelEvent, deleteEvent, createLot, updateLot, type LotPayload } from "../../api/events";
 import type { LotDto } from "../../types";
 import { formatarData, formatarHora, isoParaDatetimeLocal } from "../../utils/date";
 import TicketsDialog from "./TicketsDialog";
@@ -25,6 +25,7 @@ const emptyLotForm: LotPayload = {
 export default function AdminEventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -34,6 +35,7 @@ export default function AdminEventDetailPage() {
   const [lotForm, setLotForm] = useState<LotPayload>(emptyLotForm);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
 
   const { data: event } = useQuery({ queryKey: ["event", id], queryFn: () => getEventById(id!), enabled: !!id });
   const { data: lots } = useQuery({ queryKey: ["lots", id], queryFn: () => getLotsByEvent(id!), enabled: !!id });
@@ -97,6 +99,19 @@ export default function AdminEventDetailPage() {
     await queryClient.invalidateQueries({ queryKey: ["admin-events"] });
   };
 
+  const handleDeleteEvent = async () => {
+    if (!confirm("Excluir este evento definitivamente? Esta ação não pode ser desfeita.")) return;
+    setExcluindo(true);
+    try {
+      await deleteEvent(id!);
+      await queryClient.invalidateQueries({ queryKey: ["admin-events"] });
+      navigate("/admin/eventos");
+    } catch (err: any) {
+      alert(err?.response?.data?.errors?.join(" ") ?? "Não foi possível excluir o evento.");
+      setExcluindo(false);
+    }
+  };
+
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
     <Container sx={{ py: 4 }}>
@@ -118,6 +133,9 @@ export default function AdminEventDetailPage() {
           {event.status !== "Cancelado" && (
             <Button color="error" variant="outlined" onClick={handleCancelEvent} sx={{ borderRadius: "0.5rem" }}>Cancelar evento</Button>
           )}
+          <Button color="error" variant="outlined" disabled={excluindo} onClick={handleDeleteEvent} sx={{ borderRadius: "0.5rem" }}>
+            {excluindo ? "Excluindo..." : "Excluir evento"}
+          </Button>
         </Box>
       </Box>
 
