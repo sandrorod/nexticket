@@ -64,8 +64,13 @@ export default function StaffPage() {
             Contas responsáveis apenas pela validação de ingressos.
           </Typography>
         </Box>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={openDialog} sx={{ borderRadius: "0.5rem" }}>
-          Novo funcionário
+        <Button
+          variant="contained"
+          startIcon={!isSmallScreen ? <AddIcon /> : undefined}
+          onClick={openDialog}
+          sx={{ borderRadius: "0.5rem", minWidth: isSmallScreen ? 0 : undefined, px: isSmallScreen ? 1.5 : undefined }}
+        >
+          {isSmallScreen ? <AddIcon /> : "Novo funcionário"}
         </Button>
       </Box>
 
