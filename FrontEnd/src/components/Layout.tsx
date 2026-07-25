@@ -15,6 +15,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { useAuthStore } from "../store/authStore";
 import Footer from "./Footer";
+import ScrollToTop from "./ScrollToTop";
 
 const navLinkSx = {
   color: "text.secondary",
@@ -48,6 +49,7 @@ export default function Layout() {
 
   return (
     <>
+      <ScrollToTop />
       <AppBar
         position="sticky"
         color="inherit"
