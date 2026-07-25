@@ -8,6 +8,7 @@ import KeyboardIcon from "@mui/icons-material/Keyboard";
 import { api } from "../../api/client";
 import type { ValidateTicketPreviewResponse } from "../../types";
 import QrScanner from "../../components/QrScanner";
+import { formatarDataHora, formatarHora } from "../../utils/date";
 
 type Mode = "camera" | "manual";
 
@@ -72,9 +73,9 @@ export default function ValidateTicketPage() {
             <Box color="text.primary">
               <Typography><strong>Nome:</strong> {preview.nome}</Typography>
               <Typography><strong>Evento:</strong> {preview.eventoNome}</Typography>
-              <Typography><strong>Horário:</strong> {preview.hora}</Typography>
+              <Typography><strong>Horário:</strong> {preview.hora ? formatarHora(preview.hora) : ""}</Typography>
               <Typography><strong>Status:</strong> {preview.status}</Typography>
-              {preview.dataUso && <Typography><strong>Usado em:</strong> {preview.dataUso}</Typography>}
+              {preview.dataUso && <Typography><strong>Usado em:</strong> {formatarDataHora(preview.dataUso)}</Typography>}
             </Box>
           )}
 

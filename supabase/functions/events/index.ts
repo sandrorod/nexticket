@@ -43,6 +43,19 @@ Deno.serve(async (req) => {
   const isCancel = parts[1] === "cancel";
 
   try {
+    if (req.method === "GET" && !id && url.searchParams.get("admin") === "true") {
+      const auth = await requireAuth(req);
+      requireRole(auth, "Administrador");
+
+      const { data, error } = await supabaseAdmin
+        .from("Events")
+        .select("*, Lots(*), Tickets(Id)")
+        .order("Data", { ascending: true });
+      if (error) throw error;
+
+      return json((data ?? []).map(mapEventToDto), 200, headers);
+    }
+
     if (req.method === "GET" && !id) {
       const { data, error } = await supabaseAdmin
         .from("Events")
@@ -51,8 +64,10 @@ Deno.serve(async (req) => {
         .order("Data", { ascending: true });
       if (error) throw error;
 
-      const limite = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      const visiveis = (data ?? []).filter((e) => new Date(e.VendaFim) >= limite);
+      const agora = new Date();
+      const visiveis = (data ?? []).filter(
+        (e) => new Date(e.VendaInicio) <= agora && new Date(e.VendaFim) >= agora,
+      );
       return json(visiveis.map(mapEventToDto), 200, headers);
     }
 

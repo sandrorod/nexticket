@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
-import { getEvents, duplicateEvent } from "../../api/events";
+import { getAdminEvents, duplicateEvent } from "../../api/events";
 import { formatarData } from "../../utils/date";
 
 const statusColor: Record<string, "success" | "default" | "error" | "warning"> = {
@@ -18,7 +18,7 @@ const statusColor: Record<string, "success" | "default" | "error" | "warning"> =
 };
 
 export default function AdminEventsListPage() {
-  const { data: events, isLoading } = useQuery({ queryKey: ["admin-events"], queryFn: getEvents });
+  const { data: events, isLoading } = useQuery({ queryKey: ["admin-events"], queryFn: getAdminEvents });
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const queryClient = useQueryClient();

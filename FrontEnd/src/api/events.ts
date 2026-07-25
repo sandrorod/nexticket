@@ -3,6 +3,9 @@ import type { EventDto, LotDto, TicketDto } from "../types";
 
 export const getEvents = () => api.get<EventDto[]>("/events").then((r) => r.data);
 
+export const getAdminEvents = () =>
+  api.get<EventDto[]>("/events", { params: { admin: "true" } }).then((r) => r.data);
+
 export const getEventById = (id: string) =>
   api.get<EventDto>(`/events/${id}`).then((r) => r.data);
 
