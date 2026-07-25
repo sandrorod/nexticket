@@ -57,10 +57,10 @@ function TicketRow({
         sx={{ py: 1, px: 1, borderRadius: "0.5rem", cursor: "pointer", "&:hover": { backgroundColor: "action.hover" } }}
       >
         <Box display="flex" justifyContent="space-between" alignItems="center" gap={1}>
-          <Typography sx={{ fontSize: contentFontSize }} color="text.primary" fontWeight={600} noWrap>
+          <Typography sx={{ fontSize: contentFontSize, flex: "1 1 auto", minWidth: 0 }} color="text.primary" fontWeight={600} noWrap>
             {ticket.nome}
           </Typography>
-          <Box display="flex" alignItems="center" gap={0.5}>
+          <Box display="flex" alignItems="center" gap={0.5} sx={{ flex: "0 0 auto" }}>
             <Chip label={ticket.status} size="small" sx={{ fontWeight: 700, fontSize: contentFontSize }} />
             {cancelButton}
           </Box>
@@ -228,7 +228,7 @@ export default function TicketsDialog({
   return (
     <Dialog open={open} onClose={onClose} maxWidth={isMobile ? "sm" : "lg"} fullWidth fullScreen={isSmallScreen}>
       <DialogTitle>Ingressos vendidos</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ overflowX: "hidden" }}>
         {isLoading && (
           <Box display="flex" justifyContent="center" py={4}>
             <CircularProgress size={28} />
