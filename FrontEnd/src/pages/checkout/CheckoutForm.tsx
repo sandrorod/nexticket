@@ -159,32 +159,32 @@ export default function CheckoutForm({ event, selecionados }: Props) {
                         ))}
                       </TextField>
                     </Grid>
-                    {ehPrimeiro && (
-                      <>
-                        <Grid item xs={12} sm={7}>
-                          <TextField
-                            label="Email do comprador"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            fullWidth
-                            sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={5}>
-                          <TextField
-                            label="Telefone do comprador"
-                            value={telefone}
-                            onChange={(e) => setTelefone(e.target.value)}
-                            required
-                            fullWidth
-                            sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                          />
-                        </Grid>
-                      </>
-                    )}
                   </Grid>
+                  {ehPrimeiro && (
+                    <Grid container spacing={2} mt={0.5}>
+                      <Grid item xs={12} sm={7}>
+                        <TextField
+                          label="Email do comprador"
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                          fullWidth
+                          sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={5}>
+                        <TextField
+                          label="Telefone do comprador"
+                          value={telefone}
+                          onChange={(e) => setTelefone(e.target.value)}
+                          required
+                          fullWidth
+                          sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                        />
+                      </Grid>
+                    </Grid>
+                  )}
                 </CardContent>
               </Card>
             );
