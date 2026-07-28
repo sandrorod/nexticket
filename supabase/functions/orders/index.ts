@@ -32,9 +32,6 @@ function mapOrderToDto(o: any) {
 
 interface TicketHolderRequest {
   nome: string;
-  email: string;
-  telefone: string;
-  cpf?: string;
   idade: number;
 }
 
@@ -43,9 +40,11 @@ interface CreateOrderItemRequest {
   ingressos: TicketHolderRequest[];
 }
 
-function validateCreateOrderRequest(body: { eventId?: string; itens?: CreateOrderItemRequest[] }): void {
+function validateCreateOrderRequest(body: { eventId?: string; email?: string; telefone?: string; itens?: CreateOrderItemRequest[] }): void {
   const v = new Validator();
   v.notEmpty(body.eventId, "EventId");
+  v.notEmpty(body.email, "Email").email(body.email, "Email").maxLength(body.email, 200, "Email");
+  v.notEmpty(body.telefone, "Telefone").maxLength(body.telefone, 20, "Telefone");
   v.custom(Array.isArray(body.itens) && body.itens.length > 0, "Itens é obrigatório.");
 
   for (const item of body.itens ?? []) {
@@ -57,9 +56,6 @@ function validateCreateOrderRequest(body: { eventId?: string; itens?: CreateOrde
       if (holder.nome && !temNomeESobrenome(holder.nome)) {
         v.custom(false, "Informe nome e sobrenome completos.");
       }
-      v.notEmpty(holder.email, "Email").email(holder.email, "Email").maxLength(holder.email, 200, "Email");
-      v.notEmpty(holder.telefone, "Telefone").maxLength(holder.telefone, 20, "Telefone");
-      if (holder.cpf) v.exactLength(holder.cpf, 11, "Cpf");
       v.inclusiveBetween(holder.idade, 0, 99, "Idade");
     }
   }
@@ -85,6 +81,8 @@ Deno.serve(async (req) => {
       const { data, error } = await supabaseAdmin.rpc("create_order", {
         p_user_id: auth.sub,
         p_event_id: body.eventId,
+        p_email: body.email,
+        p_telefone: body.telefone,
         p_itens: body.itens,
       });
       if (error) throw error;

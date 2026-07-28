@@ -17,11 +17,13 @@ interface Props {
 
 const idades = Array.from({ length: 100 }, (_, i) => i);
 
-const emptyHolder: TicketHolder = { nome: "", email: "", telefone: "", cpf: "", idade: "" as unknown as number };
+const emptyHolder: TicketHolder = { nome: "", idade: "" as unknown as number };
 
 export default function CheckoutForm({ event, selecionados }: Props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [holdersPorLote, setHoldersPorLote] = useState<Record<string, TicketHolder[]>>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -57,6 +59,11 @@ export default function CheckoutForm({ event, selecionados }: Props) {
     e.preventDefault();
     setError(null);
 
+    if (!email.trim() || !telefone.trim()) {
+      setError("Informe email e telefone do comprador.");
+      return;
+    }
+
     for (const { lot, quantity } of selecionados) {
       const holders = holdersDoLote(lot.id, quantity);
 
@@ -79,9 +86,11 @@ export default function CheckoutForm({ event, selecionados }: Props) {
     try {
       const order = await createOrder({
         eventId: event.id,
+        email,
+        telefone,
         itens: selecionados.map(({ lot, quantity }) => ({
           lotId: lot.id,
-          ingressos: holdersDoLote(lot.id, quantity).map((h) => ({ ...h, cpf: h.cpf || undefined })),
+          ingressos: holdersDoLote(lot.id, quantity),
         })),
       });
       await queryClient.invalidateQueries({ queryKey: ["my-tickets"] });
@@ -104,14 +113,54 @@ export default function CheckoutForm({ event, selecionados }: Props) {
         letterSpacing="0.04em"
         sx={{ display: "block", textAlign: "left", mb: 1 }}
       >
-        Dados dos ingressos
+        Dados do comprador
       </Typography>
-      <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.7875rem" }}>
-        Informe nome e sobrenome completos. Cada ingresso deve ter dados próprios: não é permitido repetir email
-        ou celular já utilizados neste evento.
+      <Typography variant="body2" color="text.secondary" mb={2} sx={{ fontSize: "0.7875rem" }}>
+        Email e telefone usados para todos os ingressos deste pedido.
       </Typography>
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+      <Card sx={{ border: "1px solid rgba(231, 234, 243, 0.9)", mb: 3 }}>
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={7}>
+              <TextField
+                label="Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                fullWidth
+                sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={5}>
+              <TextField
+                label="Telefone"
+                value={telefone}
+                onChange={(e) => setTelefone(e.target.value)}
+                required
+                fullWidth
+                sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+
+      <Typography
+        variant="overline"
+        fontWeight={700}
+        color="text.secondary"
+        letterSpacing="0.04em"
+        sx={{ display: "block", textAlign: "left", mb: 1 }}
+      >
+        Dados dos ingressos
+      </Typography>
+      <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.7875rem" }}>
+        Informe nome e sobrenome completos de cada titular.
+      </Typography>
 
       <Box display="flex" flexDirection="column" gap={2} mb={3}>
         {selecionados.map(({ lot, quantity }) =>
@@ -120,33 +169,12 @@ export default function CheckoutForm({ event, selecionados }: Props) {
               <CardContent>
                 <Typography fontWeight={700} color="text.primary" mb={2} sx={{ fontSize: "0.9rem" }}>Ingresso {i + 1} — {lot.nome}</Typography>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={7}>
+                  <Grid item xs={9} sm={10}>
                     <TextField
                       label="Nome completo"
                       placeholder="Nome e sobrenome"
                       value={holder.nome}
                       onChange={(e) => updateHolder(lot.id, i, "nome", e.target.value)}
-                      required
-                      fullWidth
-                      sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={5}>
-                    <TextField
-                      label="Telefone"
-                      value={holder.telefone}
-                      onChange={(e) => updateHolder(lot.id, i, "telefone", e.target.value)}
-                      required
-                      fullWidth
-                      sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                    />
-                  </Grid>
-                  <Grid item xs={9} sm={6}>
-                    <TextField
-                      label="Email"
-                      type="email"
-                      value={holder.email}
-                      onChange={(e) => updateHolder(lot.id, i, "email", e.target.value)}
                       required
                       fullWidth
                       sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
@@ -165,15 +193,6 @@ export default function CheckoutForm({ event, selecionados }: Props) {
                         <MenuItem key={idade} value={idade}>{idade}</MenuItem>
                       ))}
                     </TextField>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <TextField
-                      label="CPF (opcional)"
-                      value={holder.cpf}
-                      onChange={(e) => updateHolder(lot.id, i, "cpf", e.target.value)}
-                      fullWidth
-                      sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                    />
                   </Grid>
                 </Grid>
               </CardContent>

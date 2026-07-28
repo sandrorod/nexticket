@@ -8,6 +8,8 @@ export interface CreateOrderItemPayload {
 
 export interface CreateOrderPayload {
   eventId: string;
+  email: string;
+  telefone: string;
   itens: CreateOrderItemPayload[];
   cupomCodigo?: string;
 }

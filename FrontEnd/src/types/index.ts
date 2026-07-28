@@ -64,9 +64,6 @@ export interface LotDto {
 
 export interface TicketHolder {
   nome: string;
-  email: string;
-  telefone: string;
-  cpf?: string;
   idade: number;
 }
 
