@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation, Link as RouterLink } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   Box, Container, Typography, Card, CardContent, Button, IconButton,
@@ -17,6 +17,8 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
+import LoginIcon from "@mui/icons-material/Login";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { getEventById, getLotsByEvent } from "../../api/events";
 import { getMyTickets } from "../../api/orders";
 import type { LotDto } from "../../types";
@@ -24,11 +26,15 @@ import CheckoutForm from "../checkout/CheckoutForm";
 import { formatarData, formatarHora } from "../../utils/date";
 import { paraLinkWhatsapp } from "../../utils/whatsapp";
 import { useAuthStore } from "../../store/authStore";
+import { lerRascunhoCheckout, salvarRascunhoCheckout } from "../../utils/checkoutDraft";
 
 export default function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [quantidades, setQuantidades] = useState<Record<string, number>>({});
+  const location = useLocation();
   const isAuthenticated = useAuthStore((s) => !!s.token);
+  const [quantidades, setQuantidades] = useState<Record<string, number>>(
+    () => (id ? lerRascunhoCheckout(id)?.quantidades ?? {} : {})
+  );
 
   const { data: event } = useQuery({
     queryKey: ["event", id],
@@ -60,7 +66,19 @@ export default function EventDetailPage() {
 
   const setQuantidade = (lot: LotDto, value: number) => {
     const max = Math.min(lot.quantidadeDisponivel, restanteNoLote(lot), 10);
-    setQuantidades((prev) => ({ ...prev, [lot.id]: Math.max(0, Math.min(value, max)) }));
+    setQuantidades((prev) => {
+      const next = { ...prev, [lot.id]: Math.max(0, Math.min(value, max)) };
+      if (id) {
+        const rascunho = lerRascunhoCheckout(id);
+        salvarRascunhoCheckout(id, {
+          email: rascunho?.email ?? "",
+          telefone: rascunho?.telefone ?? "",
+          holdersPorLote: rascunho?.holdersPorLote ?? {},
+          quantidades: next,
+        });
+      }
+      return next;
+    });
   };
 
   const lotesSelecionados = (lots ?? [])
@@ -339,7 +357,42 @@ export default function EventDetailPage() {
               </CardContent>
             </Card>
 
-            {lotesSelecionados.length > 0 && (
+            {lotesSelecionados.length > 0 && !isAuthenticated && (
+              <Card sx={{ mb: 3, border: "1px solid rgba(55, 125, 255, 0.3)" }}>
+                <CardContent sx={{ textAlign: "center", py: 4 }}>
+                  <Typography variant="h6" fontWeight={700} color="text.primary" mb={1}>
+                    Entre ou crie sua conta para continuar
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.875rem" }}>
+                    Seus ingressos selecionados e os dados já preenchidos serão mantidos.
+                  </Typography>
+                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
+                    <Button
+                      component={RouterLink}
+                      to="/login"
+                      state={{ from: `${location.pathname}${location.search}` }}
+                      variant="contained"
+                      startIcon={<LoginIcon />}
+                      sx={{ borderRadius: "0.5rem", px: 3 }}
+                    >
+                      Entrar
+                    </Button>
+                    <Button
+                      component={RouterLink}
+                      to="/registro"
+                      state={{ from: `${location.pathname}${location.search}` }}
+                      variant="outlined"
+                      startIcon={<PersonAddIcon />}
+                      sx={{ borderRadius: "0.5rem", px: 3 }}
+                    >
+                      Criar conta
+                    </Button>
+                  </Stack>
+                </CardContent>
+              </Card>
+            )}
+
+            {lotesSelecionados.length > 0 && isAuthenticated && (
               <Box sx={{ mb: 3 }}>
                 <CheckoutForm event={event} selecionados={lotesSelecionados} />
               </Box>

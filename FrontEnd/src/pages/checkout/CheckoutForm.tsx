@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { Box, Button, Card, CardContent, TextField, Typography, Alert, Divider, Grid, MenuItem } from "@mui/material";
 import type { EventDto, LotDto, TicketHolder } from "../../types";
 import { createOrder } from "../../api/orders";
+import { lerRascunhoCheckout, salvarRascunhoCheckout, limparRascunhoCheckout } from "../../utils/checkoutDraft";
 
 export interface SelectedLot {
   lot: LotDto;
@@ -22,11 +23,17 @@ const emptyHolder: TicketHolder = { nome: "", idade: "" as unknown as number };
 export default function CheckoutForm({ event, selecionados }: Props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [holdersPorLote, setHoldersPorLote] = useState<Record<string, TicketHolder[]>>({});
+  const rascunho = lerRascunhoCheckout(event.id);
+  const [email, setEmail] = useState(rascunho?.email ?? "");
+  const [telefone, setTelefone] = useState(rascunho?.telefone ?? "");
+  const [holdersPorLote, setHoldersPorLote] = useState<Record<string, TicketHolder[]>>(rascunho?.holdersPorLote ?? {});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const quantidades = Object.fromEntries(selecionados.map(({ lot, quantity }) => [lot.id, quantity]));
+    salvarRascunhoCheckout(event.id, { email, telefone, holdersPorLote, quantidades });
+  }, [event.id, email, telefone, holdersPorLote, selecionados]);
 
   const holdersDoLote = (lotId: string, quantity: number) => {
     const atuais = holdersPorLote[lotId] ?? [];
@@ -94,6 +101,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
         })),
       });
       await queryClient.invalidateQueries({ queryKey: ["my-tickets"] });
+      limparRascunhoCheckout(event.id);
       navigate(`/pedidos/${order.id}`);
     } catch (err: any) {
       setError(err?.response?.data?.errors?.join(" ") ?? "Não foi possível concluir a compra.");

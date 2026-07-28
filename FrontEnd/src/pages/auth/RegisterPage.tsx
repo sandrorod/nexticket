@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 import { Box, Button, Container, Paper, TextField, Typography, Alert, Link, Grid } from "@mui/material";
 import { registerUser } from "../../api/auth";
 import { useAuthStore } from "../../store/authStore";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const setAuth = useAuthStore((s) => s.setAuth);
   const [form, setForm] = useState({ nome: "", email: "", senha: "", telefone: "", cpf: "" });
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +22,8 @@ export default function RegisterPage() {
     try {
       const auth = await registerUser({ ...form, cpf: form.cpf || undefined });
       setAuth(auth);
-      navigate("/eventos");
+      const from = (location.state as { from?: string } | null)?.from;
+      navigate(from ?? "/eventos");
     } catch (err: any) {
       setError(err?.response?.data?.errors?.[0] ?? "Não foi possível criar a conta.");
     } finally {
@@ -71,7 +73,7 @@ export default function RegisterPage() {
           </Button>
         </Box>
         <Typography variant="body2" mt={3} textAlign="center" color="text.secondary">
-          Já tem conta? <Link component={RouterLink} to="/login" color="primary.main">Entrar</Link>
+          Já tem conta? <Link component={RouterLink} to="/login" state={location.state} color="primary.main">Entrar</Link>
         </Typography>
       </Paper>
     </Container>

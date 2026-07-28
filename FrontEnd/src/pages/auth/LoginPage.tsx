@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 import { Box, Button, Container, Paper, TextField, Typography, Alert, Divider } from "@mui/material";
 import { loginUser } from "../../api/auth";
 import { useAuthStore } from "../../store/authStore";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const setAuth = useAuthStore((s) => s.setAuth);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -19,7 +20,8 @@ export default function LoginPage() {
     try {
       const auth = await loginUser({ email, senha });
       setAuth(auth);
-      navigate("/eventos");
+      const from = (location.state as { from?: string } | null)?.from;
+      navigate(from ?? "/eventos");
     } catch {
       setError("Email ou senha inválidos.");
     } finally {
@@ -61,6 +63,7 @@ export default function LoginPage() {
             <Button
               component={RouterLink}
               to="/registro"
+              state={location.state}
               variant="text"
               fullWidth
               sx={{
