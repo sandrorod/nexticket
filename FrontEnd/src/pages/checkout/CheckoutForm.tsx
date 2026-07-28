@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Box, Button, Card, CardContent, TextField, Typography, Alert, Divider, Grid, MenuItem } from "@mui/material";
 import type { EventDto, LotDto, TicketHolder } from "../../types";
-import { createOrder } from "../../api/orders";
+import { createOrder, getMyTickets } from "../../api/orders";
 import { lerRascunhoCheckout, salvarRascunhoCheckout, limparRascunhoCheckout } from "../../utils/checkoutDraft";
 
 export interface SelectedLot {
@@ -24,11 +24,23 @@ export default function CheckoutForm({ event, selecionados }: Props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const rascunho = lerRascunhoCheckout(event.id);
+
+  const { data: meusIngressos } = useQuery({ queryKey: ["my-tickets"], queryFn: getMyTickets });
+  const ultimoComprador = meusIngressos?.[0]; // getMyTickets já ordena por CreatedAt desc
+
   const [email, setEmail] = useState(rascunho?.email ?? "");
   const [telefone, setTelefone] = useState(rascunho?.telefone ?? "");
   const [holdersPorLote, setHoldersPorLote] = useState<Record<string, TicketHolder[]>>(rascunho?.holdersPorLote ?? {});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Preenche com os dados do comprador já usados em compras anteriores
+  // (qualquer evento), assim que chegarem — só quando o campo ainda não
+  // tiver sido preenchido nesta sessão de checkout.
+  useEffect(() => {
+    if (!rascunho?.email && !email && ultimoComprador?.email) setEmail(ultimoComprador.email);
+    if (!rascunho?.telefone && !telefone && ultimoComprador?.telefone) setTelefone(ultimoComprador.telefone);
+  }, [ultimoComprador]);
 
   useEffect(() => {
     const quantidades = Object.fromEntries(selecionados.map(({ lot, quantity }) => [lot.id, quantity]));
