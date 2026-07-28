@@ -104,51 +104,10 @@ export default function CheckoutForm({ event, selecionados }: Props) {
 
   const total = selecionados.reduce((sum, { lot, quantity }) => sum + lot.preco * quantity, 0);
 
+  let contador = 0;
+
   return (
     <Box component="form" onSubmit={handleSubmit}>
-      <Typography
-        variant="overline"
-        fontWeight={700}
-        color="text.secondary"
-        letterSpacing="0.04em"
-        sx={{ display: "block", textAlign: "left", mb: 1 }}
-      >
-        Dados do comprador
-      </Typography>
-      <Typography variant="body2" color="text.secondary" mb={2} sx={{ fontSize: "0.7875rem" }}>
-        Email e telefone usados para todos os ingressos deste pedido.
-      </Typography>
-
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-
-      <Card sx={{ border: "1px solid rgba(231, 234, 243, 0.9)", mb: 3 }}>
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={7}>
-              <TextField
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                fullWidth
-                sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={5}>
-              <TextField
-                label="Telefone"
-                value={telefone}
-                onChange={(e) => setTelefone(e.target.value)}
-                required
-                fullWidth
-                sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-
       <Typography
         variant="overline"
         fontWeight={700}
@@ -159,45 +118,77 @@ export default function CheckoutForm({ event, selecionados }: Props) {
         Dados dos ingressos
       </Typography>
       <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.7875rem" }}>
-        Informe nome e sobrenome completos de cada titular.
+        Informe nome e sobrenome completos de cada titular. Email e telefone do comprador são informados uma
+        única vez, no Ingresso 1.
       </Typography>
+
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
       <Box display="flex" flexDirection="column" gap={2} mb={3}>
         {selecionados.map(({ lot, quantity }) =>
-          holdersDoLote(lot.id, quantity).map((holder, i) => (
-            <Card key={`${lot.id}-${i}`} sx={{ border: "1px solid rgba(231, 234, 243, 0.9)" }}>
-              <CardContent>
-                <Typography fontWeight={700} color="text.primary" mb={2} sx={{ fontSize: "0.9rem" }}>Ingresso {i + 1} — {lot.nome}</Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={9} sm={10}>
-                    <TextField
-                      label="Nome completo"
-                      placeholder="Nome e sobrenome"
-                      value={holder.nome}
-                      onChange={(e) => updateHolder(lot.id, i, "nome", e.target.value)}
-                      required
-                      fullWidth
-                      sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                    />
+          holdersDoLote(lot.id, quantity).map((holder, i) => {
+            const ehPrimeiro = contador === 0;
+            contador += 1;
+            return (
+              <Card key={`${lot.id}-${i}`} sx={{ border: "1px solid rgba(231, 234, 243, 0.9)" }}>
+                <CardContent>
+                  <Typography fontWeight={700} color="text.primary" mb={2} sx={{ fontSize: "0.9rem" }}>Ingresso {i + 1} — {lot.nome}</Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={9} sm={10}>
+                      <TextField
+                        label="Nome completo"
+                        placeholder="Nome e sobrenome"
+                        value={holder.nome}
+                        onChange={(e) => updateHolder(lot.id, i, "nome", e.target.value)}
+                        required
+                        fullWidth
+                        sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                      />
+                    </Grid>
+                    <Grid item xs={3} sm={2}>
+                      <TextField
+                        select
+                        label="Idade"
+                        value={holder.idade === undefined || holder.idade === null ? "" : holder.idade}
+                        onChange={(e) => updateHolder(lot.id, i, "idade", Number(e.target.value))}
+                        required
+                        fullWidth
+                      >
+                        {idades.map((idade) => (
+                          <MenuItem key={idade} value={idade}>{idade}</MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    {ehPrimeiro && (
+                      <>
+                        <Grid item xs={12} sm={7}>
+                          <TextField
+                            label="Email do comprador"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            fullWidth
+                            sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={5}>
+                          <TextField
+                            label="Telefone do comprador"
+                            value={telefone}
+                            onChange={(e) => setTelefone(e.target.value)}
+                            required
+                            fullWidth
+                            sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                          />
+                        </Grid>
+                      </>
+                    )}
                   </Grid>
-                  <Grid item xs={3} sm={2}>
-                    <TextField
-                      select
-                      label="Idade"
-                      value={holder.idade === undefined || holder.idade === null ? "" : holder.idade}
-                      onChange={(e) => updateHolder(lot.id, i, "idade", Number(e.target.value))}
-                      required
-                      fullWidth
-                    >
-                      {idades.map((idade) => (
-                        <MenuItem key={idade} value={idade}>{idade}</MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          ))
+                </CardContent>
+              </Card>
+            );
+          })
         )}
       </Box>
 
