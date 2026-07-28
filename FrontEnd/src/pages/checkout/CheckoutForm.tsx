@@ -26,7 +26,10 @@ export default function CheckoutForm({ event, selecionados }: Props) {
   const rascunho = lerRascunhoCheckout(event.id);
 
   const { data: meusIngressos, isLoading: carregandoHistorico } = useQuery({ queryKey: ["my-tickets"], queryFn: getMyTickets });
-  const ultimoComprador = meusIngressos?.[0]; // getMyTickets já ordena por CreatedAt desc
+  // Prioriza uma compra já feita NESTE evento; se não houver, usa a compra
+  // mais recente em qualquer evento (getMyTickets já ordena por CreatedAt desc).
+  const compradorDoEvento = meusIngressos?.find((t) => t.eventId === event.id);
+  const ultimoComprador = compradorDoEvento ?? meusIngressos?.[0];
 
   const [email, setEmail] = useState(rascunho?.email ?? "");
   const [telefone, setTelefone] = useState(rascunho?.telefone ?? "");
@@ -34,9 +37,9 @@ export default function CheckoutForm({ event, selecionados }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Preenche com os dados do comprador já usados em compras anteriores
-  // (qualquer evento), assim que chegarem — só quando o campo ainda não
-  // tiver sido preenchido nesta sessão de checkout.
+  // Preenche com os dados do comprador já usados em compras anteriores,
+  // assim que chegarem — só quando o campo ainda não tiver sido preenchido
+  // nesta sessão de checkout.
   useEffect(() => {
     if (!rascunho?.email && !email && ultimoComprador?.email) setEmail(ultimoComprador.email);
     if (!rascunho?.telefone && !telefone && ultimoComprador?.telefone) setTelefone(ultimoComprador.telefone);

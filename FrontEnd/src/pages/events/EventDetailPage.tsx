@@ -394,7 +394,7 @@ export default function EventDetailPage() {
 
             {lotesSelecionados.length > 0 && isAuthenticated && (
               <Box sx={{ mb: 3 }}>
-                <CheckoutForm event={event} selecionados={lotesSelecionados} />
+                <CheckoutForm key={event.id} event={event} selecionados={lotesSelecionados} />
               </Box>
             )}
 
