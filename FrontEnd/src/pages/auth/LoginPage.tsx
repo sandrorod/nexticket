@@ -3,6 +3,9 @@ import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
 import { Box, Button, Container, Paper, TextField, Typography, Alert, Divider } from "@mui/material";
 import { loginUser } from "../../api/auth";
 import { useAuthStore } from "../../store/authStore";
+import { supabase } from "../../api/supabaseClient";
+import { salvarRetornoOAuth } from "../../utils/oauthReturn";
+import GoogleIcon from "@mui/icons-material/Google";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -27,6 +30,15 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    const from = (location.state as { from?: string } | null)?.from;
+    if (from) salvarRetornoOAuth(from);
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
   };
 
   return (
@@ -54,6 +66,20 @@ export default function LoginPage() {
             </Typography>
             <Button type="submit" variant="contained" size="large" disabled={loading} fullWidth sx={{ borderRadius: "0.5rem", py: 1.4 }}>
               {loading ? "Entrando..." : "Acessar"}
+            </Button>
+
+            <Divider sx={{ my: 1 }}>
+              <Typography variant="body2" color="text.secondary">ou</Typography>
+            </Divider>
+
+            <Button
+              onClick={handleGoogleLogin}
+              variant="outlined"
+              startIcon={<GoogleIcon />}
+              fullWidth
+              sx={{ borderRadius: "0.5rem", py: 1.3 }}
+            >
+              Continuar com Google
             </Button>
 
             <Divider sx={{ my: 1 }}>

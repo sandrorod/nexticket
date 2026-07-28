@@ -3,6 +3,7 @@ import Layout from "./components/Layout";
 import RequireAuth from "./components/RequireAuth";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import GoogleCallbackPage from "./pages/auth/GoogleCallbackPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import EventsListPage from "./pages/events/EventsListPage";
@@ -26,6 +27,7 @@ function App() {
         <Route path="/" element={<Navigate to="/eventos" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registro" element={<RegisterPage />} />
+        <Route path="/auth/callback" element={<GoogleCallbackPage />} />
         <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
         <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
         <Route path="/eventos" element={<EventsListPage />} />

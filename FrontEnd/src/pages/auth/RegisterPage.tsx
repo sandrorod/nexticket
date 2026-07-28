@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useNavigate, useLocation, Link as RouterLink } from "react-router-dom";
-import { Box, Button, Container, Paper, TextField, Typography, Alert, Link, Grid } from "@mui/material";
+import { Box, Button, Container, Paper, TextField, Typography, Alert, Link, Grid, Divider } from "@mui/material";
 import { registerUser } from "../../api/auth";
 import { useAuthStore } from "../../store/authStore";
+import { supabase } from "../../api/supabaseClient";
+import { salvarRetornoOAuth } from "../../utils/oauthReturn";
+import GoogleIcon from "@mui/icons-material/Google";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -29,6 +32,15 @@ export default function RegisterPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    const from = (location.state as { from?: string } | null)?.from;
+    if (from) salvarRetornoOAuth(from);
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
   };
 
   return (
@@ -72,6 +84,21 @@ export default function RegisterPage() {
             {loading ? "Criando..." : "Criar conta"}
           </Button>
         </Box>
+
+        <Divider sx={{ my: 2 }}>
+          <Typography variant="body2" color="text.secondary">ou</Typography>
+        </Divider>
+
+        <Button
+          onClick={handleGoogleLogin}
+          variant="outlined"
+          startIcon={<GoogleIcon />}
+          fullWidth
+          sx={{ borderRadius: "0.5rem", py: 1.3 }}
+        >
+          Continuar com Google
+        </Button>
+
         <Typography variant="body2" mt={3} textAlign="center" color="text.secondary">
           Já tem conta? <Link component={RouterLink} to="/login" state={location.state} color="primary.main">Entrar</Link>
         </Typography>
