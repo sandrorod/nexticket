@@ -25,7 +25,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
   const queryClient = useQueryClient();
   const rascunho = lerRascunhoCheckout(event.id);
 
-  const { data: meusIngressos } = useQuery({ queryKey: ["my-tickets"], queryFn: getMyTickets });
+  const { data: meusIngressos, isLoading: carregandoHistorico } = useQuery({ queryKey: ["my-tickets"], queryFn: getMyTickets });
   const ultimoComprador = meusIngressos?.[0]; // getMyTickets já ordena por CreatedAt desc
 
   const [email, setEmail] = useState(rascunho?.email ?? "");
@@ -41,6 +41,14 @@ export default function CheckoutForm({ event, selecionados }: Props) {
     if (!rascunho?.email && !email && ultimoComprador?.email) setEmail(ultimoComprador.email);
     if (!rascunho?.telefone && !telefone && ultimoComprador?.telefone) setTelefone(ultimoComprador.telefone);
   }, [ultimoComprador]);
+
+  // Só mostra os campos de email/telefone no Ingresso 1 quando o comprador
+  // ainda não tem esses dados (nem do histórico, nem já digitados agora) —
+  // uma vez que existam, ficam ocultos e são usados automaticamente.
+  // Espera o histórico carregar para evitar mostrar e esconder o campo em
+  // sequência (flash) quando o preenchimento automático estiver a caminho.
+  const temDadosSalvos = !!(rascunho?.email || rascunho?.telefone || ultimoComprador?.email || ultimoComprador?.telefone);
+  const mostrarCamposComprador = !carregandoHistorico && !temDadosSalvos;
 
   useEffect(() => {
     const quantidades = Object.fromEntries(selecionados.map(({ lot, quantity }) => [lot.id, quantity]));
@@ -138,8 +146,8 @@ export default function CheckoutForm({ event, selecionados }: Props) {
         Dados dos ingressos
       </Typography>
       <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.7875rem" }}>
-        Informe nome e sobrenome completos de cada titular. Email e telefone do comprador são informados uma
-        única vez, no Ingresso 1.
+        Informe nome e sobrenome completos de cada titular.
+        {mostrarCamposComprador && " Email e telefone do comprador são informados uma única vez, no Ingresso 1."}
       </Typography>
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -180,7 +188,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
                       </TextField>
                     </Grid>
                   </Grid>
-                  {ehPrimeiro && (
+                  {ehPrimeiro && mostrarCamposComprador && (
                     <Grid container spacing={2} mt={0.5}>
                       <Grid item xs={12} sm={7}>
                         <TextField
