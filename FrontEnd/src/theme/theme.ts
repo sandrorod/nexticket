@@ -55,5 +55,18 @@ export const theme = createTheme({
         root: { fontWeight: 600 },
       },
     },
+    MuiDialog: {
+      styleOverrides: {
+        container: {
+          alignItems: "flex-start",
+        },
+        paper: {
+          marginTop: "10vh",
+          "&.MuiDialog-paperFullScreen": {
+            marginTop: 0,
+          },
+        },
+      },
+    },
   },
 });
