@@ -29,6 +29,9 @@ function validateEventRequest(body: Record<string, unknown>): void {
   }
   v.maxLength(body.contatoFacebook as string, 300, "ContatoFacebook");
   v.maxLength(body.contatoInstagram as string, 300, "ContatoInstagram");
+  if (body.exigirContatoTodosIngressos !== undefined) {
+    v.custom(typeof body.exigirContatoTodosIngressos === "boolean", "ExigirContatoTodosIngressos deve ser verdadeiro ou falso.");
+  }
   v.throwIfInvalid();
 }
 
@@ -119,6 +122,7 @@ Deno.serve(async (req) => {
         ContatoFacebook: body.contatoFacebook ?? null,
         ContatoInstagram: body.contatoInstagram ?? null,
         OrientacoesGerais: body.orientacoesGerais ?? null,
+        ExigirContatoTodosIngressos: body.exigirContatoTodosIngressos ?? false,
         CreatedAt: new Date().toISOString(),
       });
       if (error) throw error;
@@ -160,6 +164,7 @@ Deno.serve(async (req) => {
         ContatoFacebook: body.contatoFacebook ?? null,
         ContatoInstagram: body.contatoInstagram ?? null,
         OrientacoesGerais: body.orientacoesGerais ?? null,
+        ExigirContatoTodosIngressos: body.exigirContatoTodosIngressos ?? false,
       }).eq("Id", id);
       if (error) throw error;
 

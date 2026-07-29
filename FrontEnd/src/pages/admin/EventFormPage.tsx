@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   Container, Typography, TextField, Button, Paper, Box, Alert, Grid, Divider,
-  IconButton, MenuItem,
+  IconButton, MenuItem, FormControlLabel, Switch,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -38,6 +38,7 @@ const emptyForm: EventPayload = {
   contatoFacebook: "",
   contatoInstagram: "",
   orientacoesGerais: "",
+  exigirContatoTodosIngressos: false,
 };
 
 export default function EventFormPage() {
@@ -83,6 +84,7 @@ export default function EventFormPage() {
         contatoFacebook: existing.contatoFacebook ?? "",
         contatoInstagram: existing.contatoInstagram ?? "",
         orientacoesGerais: existing.orientacoesGerais ?? "",
+        exigirContatoTodosIngressos: existing.exigirContatoTodosIngressos ?? false,
       });
       setOrientacoes(
         existing.orientacoesGerais ? existing.orientacoesGerais.split("\n").filter(Boolean) : [""]
@@ -93,6 +95,10 @@ export default function EventFormPage() {
   const update = (field: keyof EventPayload) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.type === "number" ? Number(e.target.value) : e.target.value;
     setForm((f) => ({ ...f, [field]: value }));
+  };
+
+  const updateSwitch = (field: keyof EventPayload) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((f) => ({ ...f, [field]: e.target.checked }));
   };
 
   const updateOrientacao = (index: number, value: string) => {
@@ -301,6 +307,26 @@ export default function EventFormPage() {
               <TextField label="URL da transmissão" value={form.transmissaoUrl} onChange={update("transmissaoUrl")} fullWidth />
             </Grid>
           </Grid>
+
+          <Divider sx={{ my: 4 }} />
+
+          <Typography variant="overline" color="text.secondary">Dados dos ingressos</Typography>
+          <Box mt={1} mb={4}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={form.exigirContatoTodosIngressos ?? false}
+                  onChange={updateSwitch("exigirContatoTodosIngressos")}
+                />
+              }
+              label="Exigir email e telefone de todos os ingressos"
+            />
+            <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.7875rem" }}>
+              {form.exigirContatoTodosIngressos
+                ? "Cada titular de ingresso precisará informar seu próprio email e telefone no checkout."
+                : "Apenas o comprador informa email e telefone, uma única vez, no Ingresso 1."}
+            </Typography>
+          </Box>
 
           <Box display="flex" justifyContent="flex-end" gap={2}>
             <Button variant="text" onClick={() => navigate(-1)}>Cancelar</Button>

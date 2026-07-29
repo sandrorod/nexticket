@@ -32,6 +32,7 @@ public class Event : BaseEntity
     public string? ContatoFacebook { get; set; }
     public string? ContatoInstagram { get; set; }
     public string? OrientacoesGerais { get; set; }
+    public bool ExigirContatoTodosIngressos { get; set; }
 
     public ICollection<Lot> Lots { get; set; } = new List<Lot>();
     public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();

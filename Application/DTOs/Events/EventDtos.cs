@@ -29,7 +29,8 @@ public record EventDto(
     string? ContatoEmail,
     string? ContatoFacebook,
     string? ContatoInstagram,
-    string? OrientacoesGerais);
+    string? OrientacoesGerais,
+    bool ExigirContatoTodosIngressos);
 
 public record CreateEventRequest(
     string Nome,
@@ -56,7 +57,8 @@ public record CreateEventRequest(
     string? ContatoEmail,
     string? ContatoFacebook,
     string? ContatoInstagram,
-    string? OrientacoesGerais);
+    string? OrientacoesGerais,
+    bool ExigirContatoTodosIngressos);
 
 public record UpdateEventRequest(
     string Nome,
@@ -83,4 +85,5 @@ public record UpdateEventRequest(
     string? ContatoEmail,
     string? ContatoFacebook,
     string? ContatoInstagram,
-    string? OrientacoesGerais);
+    string? OrientacoesGerais,
+    bool ExigirContatoTodosIngressos);

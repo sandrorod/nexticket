@@ -34,6 +34,7 @@ export function mapEventToDto(ev: any) {
     contatoFacebook: ev.ContatoFacebook,
     contatoInstagram: ev.ContatoInstagram,
     orientacoesGerais: ev.OrientacoesGerais,
+    exigirContatoTodosIngressos: ev.ExigirContatoTodosIngressos,
   };
 }
 

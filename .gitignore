@@ -19,3 +19,5 @@ FrontEnd/.env.local
 
 # Local tooling
 .tools/
+.vercel
+.env*

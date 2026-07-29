@@ -18,12 +18,13 @@ interface Props {
 
 const idades = Array.from({ length: 100 }, (_, i) => i);
 
-const emptyHolder: TicketHolder = { nome: "", idade: "" as unknown as number };
+const emptyHolder: TicketHolder = { nome: "", idade: "" as unknown as number, email: "", telefone: "" };
 
 export default function CheckoutForm({ event, selecionados }: Props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const rascunho = lerRascunhoCheckout(event.id);
+  const exigirContatoTodosIngressos = event.exigirContatoTodosIngressos;
 
   const { data: meusIngressos, isLoading: carregandoHistorico } = useQuery({ queryKey: ["my-tickets"], queryFn: getMyTickets });
   // Prioriza uma compra já feita NESTE evento; se não houver, usa a compra
@@ -50,8 +51,10 @@ export default function CheckoutForm({ event, selecionados }: Props) {
   // uma vez que existam, ficam ocultos e são usados automaticamente.
   // Espera o histórico carregar para evitar mostrar e esconder o campo em
   // sequência (flash) quando o preenchimento automático estiver a caminho.
+  // Quando o evento exige contato de todos os titulares, cada ingresso tem
+  // seus próprios campos — o fluxo de "único comprador" não se aplica.
   const temDadosSalvos = !!(rascunho?.email || rascunho?.telefone || ultimoComprador?.email || ultimoComprador?.telefone);
-  const mostrarCamposComprador = !carregandoHistorico && !temDadosSalvos;
+  const mostrarCamposComprador = !exigirContatoTodosIngressos && !carregandoHistorico && !temDadosSalvos;
 
   useEffect(() => {
     const quantidades = Object.fromEntries(selecionados.map(({ lot, quantity }) => [lot.id, quantity]));
@@ -85,11 +88,13 @@ export default function CheckoutForm({ event, selecionados }: Props) {
     return partes.length >= 2 && partes.every((p) => p.length >= 2);
   };
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (!email.trim() || !telefone.trim()) {
+    if (!exigirContatoTodosIngressos && (!email.trim() || !telefone.trim())) {
       setError("Informe email e telefone do comprador.");
       return;
     }
@@ -110,14 +115,29 @@ export default function CheckoutForm({ event, selecionados }: Props) {
         setError(`Informe a idade no Ingresso ${indiceSemIdade + 1} — ${lot.nome}.`);
         return;
       }
+
+      if (exigirContatoTodosIngressos) {
+        const indiceSemEmail = holders.findIndex((h) => !h.email?.trim() || !emailRegex.test(h.email.trim()));
+        if (indiceSemEmail !== -1) {
+          setError(`Informe um email válido no Ingresso ${indiceSemEmail + 1} — ${lot.nome}.`);
+          return;
+        }
+
+        const indiceSemTelefone = holders.findIndex((h) => !h.telefone?.trim());
+        if (indiceSemTelefone !== -1) {
+          setError(`Informe o telefone no Ingresso ${indiceSemTelefone + 1} — ${lot.nome}.`);
+          return;
+        }
+      }
     }
 
     setLoading(true);
     try {
+      const primeiroHolder = holdersDoLote(selecionados[0].lot.id, selecionados[0].quantity)[0];
       const order = await createOrder({
         eventId: event.id,
-        email,
-        telefone,
+        email: exigirContatoTodosIngressos ? (primeiroHolder.email ?? "") : email,
+        telefone: exigirContatoTodosIngressos ? (primeiroHolder.telefone ?? "") : telefone,
         itens: selecionados.map(({ lot, quantity }) => ({
           lotId: lot.id,
           ingressos: holdersDoLote(lot.id, quantity),
@@ -151,6 +171,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
       <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.7875rem" }}>
         Informe nome e sobrenome completos de cada titular.
         {mostrarCamposComprador && " Email e telefone do comprador são informados uma única vez, no Ingresso 1."}
+        {exigirContatoTodosIngressos && " Este evento exige email e telefone de cada titular de ingresso."}
       </Typography>
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -191,6 +212,31 @@ export default function CheckoutForm({ event, selecionados }: Props) {
                       </TextField>
                     </Grid>
                   </Grid>
+                  {exigirContatoTodosIngressos && (
+                    <Grid container spacing={2} mt={0.5}>
+                      <Grid item xs={12} sm={7}>
+                        <TextField
+                          label="Email do titular"
+                          type="email"
+                          value={holder.email ?? ""}
+                          onChange={(e) => updateHolder(lot.id, i, "email", e.target.value)}
+                          required
+                          fullWidth
+                          sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={5}>
+                        <TextField
+                          label="Telefone do titular"
+                          value={holder.telefone ?? ""}
+                          onChange={(e) => updateHolder(lot.id, i, "telefone", e.target.value)}
+                          required
+                          fullWidth
+                          sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                        />
+                      </Grid>
+                    </Grid>
+                  )}
                   {ehPrimeiro && mostrarCamposComprador && (
                     <Grid container spacing={2} mt={0.5}>
                       <Grid item xs={12} sm={7}>

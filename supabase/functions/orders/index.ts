@@ -33,6 +33,8 @@ function mapOrderToDto(o: any) {
 interface TicketHolderRequest {
   nome: string;
   idade: number;
+  email?: string;
+  telefone?: string;
 }
 
 interface CreateOrderItemRequest {
@@ -40,7 +42,10 @@ interface CreateOrderItemRequest {
   ingressos: TicketHolderRequest[];
 }
 
-function validateCreateOrderRequest(body: { eventId?: string; email?: string; telefone?: string; itens?: CreateOrderItemRequest[] }): void {
+function validateCreateOrderRequest(
+  body: { eventId?: string; email?: string; telefone?: string; itens?: CreateOrderItemRequest[] },
+  exigirContatoTodosIngressos: boolean,
+): void {
   const v = new Validator();
   v.notEmpty(body.eventId, "EventId");
   v.notEmpty(body.email, "Email").email(body.email, "Email").maxLength(body.email, 200, "Email");
@@ -57,6 +62,11 @@ function validateCreateOrderRequest(body: { eventId?: string; email?: string; te
         v.custom(false, "Informe nome e sobrenome completos.");
       }
       v.inclusiveBetween(holder.idade, 0, 99, "Idade");
+
+      if (exigirContatoTodosIngressos) {
+        v.notEmpty(holder.email, "Email do ingresso").email(holder.email, "Email do ingresso").maxLength(holder.email, 200, "Email do ingresso");
+        v.notEmpty(holder.telefone, "Telefone do ingresso").maxLength(holder.telefone, 20, "Telefone do ingresso");
+      }
     }
   }
   v.throwIfInvalid();
@@ -76,7 +86,16 @@ Deno.serve(async (req) => {
 
     if (req.method === "POST" && !first) {
       const body = await req.json();
-      validateCreateOrderRequest(body);
+
+      const { data: event, error: eventError } = await supabaseAdmin
+        .from("Events")
+        .select("ExigirContatoTodosIngressos")
+        .eq("Id", body.eventId)
+        .maybeSingle();
+      if (eventError) throw eventError;
+      if (!event) throw new NotFoundError("Evento", body.eventId);
+
+      validateCreateOrderRequest(body, event.ExigirContatoTodosIngressos);
 
       const { data, error } = await supabaseAdmin.rpc("create_order", {
         p_user_id: auth.sub,

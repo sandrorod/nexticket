@@ -43,6 +43,7 @@ export interface EventPayload {
   contatoFacebook?: string;
   contatoInstagram?: string;
   orientacoesGerais?: string;
+  exigirContatoTodosIngressos?: boolean;
 }
 
 export const createEvent = (payload: EventPayload) =>
@@ -99,6 +100,7 @@ export const duplicateEvent = async (id: string): Promise<EventDto> => {
     contatoFacebook: original.contatoFacebook,
     contatoInstagram: original.contatoInstagram,
     orientacoesGerais: original.orientacoesGerais,
+    exigirContatoTodosIngressos: original.exigirContatoTodosIngressos,
   };
 
   const created = await createEvent(payload);

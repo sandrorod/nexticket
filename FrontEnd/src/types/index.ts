@@ -46,6 +46,7 @@ export interface EventDto {
   contatoFacebook?: string;
   contatoInstagram?: string;
   orientacoesGerais?: string;
+  exigirContatoTodosIngressos: boolean;
 }
 
 export interface LotDto {
@@ -65,6 +66,8 @@ export interface LotDto {
 export interface TicketHolder {
   nome: string;
   idade: number;
+  email?: string;
+  telefone?: string;
 }
 
 export interface OrderItemDto {

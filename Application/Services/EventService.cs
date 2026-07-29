@@ -76,7 +76,8 @@ public class EventService : IEventService
             ContatoEmail = request.ContatoEmail,
             ContatoFacebook = request.ContatoFacebook,
             ContatoInstagram = request.ContatoInstagram,
-            OrientacoesGerais = request.OrientacoesGerais
+            OrientacoesGerais = request.OrientacoesGerais,
+            ExigirContatoTodosIngressos = request.ExigirContatoTodosIngressos
         };
 
         await _uow.Events.AddAsync(ev, ct);
@@ -115,6 +116,7 @@ public class EventService : IEventService
         ev.ContatoFacebook = request.ContatoFacebook;
         ev.ContatoInstagram = request.ContatoInstagram;
         ev.OrientacoesGerais = request.OrientacoesGerais;
+        ev.ExigirContatoTodosIngressos = request.ExigirContatoTodosIngressos;
 
         _uow.Events.Update(ev);
         await _uow.SaveChangesAsync(ct);
