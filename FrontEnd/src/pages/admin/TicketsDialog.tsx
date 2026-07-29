@@ -17,6 +17,13 @@ const contentFontSize = "0.7875rem";
 
 const statusOrder: Record<string, number> = { Disponivel: 0, Utilizado: 1, Cancelado: 2 };
 
+const statusFiltros: { value: string; label: string }[] = [
+  { value: "Todos", label: "Todos" },
+  { value: "Disponivel", label: "Disponível" },
+  { value: "Utilizado", label: "Utilizado" },
+  { value: "Cancelado", label: "Cancelado" },
+];
+
 function ordenarTickets(tickets: TicketDto[]): TicketDto[] {
   return [...tickets].sort((a, b) => {
     const statusDiff = (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99);
@@ -146,6 +153,7 @@ export default function TicketsDialog({
   const queryClient = useQueryClient();
   const [ticketCancelando, setTicketCancelando] = useState<string | null>(null);
   const [exportando, setExportando] = useState(false);
+  const [statusFiltro, setStatusFiltro] = useState("Todos");
 
   const { data: ticketsData, isLoading } = useQuery({
     queryKey: ["tickets", eventId],
@@ -153,7 +161,8 @@ export default function TicketsDialog({
     enabled: open && !!eventId,
   });
 
-  const tickets = ticketsData ? ordenarTickets(ticketsData) : ticketsData;
+  const ticketsOrdenados = ticketsData ? ordenarTickets(ticketsData) : ticketsData;
+  const tickets = ticketsOrdenados?.filter((t) => statusFiltro === "Todos" || t.status === statusFiltro);
 
   const handleCancel = async (ticket: TicketDto) => {
     if (!confirm(`Excluir o ingresso de ${ticket.nome}? Esta ação não pode ser desfeita.`)) return;
@@ -177,8 +186,9 @@ export default function TicketsDialog({
       const margin = 32;
       let y = margin;
 
+      const filtroLabel = statusFiltros.find((f) => f.value === statusFiltro)?.label ?? "Todos";
       pdf.setFontSize(14);
-      pdf.text(`Ingressos vendidos - ${eventoNome}`, margin, y);
+      pdf.text(`Ingressos vendidos - ${eventoNome}${statusFiltro !== "Todos" ? ` (${filtroLabel})` : ""}`, margin, y);
       y += 24;
 
       const cols = [
@@ -241,6 +251,21 @@ export default function TicketsDialog({
     <Dialog open={open} onClose={onClose} maxWidth={isMobile ? "sm" : "lg"} fullWidth fullScreen={isSmallScreen}>
       <DialogTitle>Ingressos vendidos</DialogTitle>
       <DialogContent sx={{ overflowX: "hidden" }}>
+        {!isLoading && (
+          <Box display="flex" flexWrap="wrap" gap={1} sx={{ px: 1, pb: 1.5 }}>
+            {statusFiltros.map((f) => (
+              <Chip
+                key={f.value}
+                label={f.label}
+                size="small"
+                onClick={() => setStatusFiltro(f.value)}
+                color={statusFiltro === f.value ? "primary" : "default"}
+                variant={statusFiltro === f.value ? "filled" : "outlined"}
+                sx={{ fontWeight: 700, fontSize: contentFontSize }}
+              />
+            ))}
+          </Box>
+        )}
         {isLoading && (
           <Box display="flex" justifyContent="center" py={4}>
             <CircularProgress size={28} />
@@ -271,7 +296,7 @@ export default function TicketsDialog({
         </Box>
         {!isLoading && tickets?.length === 0 && (
           <Typography color="text.secondary" textAlign="center" py={3} sx={{ fontSize: contentFontSize }}>
-            Nenhum ingresso vendido ainda.
+            {statusFiltro === "Todos" ? "Nenhum ingresso vendido ainda." : "Nenhum ingresso com esse status."}
           </Typography>
         )}
       </DialogContent>
