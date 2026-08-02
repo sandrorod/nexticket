@@ -258,6 +258,45 @@ export default function EventDetailPage() {
                     );
                   })}
                 </Stack>
+
+                {lotesSelecionados.length > 0 && !isAuthenticated && (
+                  <Box sx={{ mt: 3, textAlign: "center", py: 4, borderTop: "1px solid rgba(231, 234, 243, 0.9)" }}>
+                    <Typography variant="h6" fontWeight={700} color="text.primary" mb={1}>
+                      Entre ou crie sua conta para continuar
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.875rem" }}>
+                      Seus ingressos selecionados e os dados já preenchidos serão mantidos.
+                    </Typography>
+                    <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
+                      <Button
+                        component={RouterLink}
+                        to="/login"
+                        state={{ from: `${location.pathname}${location.search}` }}
+                        variant="contained"
+                        startIcon={<LoginIcon />}
+                        sx={{ borderRadius: "0.5rem", px: 3 }}
+                      >
+                        Entrar
+                      </Button>
+                      <Button
+                        component={RouterLink}
+                        to="/registro"
+                        state={{ from: `${location.pathname}${location.search}` }}
+                        variant="outlined"
+                        startIcon={<PersonAddIcon />}
+                        sx={{ borderRadius: "0.5rem", px: 3 }}
+                      >
+                        Criar conta
+                      </Button>
+                    </Stack>
+                  </Box>
+                )}
+
+                {lotesSelecionados.length > 0 && isAuthenticated && (
+                  <Box sx={{ mt: 3, pt: 3, borderTop: "1px solid rgba(231, 234, 243, 0.9)" }}>
+                    <CheckoutForm key={event.id} event={event} selecionados={lotesSelecionados} />
+                  </Box>
+                )}
               </CardContent>
             </Card>
           </Grid>
@@ -428,49 +467,8 @@ export default function EventDetailPage() {
             </Typography>
           </Grid>
 
-          {/* Coluna direita: checkout e demais informações — no mobile, order 5+ */}
+          {/* Coluna direita: Informações/Orientações no desktop (mobile já mostradas acima) */}
           <Grid item xs={12} md={9} sx={{ order: { xs: 5, md: "unset" } }}>
-            {lotesSelecionados.length > 0 && !isAuthenticated && (
-              <Card sx={{ mb: { xs: 2.7, md: 3 }, border: "1px solid rgba(55, 125, 255, 0.3)" }}>
-                <CardContent sx={{ textAlign: "center", py: 4 }}>
-                  <Typography variant="h6" fontWeight={700} color="text.primary" mb={1}>
-                    Entre ou crie sua conta para continuar
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.875rem" }}>
-                    Seus ingressos selecionados e os dados já preenchidos serão mantidos.
-                  </Typography>
-                  <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
-                    <Button
-                      component={RouterLink}
-                      to="/login"
-                      state={{ from: `${location.pathname}${location.search}` }}
-                      variant="contained"
-                      startIcon={<LoginIcon />}
-                      sx={{ borderRadius: "0.5rem", px: 3 }}
-                    >
-                      Entrar
-                    </Button>
-                    <Button
-                      component={RouterLink}
-                      to="/registro"
-                      state={{ from: `${location.pathname}${location.search}` }}
-                      variant="outlined"
-                      startIcon={<PersonAddIcon />}
-                      sx={{ borderRadius: "0.5rem", px: 3 }}
-                    >
-                      Criar conta
-                    </Button>
-                  </Stack>
-                </CardContent>
-              </Card>
-            )}
-
-            {lotesSelecionados.length > 0 && isAuthenticated && (
-              <Box sx={{ mb: { xs: 2.7, md: 3 } }}>
-                <CheckoutForm key={event.id} event={event} selecionados={lotesSelecionados} />
-              </Box>
-            )}
-
             <Card sx={{ mb: { xs: 2.7, md: 3 }, display: { xs: "none", md: "block" } }}>
               <CardContent>
                 <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
