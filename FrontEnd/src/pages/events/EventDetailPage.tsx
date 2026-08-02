@@ -120,7 +120,7 @@ export default function EventDetailPage() {
             )}
 
             <Stack direction="row" spacing={1.5} alignItems="center" mb={2} sx={{ display: { xs: "flex", md: "none" } }}>
-              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ fontSize: "1.2rem" }}>
+              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ fontSize: "1.08rem" }}>
                 {event.nome}
               </Typography>
               {event.classificacao && event.classificacao !== "Livre" && (
