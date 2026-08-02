@@ -371,6 +371,13 @@ authorization_url_path = "/oauth/consent"
 # Allow dynamic client registration
 allow_dynamic_registration = false
 
+# As Edge Functions abaixo usam autenticação própria (JWT customizado
+# assinado com JWT_SECRET, não sessões do Supabase Auth) — sem
+# verify_jwt = false, o gateway rejeita o token com
+# sb-error-code: UNAUTHORIZED_LEGACY_JWT antes de a function rodar.
+[functions.users]
+verify_jwt = false
+
 [edge_runtime]
 enabled = true
 # Supported request policies: `oneshot`, `per_worker`.
