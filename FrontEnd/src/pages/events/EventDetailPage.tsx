@@ -143,7 +143,7 @@ export default function EventDetailPage() {
               </Stack>
             </Stack>
 
-            <Stack direction="row" spacing={1.5} mb={1} justifyContent="flex-start">
+            <Stack direction="row" spacing={1.5} mb={1} justifyContent="flex-start" sx={{ display: { xs: "none", md: "flex" } }}>
               <IconButton
                 component="a"
                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
@@ -163,7 +163,7 @@ export default function EventDetailPage() {
                 <WhatsAppIcon />
               </IconButton>
             </Stack>
-            <Typography variant="caption" display="block" textAlign="left" color="text.secondary" mb={3}>
+            <Typography variant="caption" display="block" textAlign="left" color="text.secondary" mb={3} sx={{ display: { xs: "none", md: "block" } }}>
               Compartilhe este evento
             </Typography>
           </Grid>
@@ -370,6 +370,31 @@ export default function EventDetailPage() {
                 </Stack>
               </Card>
             )}
+
+            {/* Compartilhar: só no mobile, aparece aqui (depois de Contato) */}
+            <Stack direction="row" spacing={1.5} mb={1} justifyContent="flex-start" sx={{ display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                component="a"
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ backgroundColor: "rgba(55, 125, 255, 0.08)", color: "primary.main" }}
+              >
+                <FacebookIcon />
+              </IconButton>
+              <IconButton
+                component="a"
+                href={`https://wa.me/?text=${encodeURIComponent(`Confira este evento: ${window.location.href}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ backgroundColor: "rgba(0, 166, 80, 0.08)", color: "#00a650" }}
+              >
+                <WhatsAppIcon />
+              </IconButton>
+            </Stack>
+            <Typography variant="caption" display="block" textAlign="left" color="text.secondary" mb={3} sx={{ display: { xs: "block", md: "none" } }}>
+              Compartilhe este evento
+            </Typography>
           </Grid>
 
           {/* Coluna direita: checkout e demais informações — no mobile, order 4+ */}
