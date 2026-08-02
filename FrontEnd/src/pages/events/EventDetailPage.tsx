@@ -262,6 +262,37 @@ export default function EventDetailPage() {
             </Card>
           </Grid>
 
+          {/* Informações/Orientações: no mobile, sobe para logo após Ingressos */}
+          <Grid item xs={12} md={9} sx={{ order: { xs: 2.5, md: "unset" }, display: { xs: "block", md: "none" } }}>
+            <Card sx={{ mb: { xs: 2.7, md: 3 } }}>
+              <CardContent>
+                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
+                  Informações sobre o evento
+                </Typography>
+                <Divider sx={{ my: 1.5 }} />
+                <Typography variant="body2" color="text.primary" sx={{ whiteSpace: "pre-line", lineHeight: 1.8, textAlign: "left", fontSize: "0.7875rem" }}>{event.descricao}</Typography>
+              </CardContent>
+            </Card>
+
+            {event.orientacoesGerais && (
+              <Card sx={{ mb: { xs: 2.7, md: 3 } }}>
+                <CardContent>
+                  <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
+                    Orientações gerais
+                  </Typography>
+                  <Divider sx={{ my: 1.5 }} />
+                  <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
+                    {event.orientacoesGerais.split("\n").filter(Boolean).map((linha, i) => (
+                      <Typography key={i} component="li" variant="body2" color="text.primary" sx={{ mb: 1.2, textAlign: "left", fontSize: "0.7875rem" }}>
+                        {linha}
+                      </Typography>
+                    ))}
+                  </Box>
+                </CardContent>
+              </Card>
+            )}
+          </Grid>
+
           {/* Coluna esquerda: localização, mapa, contato — no mobile, vem depois de "Compartilhe" */}
           <Grid item xs={12} md={3} sx={{ order: { xs: 3, md: "unset" } }}>
             <Card sx={{ p: 2.5, mb: { xs: 2.7, md: 3 } }}>
@@ -440,7 +471,7 @@ export default function EventDetailPage() {
               </Box>
             )}
 
-            <Card sx={{ mb: { xs: 2.7, md: 3 } }}>
+            <Card sx={{ mb: { xs: 2.7, md: 3 }, display: { xs: "none", md: "block" } }}>
               <CardContent>
                 <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                   Informações sobre o evento
@@ -451,7 +482,7 @@ export default function EventDetailPage() {
             </Card>
 
             {event.orientacoesGerais && (
-              <Card sx={{ mb: 0.6 }}>
+              <Card sx={{ mb: 0.6, display: { xs: "none", md: "block" } }}>
                 <CardContent>
                   <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                     Orientações gerais
