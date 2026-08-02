@@ -63,17 +63,9 @@ Deno.serve(async (req) => {
       }
 
       if (req.method === "DELETE") {
-        const { count } = await supabaseAdmin
-          .from("Orders")
-          .select("Id", { count: "exact", head: true })
-          .eq("UserId", id);
-        if (count && count > 0) {
-          throw new ConflictError(
-            "Esta conta possui pedidos vinculados e não pode ser excluída — desative-a em vez de excluir."
-          );
-        }
-
-        const { error } = await supabaseAdmin.from("Users").delete().eq("Id", id);
+        // Apaga em cascata (Tickets, OrderItems, Orders) dentro de uma
+        // transação no banco — ver rpc delete_user_cascade.
+        const { error } = await supabaseAdmin.rpc("delete_user_cascade", { p_user_id: id });
         if (error) throw error;
 
         return new Response(null, { status: 204, headers });

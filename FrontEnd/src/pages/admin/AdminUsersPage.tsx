@@ -241,7 +241,8 @@ export default function AdminUsersPage() {
           {deleteError && <Alert severity="error" sx={{ mb: 2, mt: 1 }}>{deleteError}</Alert>}
           <Typography variant="body2" color="text.secondary">
             Tem certeza que deseja excluir permanentemente a conta de <strong>{excluindo?.nome}</strong> ({excluindo?.email})?
-            Esta ação não pode ser desfeita. Contas com pedidos vinculados não podem ser excluídas — desative-as em vez disso.
+            Esta ação não pode ser desfeita e também apaga todos os pedidos e ingressos vinculados a esta conta.
+            Se quiser apenas bloquear o acesso preservando o histórico, use "Desativar" em vez de excluir.
           </Typography>
         </DialogContent>
         <DialogActions>
