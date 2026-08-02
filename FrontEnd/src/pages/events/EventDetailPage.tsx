@@ -263,7 +263,7 @@ export default function EventDetailPage() {
           </Grid>
 
           {/* Informações/Orientações: no mobile, sobe para logo após Ingressos */}
-          <Grid item xs={12} md={9} sx={{ order: { xs: 2.5, md: "unset" }, display: { xs: "block", md: "none" } }}>
+          <Grid item xs={12} md={9} sx={{ order: { xs: 3, md: "unset" }, display: { xs: "block", md: "none" } }}>
             <Card sx={{ mb: { xs: 2.7, md: 3 } }}>
               <CardContent>
                 <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
@@ -294,7 +294,7 @@ export default function EventDetailPage() {
           </Grid>
 
           {/* Coluna esquerda: localização, mapa, contato — no mobile, vem depois de "Compartilhe" */}
-          <Grid item xs={12} md={3} sx={{ order: { xs: 3, md: "unset" } }}>
+          <Grid item xs={12} md={3} sx={{ order: { xs: 4, md: "unset" } }}>
             <Card sx={{ p: 2.5, mb: { xs: 2.7, md: 3 } }}>
               <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                 Localização
@@ -428,8 +428,8 @@ export default function EventDetailPage() {
             </Typography>
           </Grid>
 
-          {/* Coluna direita: checkout e demais informações — no mobile, order 4+ */}
-          <Grid item xs={12} md={9} sx={{ order: { xs: 4, md: "unset" } }}>
+          {/* Coluna direita: checkout e demais informações — no mobile, order 5+ */}
+          <Grid item xs={12} md={9} sx={{ order: { xs: 5, md: "unset" } }}>
             {lotesSelecionados.length > 0 && !isAuthenticated && (
               <Card sx={{ mb: { xs: 2.7, md: 3 }, border: "1px solid rgba(55, 125, 255, 0.3)" }}>
                 <CardContent sx={{ textAlign: "center", py: 4 }}>
