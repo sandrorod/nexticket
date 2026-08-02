@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { useParams, useLocation, Link as RouterLink } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useParams, useLocation, useNavigate, Link as RouterLink } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   Box, Container, Typography, Card, CardContent, Button, IconButton,
-  Divider, Alert, Grid, Stack, Chip,
+  Divider, Alert, Grid, Stack, Chip, Dialog, DialogTitle, DialogContent, DialogActions,
 } from "@mui/material";
+import EventBusyIcon from "@mui/icons-material/EventBusy";
 import LiveTvIcon from "@mui/icons-material/LiveTv";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -31,6 +32,7 @@ import { lerRascunhoCheckout, salvarRascunhoCheckout } from "../../utils/checkou
 export default function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
   const isAuthenticated = useAuthStore((s) => !!s.token);
   const [quantidades, setQuantidades] = useState<Record<string, number>>(
     () => (id ? lerRascunhoCheckout(id)?.quantidades ?? {} : {})
@@ -53,6 +55,15 @@ export default function EventDetailPage() {
     queryFn: getMyTickets,
     enabled: isAuthenticated,
   });
+
+  const vendasEncerradas = useMemo(() => {
+    if (!event) return false;
+    if (event.status !== "Publicado") return true;
+    const agora = Date.now();
+    if (event.vendaInicio && agora < new Date(event.vendaInicio).getTime()) return true;
+    if (event.vendaFim && agora > new Date(event.vendaFim).getTime()) return true;
+    return false;
+  }, [event]);
 
   if (!event) return null;
 
@@ -428,6 +439,27 @@ export default function EventDetailPage() {
           </Grid>
         </Grid>
       </Container>
+
+      <Dialog
+        open={vendasEncerradas}
+        disableEscapeKeyDown
+        slotProps={{ backdrop: { sx: { backdropFilter: "blur(4px)" } } }}
+      >
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <EventBusyIcon color="warning" />
+          Evento indisponível
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary">
+            Este evento não está mais disponível para venda de ingressos.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button variant="contained" onClick={() => navigate("/eventos")} sx={{ borderRadius: "0.5rem", px: 3 }}>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
