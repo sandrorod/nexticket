@@ -13,12 +13,12 @@ export default function TermsPage() {
 
         <Stack spacing={3}>
           <Section title="1. Aceitação dos termos">
-            Ao acessar e utilizar a plataforma NexTicket, você concorda com estes Termos de Uso.
+            Ao acessar e utilizar a plataforma BoraPass, você concorda com estes Termos de Uso.
             Caso não concorde com qualquer disposição aqui prevista, não utilize a plataforma.
           </Section>
 
           <Section title="2. Descrição do serviço">
-            A NexTicket é uma plataforma de venda e gestão de ingressos para eventos, que conecta
+            A BoraPass é uma plataforma de venda e gestão de ingressos para eventos, que conecta
             organizadores de eventos a compradores de ingressos, permitindo a emissão de ingressos
             digitais com validação por QR Code.
           </Section>
@@ -45,7 +45,7 @@ export default function TermsPage() {
 
           <Section title="6. Responsabilidades do organizador">
             O organizador é o único responsável pela realização do evento, incluindo data, horário,
-            local, conteúdo e demais condições anunciadas. A NexTicket atua exclusivamente como
+            local, conteúdo e demais condições anunciadas. A BoraPass atua exclusivamente como
             intermediária na venda e gestão de ingressos.
           </Section>
 

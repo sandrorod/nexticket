@@ -6,7 +6,7 @@ import { Validator } from "../_shared/validate.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const SMTP_FROM_EMAIL = Deno.env.get("SMTP_FROM_EMAIL") ?? "onboarding@resend.dev";
-const SMTP_FROM_NAME = Deno.env.get("SMTP_FROM_NAME") ?? "NexTicket";
+const SMTP_FROM_NAME = Deno.env.get("SMTP_FROM_NAME") ?? "BoraPass";
 const FRONTEND_URL = Deno.env.get("FRONTEND_URL") ?? "http://localhost:5174";
 
 Deno.serve(async (req) => {
@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
       const resetUrl = `${FRONTEND_URL}/redefinir-senha?token=${resetToken}`;
       const html = `
         <p>Olá, ${user.Nome}!</p>
-        <p>Recebemos uma solicitação para redefinir sua senha no NexTicket.</p>
+        <p>Recebemos uma solicitação para redefinir sua senha no BoraPass.</p>
         <p><a href="${resetUrl}">Clique aqui para criar uma nova senha</a></p>
         <p>Este link expira em 1 hora. Se você não solicitou isso, ignore este email.</p>
       `;
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           from: `${SMTP_FROM_NAME} <${SMTP_FROM_EMAIL}>`,
           to: [user.Email],
-          subject: "Redefinição de senha — NexTicket",
+          subject: "Redefinição de senha — BoraPass",
           html,
         }),
       });

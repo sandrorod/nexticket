@@ -46,7 +46,7 @@ export default function Footer() {
                 <InstagramIcon fontSize="small" />
               </IconButton>
               <IconButton
-                href="mailto:ajuda@nexticket.com.br"
+                href="mailto:fale@borapass.com.br"
                 size="small"
                 sx={{ backgroundColor: "rgba(55, 125, 255, 0.08)", color: "primary.main" }}
               >
@@ -95,7 +95,7 @@ export default function Footer() {
         <Divider sx={{ my: 4 }} />
 
         <Typography variant="body2" color="text.secondary">
-          Copyright © {new Date().getFullYear()} NexTicket
+          Copyright © {new Date().getFullYear()} BoraPass
         </Typography>
       </Container>
     </Box>
