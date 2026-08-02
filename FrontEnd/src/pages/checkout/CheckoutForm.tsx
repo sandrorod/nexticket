@@ -182,11 +182,12 @@ export default function CheckoutForm({ event, selecionados }: Props) {
       >
         Dados dos ingressos
       </Typography>
-      <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.7875rem" }}>
-        Informe nome e sobrenome completos de cada titular.
-        {mostrarCamposComprador && " Email e telefone do comprador são informados uma única vez, no Ingresso 1."}
-        {exigirContatoTodosIngressos && " Este evento exige email e telefone de cada titular de ingresso."}
-      </Typography>
+      {(mostrarCamposComprador || exigirContatoTodosIngressos) && (
+        <Typography variant="body2" color="text.secondary" mb={3} sx={{ fontSize: "0.7875rem" }}>
+          {mostrarCamposComprador && "Email e telefone do comprador são informados uma única vez, no Ingresso 1."}
+          {exigirContatoTodosIngressos && " Este evento exige email e telefone de cada titular de ingresso."}
+        </Typography>
+      )}
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
