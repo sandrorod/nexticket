@@ -47,14 +47,28 @@ export default function CheckoutForm({ event, selecionados }: Props) {
   }, [ultimoComprador]);
 
   // Só mostra os campos de email/telefone no Ingresso 1 quando o comprador
-  // ainda não tem esses dados (nem do histórico, nem já digitados agora) —
-  // uma vez que existam, ficam ocultos e são usados automaticamente.
+  // ainda não tinha esses dados ANTES de abrir o formulário (nem no
+  // rascunho salvo antes desta sessão, nem no histórico de compras) —
+  // uma vez decidido, a visibilidade não muda mais nesta sessão. Sem essa
+  // trava, o useEffect que salva email/telefone no rascunho a cada
+  // digitação faria "rascunho" (relido a cada render) deixar de estar
+  // vazio assim que o usuário digitasse o 1º caractere, escondendo os
+  // campos que ele mesmo está preenchendo.
   // Espera o histórico carregar para evitar mostrar e esconder o campo em
   // sequência (flash) quando o preenchimento automático estiver a caminho.
   // Quando o evento exige contato de todos os titulares, cada ingresso tem
   // seus próprios campos — o fluxo de "único comprador" não se aplica.
-  const temDadosSalvos = !!(rascunho?.email || rascunho?.telefone || ultimoComprador?.email || ultimoComprador?.telefone);
-  const mostrarCamposComprador = !exigirContatoTodosIngressos && !carregandoHistorico && !temDadosSalvos;
+  const tinhaDadosSalvosAntes = !!(rascunho?.email || rascunho?.telefone);
+  const [decisaoCamposComprador, setDecisaoCamposComprador] = useState<boolean | null>(
+    tinhaDadosSalvosAntes ? false : null
+  );
+
+  useEffect(() => {
+    if (decisaoCamposComprador !== null || carregandoHistorico) return;
+    setDecisaoCamposComprador(!(ultimoComprador?.email || ultimoComprador?.telefone));
+  }, [carregandoHistorico, ultimoComprador, decisaoCamposComprador]);
+
+  const mostrarCamposComprador = !exigirContatoTodosIngressos && !!decisaoCamposComprador;
 
   useEffect(() => {
     const quantidades = Object.fromEntries(selecionados.map(({ lot, quantity }) => [lot.id, quantity]));
