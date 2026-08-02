@@ -1,10 +1,20 @@
-export type UserRole = "Comprador" | "Administrador" | "Validador";
+export type UserRole = "Comprador" | "Administrador" | "Validador" | "Master";
 
 export interface StaffDto {
   id: string;
   nome: string;
   email: string;
   telefone: string;
+  ativo: boolean;
+  createdAt: string;
+}
+
+export interface UserAccountDto {
+  id: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  role: UserRole;
   ativo: boolean;
   createdAt: string;
 }

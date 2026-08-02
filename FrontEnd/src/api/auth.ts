@@ -28,3 +28,6 @@ export const resetPassword = (token: string, novaSenha: string) =>
 
 export const loginWithGoogleAccessToken = (accessToken: string) =>
   api.post<AuthResponse>("/auth-google", { accessToken }).then((r) => r.data);
+
+export const changePassword = (senhaAtual: string, novaSenha: string) =>
+  api.post("/auth-change-password", { senhaAtual, novaSenha });

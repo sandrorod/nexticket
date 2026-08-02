@@ -5,7 +5,7 @@ import { verifyPassword } from "../_shared/password.ts";
 import { generateToken, type UserRole } from "../_shared/jwt.ts";
 import { Validator } from "../_shared/validate.ts";
 
-const roleNames: UserRole[] = ["Comprador", "Administrador", "Validador"];
+const roleNames: UserRole[] = ["Comprador", "Administrador", "Validador", "Master"];
 
 Deno.serve(async (req) => {
   const opt = handleOptions(req);

@@ -16,6 +16,7 @@ import AdminEventsListPage from "./pages/admin/AdminEventsListPage";
 import EventFormPage from "./pages/admin/EventFormPage";
 import AdminEventDetailPage from "./pages/admin/AdminEventDetailPage";
 import StaffPage from "./pages/admin/StaffPage";
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
 import AccountPage from "./pages/account/AccountPage";
 import TermsPage from "./pages/legal/TermsPage";
 import PrivacyPage from "./pages/legal/PrivacyPage";
@@ -52,6 +53,10 @@ function App() {
           <Route path="/admin/eventos/:id" element={<AdminEventDetailPage />} />
           <Route path="/admin/eventos/:id/editar" element={<EventFormPage />} />
           <Route path="/admin/funcionarios" element={<StaffPage />} />
+        </Route>
+
+        <Route element={<RequireAuth roles={["Master"]} />}>
+          <Route path="/admin/administradores" element={<AdminUsersPage />} />
         </Route>
       </Route>
     </Routes>

@@ -6,7 +6,7 @@ const JWT_ISSUER = Deno.env.get("JWT_ISSUER") ?? "NexTicket.API";
 const JWT_AUDIENCE = Deno.env.get("JWT_AUDIENCE") ?? "NexTicket.Client";
 const JWT_EXPIRATION_MINUTES = Number(Deno.env.get("JWT_EXPIRATION_MINUTES") ?? "120");
 
-export type UserRole = "Comprador" | "Administrador" | "Validador";
+export type UserRole = "Comprador" | "Administrador" | "Validador" | "Master";
 
 export interface JwtPayload {
   [key: string]: unknown;
@@ -71,6 +71,9 @@ export async function requireAuth(req: Request): Promise<JwtPayload> {
 }
 
 export function requireRole(payload: JwtPayload, ...roles: UserRole[]): void {
+  // Master tem acesso a tudo que Administrador tem, exceto onde checado
+  // explicitamente (ex: gestão de contas admin, restrita a "Master").
+  if (payload.role === "Master" && roles.includes("Administrador")) return;
   if (!roles.includes(payload.role)) {
     throw new UnauthorizedAppError("Você não tem permissão para acessar este recurso.");
   }
