@@ -200,7 +200,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
               <Card key={`${lot.id}-${i}`} sx={{ border: "1px solid rgba(231, 234, 243, 0.9)" }}>
                 <CardContent>
                   <Typography fontWeight={700} color="text.primary" mb={2} sx={{ fontSize: "0.9rem" }}>Ingresso {i + 1} — {lot.nome}</Typography>
-                  <Grid container spacing={2}>
+                  <Grid container spacing={{ xs: 0.4, sm: 2 }}>
                     <Grid item xs={8.55} sm={10}>
                       <TextField
                         label="Nome completo"
@@ -253,29 +253,31 @@ export default function CheckoutForm({ event, selecionados }: Props) {
                     </Grid>
                   )}
                   {ehPrimeiro && mostrarCamposComprador && (
-                    <Grid container spacing={2} mt={0.5}>
-                      <Grid item xs={12} sm={7}>
-                        <TextField
-                          label="Email do comprador"
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                          fullWidth
-                          sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                        />
+                    <Box sx={{ py: 0.5 }}>
+                      <Grid container spacing={2} mt={0.5}>
+                        <Grid item xs={12} sm={7}>
+                          <TextField
+                            label="Email do comprador"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            fullWidth
+                            sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={5}>
+                          <TextField
+                            label="Telefone do comprador"
+                            value={telefone}
+                            onChange={(e) => setTelefone(e.target.value)}
+                            required
+                            fullWidth
+                            sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
+                          />
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} sm={5}>
-                        <TextField
-                          label="Telefone do comprador"
-                          value={telefone}
-                          onChange={(e) => setTelefone(e.target.value)}
-                          required
-                          fullWidth
-                          sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
-                        />
-                      </Grid>
-                    </Grid>
+                    </Box>
                   )}
                 </CardContent>
               </Card>
