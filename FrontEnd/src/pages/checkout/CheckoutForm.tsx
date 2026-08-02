@@ -200,7 +200,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
                 <CardContent>
                   <Typography fontWeight={700} color="text.primary" mb={2} sx={{ fontSize: "0.9rem" }}>Ingresso {i + 1} — {lot.nome}</Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={9} sm={10}>
+                    <Grid item xs={8.55} sm={10}>
                       <TextField
                         label="Nome completo"
                         placeholder="Nome e sobrenome"
@@ -211,7 +211,7 @@ export default function CheckoutForm({ event, selecionados }: Props) {
                         sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
                       />
                     </Grid>
-                    <Grid item xs={3} sm={2}>
+                    <Grid item xs={3.45} sm={2}>
                       <TextField
                         select
                         label="Idade"
