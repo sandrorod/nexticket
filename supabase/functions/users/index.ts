@@ -61,6 +61,23 @@ Deno.serve(async (req) => {
         const { data: updated } = await supabaseAdmin.from("Users").select("*").eq("Id", id).single();
         return json(toDto(updated), 200, headers);
       }
+
+      if (req.method === "DELETE") {
+        const { count } = await supabaseAdmin
+          .from("Orders")
+          .select("Id", { count: "exact", head: true })
+          .eq("UserId", id);
+        if (count && count > 0) {
+          throw new ConflictError(
+            "Esta conta possui pedidos vinculados e não pode ser excluída — desative-a em vez de excluir."
+          );
+        }
+
+        const { error } = await supabaseAdmin.from("Users").delete().eq("Id", id);
+        if (error) throw error;
+
+        return new Response(null, { status: 204, headers });
+      }
     }
 
     if (req.method === "POST" && id && action) {

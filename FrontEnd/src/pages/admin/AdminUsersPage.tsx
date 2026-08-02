@@ -8,7 +8,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-  getUsers, updateUser, promoverAdmin, removerAdmin, deactivateUser, reactivateUser,
+  getUsers, updateUser, promoverAdmin, removerAdmin, deactivateUser, reactivateUser, deleteUser,
 } from "../../api/users";
 import type { UserAccountDto } from "../../types";
 
@@ -34,9 +34,12 @@ export default function AdminUsersPage() {
 
   const [busca, setBusca] = useState("");
   const [editando, setEditando] = useState<UserAccountDto | null>(null);
+  const [excluindo, setExcluindo] = useState<UserAccountDto | null>(null);
   const [form, setForm] = useState({ nome: "", telefone: "" });
   const [error, setError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const usuariosFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
@@ -86,6 +89,21 @@ export default function AdminUsersPage() {
       await reactivateUser(id);
     }
     await invalidate();
+  };
+
+  const handleDelete = async () => {
+    if (!excluindo) return;
+    setDeleteError(null);
+    setDeleting(true);
+    try {
+      await deleteUser(excluindo.id);
+      await invalidate();
+      setExcluindo(null);
+    } catch (err: any) {
+      setDeleteError(err?.response?.data?.errors?.join(" ") ?? "Não foi possível excluir esta conta.");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -160,6 +178,9 @@ export default function AdminUsersPage() {
                             <Button size="small" color={u.ativo ? "error" : "success"} onClick={() => handleToggleActive(u.id, u.ativo)}>
                               {u.ativo ? "Desativar" : "Reativar"}
                             </Button>
+                            <Button size="small" color="error" onClick={() => { setExcluindo(u); setDeleteError(null); }}>
+                              Deletar
+                            </Button>
                           </Box>
                         )}
                       </TableCell>
@@ -210,6 +231,23 @@ export default function AdminUsersPage() {
           <Button onClick={() => setEditando(null)}>Cancelar</Button>
           <Button variant="contained" onClick={handleSaveEdit} disabled={loading}>
             {loading ? "Salvando..." : "Salvar"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={!!excluindo} onClose={() => setExcluindo(null)} maxWidth="xs" fullWidth>
+        <DialogTitle>Excluir conta</DialogTitle>
+        <DialogContent>
+          {deleteError && <Alert severity="error" sx={{ mb: 2, mt: 1 }}>{deleteError}</Alert>}
+          <Typography variant="body2" color="text.secondary">
+            Tem certeza que deseja excluir permanentemente a conta de <strong>{excluindo?.nome}</strong> ({excluindo?.email})?
+            Esta ação não pode ser desfeita. Contas com pedidos vinculados não podem ser excluídas — desative-as em vez disso.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setExcluindo(null)}>Cancelar</Button>
+          <Button variant="contained" color="error" onClick={handleDelete} disabled={deleting}>
+            {deleting ? "Excluindo..." : "Excluir"}
           </Button>
         </DialogActions>
       </Dialog>

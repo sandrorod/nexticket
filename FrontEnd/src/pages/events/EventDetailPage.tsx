@@ -100,8 +100,8 @@ export default function EventDetailPage() {
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
       <Container maxWidth="xl" sx={{ pt: 4, pb: 1.2 }}>
         <Grid container spacing={3}>
-          {/* Coluna esquerda */}
-          <Grid item xs={12} md={3}>
+          {/* Coluna esquerda: cabeçalho (imagem, título, data, local) */}
+          <Grid item xs={12} md={3} sx={{ order: { xs: 1, md: "unset" } }}>
             {event.imagemUrl && (
               <Box
                 sx={{
@@ -166,7 +166,104 @@ export default function EventDetailPage() {
             <Typography variant="caption" display="block" textAlign="left" color="text.secondary" mb={3}>
               Compartilhe este evento
             </Typography>
+          </Grid>
 
+          {/* Ingressos: no mobile, sobe para antes de "Compartilhe este evento" */}
+          <Grid item xs={12} md={9} sx={{ order: { xs: 2, md: "unset" } }}>
+            <Stack direction="row" spacing={1.5} alignItems="center" mb={0.5} sx={{ display: { xs: "none", md: "flex" } }}>
+              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ fontSize: "1.5rem" }}>
+                {event.nome}
+              </Typography>
+              {event.classificacao && event.classificacao !== "Livre" && (
+                <Chip
+                  label={`+${event.classificacao}`}
+                  size="small"
+                  sx={{ backgroundColor: "#132144", color: "#fff", fontWeight: 700 }}
+                />
+              )}
+            </Stack>
+            <Typography
+              variant="body1"
+              color="primary.main"
+              fontWeight={600}
+              mb={3}
+              sx={{ textAlign: "left", fontSize: "0.9rem", display: { xs: "none", md: "block" } }}
+            >
+              {formatarData(event.data).toUpperCase()} · {formatarHora(event.hora)}
+            </Typography>
+
+            {event.transmissaoUrl && (
+              <Alert
+                icon={<LiveTvIcon />}
+                severity="info"
+                action={
+                  <Button color="inherit" size="small" href={event.transmissaoUrl} target="_blank" rel="noopener noreferrer">
+                    Assistir
+                  </Button>
+                }
+                sx={{ mb: 3 }}
+              >
+                Este evento possui transmissão ao vivo.
+              </Alert>
+            )}
+
+            <Card sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
+                  Ingressos
+                </Typography>
+                <Divider sx={{ my: 1.5 }} />
+                <Stack divider={<Divider />} spacing={2}>
+                  {lots?.map((lot) => {
+                    const qtd = quantidades[lot.id] ?? 0;
+                    const restante = restanteNoLote(lot);
+                    const max = Math.min(lot.quantidadeDisponivel, restante, 10);
+                    return (
+                      <Box key={lot.id} py={1}>
+                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                          <Box>
+                            <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.729rem", letterSpacing: "0.01em" }}>
+                              {lot.nome}
+                            </Typography>
+                          </Box>
+                          <Stack direction="row" spacing={2} alignItems="center">
+                            <Typography fontWeight={700} color="text.primary" sx={{ fontSize: "0.7875rem" }}>R$ {lot.preco.toFixed(2)}</Typography>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                              <IconButton
+                                size="small"
+                                disabled={qtd === 0}
+                                onClick={() => setQuantidade(lot, qtd - 1)}
+                                sx={{ border: "1px solid rgba(231, 234, 243, 0.95)" }}
+                              >
+                                <RemoveIcon fontSize="small" />
+                              </IconButton>
+                              <Typography sx={{ minWidth: 20, textAlign: "center" }}>{qtd}</Typography>
+                              <IconButton
+                                size="small"
+                                disabled={qtd >= max || lot.quantidadeDisponivel === 0}
+                                onClick={() => setQuantidade(lot, qtd + 1)}
+                                sx={{ backgroundColor: "primary.main", color: "#fff", "&:hover": { backgroundColor: "primary.dark" } }}
+                              >
+                                <AddIcon fontSize="small" />
+                              </IconButton>
+                            </Stack>
+                          </Stack>
+                        </Box>
+                        {restante === 0 && (
+                          <Typography variant="caption" color="warning.main" sx={{ display: "block", mt: 0.5 }}>
+                            Você já atingiu o limite de {lot.maximoPorUsuario} ingresso(s) por login neste lote.
+                          </Typography>
+                        )}
+                      </Box>
+                    );
+                  })}
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Coluna esquerda: localização, mapa, contato — no mobile, vem depois de "Compartilhe" */}
+          <Grid item xs={12} md={3} sx={{ order: { xs: 3, md: "unset" } }}>
             <Card sx={{ p: 2.5, mb: 3 }}>
               <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                 Localização
@@ -275,99 +372,8 @@ export default function EventDetailPage() {
             )}
           </Grid>
 
-          {/* Coluna direita */}
-          <Grid item xs={12} md={9}>
-            <Stack direction="row" spacing={1.5} alignItems="center" mb={0.5} sx={{ display: { xs: "none", md: "flex" } }}>
-              <Typography variant="h5" fontWeight={700} color="text.primary" sx={{ fontSize: "1.5rem" }}>
-                {event.nome}
-              </Typography>
-              {event.classificacao && event.classificacao !== "Livre" && (
-                <Chip
-                  label={`+${event.classificacao}`}
-                  size="small"
-                  sx={{ backgroundColor: "#132144", color: "#fff", fontWeight: 700 }}
-                />
-              )}
-            </Stack>
-            <Typography
-              variant="body1"
-              color="primary.main"
-              fontWeight={600}
-              mb={3}
-              sx={{ textAlign: "left", fontSize: "0.9rem", display: { xs: "none", md: "block" } }}
-            >
-              {formatarData(event.data).toUpperCase()} · {formatarHora(event.hora)}
-            </Typography>
-
-            {event.transmissaoUrl && (
-              <Alert
-                icon={<LiveTvIcon />}
-                severity="info"
-                action={
-                  <Button color="inherit" size="small" href={event.transmissaoUrl} target="_blank" rel="noopener noreferrer">
-                    Assistir
-                  </Button>
-                }
-                sx={{ mb: 3 }}
-              >
-                Este evento possui transmissão ao vivo.
-              </Alert>
-            )}
-
-            <Card sx={{ mb: 3 }}>
-              <CardContent>
-                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
-                  Ingressos
-                </Typography>
-                <Divider sx={{ my: 1.5 }} />
-                <Stack divider={<Divider />} spacing={2}>
-                  {lots?.map((lot) => {
-                    const qtd = quantidades[lot.id] ?? 0;
-                    const restante = restanteNoLote(lot);
-                    const max = Math.min(lot.quantidadeDisponivel, restante, 10);
-                    return (
-                      <Box key={lot.id} py={1}>
-                        <Box display="flex" justifyContent="space-between" alignItems="center">
-                          <Box>
-                            <Typography fontWeight={700} color="text.primary" sx={{ textTransform: "uppercase", fontSize: "0.729rem", letterSpacing: "0.01em" }}>
-                              {lot.nome}
-                            </Typography>
-                          </Box>
-                          <Stack direction="row" spacing={2} alignItems="center">
-                            <Typography fontWeight={700} color="text.primary" sx={{ fontSize: "0.7875rem" }}>R$ {lot.preco.toFixed(2)}</Typography>
-                            <Stack direction="row" alignItems="center" spacing={1}>
-                              <IconButton
-                                size="small"
-                                disabled={qtd === 0}
-                                onClick={() => setQuantidade(lot, qtd - 1)}
-                                sx={{ border: "1px solid rgba(231, 234, 243, 0.95)" }}
-                              >
-                                <RemoveIcon fontSize="small" />
-                              </IconButton>
-                              <Typography sx={{ minWidth: 20, textAlign: "center" }}>{qtd}</Typography>
-                              <IconButton
-                                size="small"
-                                disabled={qtd >= max || lot.quantidadeDisponivel === 0}
-                                onClick={() => setQuantidade(lot, qtd + 1)}
-                                sx={{ backgroundColor: "primary.main", color: "#fff", "&:hover": { backgroundColor: "primary.dark" } }}
-                              >
-                                <AddIcon fontSize="small" />
-                              </IconButton>
-                            </Stack>
-                          </Stack>
-                        </Box>
-                        {restante === 0 && (
-                          <Typography variant="caption" color="warning.main" sx={{ display: "block", mt: 0.5 }}>
-                            Você já atingiu o limite de {lot.maximoPorUsuario} ingresso(s) por login neste lote.
-                          </Typography>
-                        )}
-                      </Box>
-                    );
-                  })}
-                </Stack>
-              </CardContent>
-            </Card>
-
+          {/* Coluna direita: checkout e demais informações — no mobile, order 4+ */}
+          <Grid item xs={12} md={9} sx={{ order: { xs: 4, md: "unset" } }}>
             {lotesSelecionados.length > 0 && !isAuthenticated && (
               <Card sx={{ mb: 3, border: "1px solid rgba(55, 125, 255, 0.3)" }}>
                 <CardContent sx={{ textAlign: "center", py: 4 }}>

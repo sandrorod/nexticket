@@ -18,3 +18,5 @@ export const removerAdmin = (id: string) => api.post<UserAccountDto>(`/users/${i
 export const deactivateUser = (id: string) => api.post<UserAccountDto>(`/users/${id}/deactivate`).then((r) => r.data);
 
 export const reactivateUser = (id: string) => api.post<UserAccountDto>(`/users/${id}/reactivate`).then((r) => r.data);
+
+export const deleteUser = (id: string) => api.delete(`/users/${id}`);
