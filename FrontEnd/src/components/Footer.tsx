@@ -29,9 +29,7 @@ export default function Footer() {
       <Container sx={{ pt: { xs: 0.6, sm: 6 }, pb: 6 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
-            <Typography variant="h6" fontWeight={800} color="text.primary" mb={1.5}>
-              <Box component="span" sx={{ color: "primary.main" }}>X</Box>next
-            </Typography>
+            <Box component="img" src="/logo-borapass.png" alt="BoraPass" sx={{ height: "1.75rem", display: "block", mb: 1.5 }} />
             <Typography variant="body2" color="text.secondary" mb={2}>
               Plataforma de venda e gestão de ingressos.
             </Typography>

@@ -12,7 +12,9 @@ import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumb
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { useAuthStore } from "../store/authStore";
 import Footer from "./Footer";
 import ScrollToTop from "./ScrollToTop";
@@ -39,13 +41,18 @@ export default function Layout() {
     navigate("/login");
   };
 
+  const isAdmin = role === "Administrador" || role === "Master";
+
   const navItems = [
-    role === "Administrador" && { to: "/admin/eventos/novo", icon: <AddCircleOutlineIcon />, label: "Criar evento" },
-    role === "Administrador" && { to: "/admin/eventos", icon: <EventNoteIcon />, label: "Meus eventos" },
-    role === "Administrador" && { to: "/admin/funcionarios", icon: <PeopleAltOutlinedIcon />, label: "Funcionários" },
-    (role === "Administrador" || role === "Validador") && { to: "/admin/validar", icon: <QrCodeScannerIcon />, label: "Validar ingresso" },
+    isAdmin && { to: "/admin/eventos/novo", icon: <AddCircleOutlineIcon />, label: "Criar evento" },
+    isAdmin && { to: "/admin/eventos", icon: <EventNoteIcon />, label: "Meus eventos" },
+    isAdmin && { to: "/admin/funcionarios", icon: <PeopleAltOutlinedIcon />, label: "Funcionários" },
+    role === "Master" && { to: "/admin/administradores", icon: <AdminPanelSettingsOutlinedIcon />, label: "Administradores" },
+    (isAdmin || role === "Validador") && { to: "/admin/validar", icon: <QrCodeScannerIcon />, label: "Validar ingresso" },
     token && role !== "Validador" && { to: "/meus-ingressos", icon: <ConfirmationNumberOutlinedIcon />, label: "Meus ingressos" },
   ].filter(Boolean) as { to: string; icon: React.ReactNode; label: string }[];
+
+  const contaItem = token ? { to: "/conta", icon: <PersonOutlineIcon />, label: "Minha conta" } : null;
 
   return (
     <>
@@ -60,15 +67,9 @@ export default function Layout() {
         }}
       >
         <Toolbar sx={{ gap: 0.5, minHeight: "4.75rem", px: { xs: 2, md: 4 } }}>
-          <Typography
-            variant="h6"
-            fontWeight={800}
-            component={RouterLink}
-            to="/eventos"
-            sx={{ textDecoration: "none", color: "text.primary", flexGrow: 1, letterSpacing: "-0.02em" }}
-          >
-            <Box component="span" sx={{ color: "primary.main" }}>X</Box>next
-          </Typography>
+          <Box component={RouterLink} to="/eventos" sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+            <Box component="img" src="/logo-borapass.png" alt="BoraPass" sx={{ height: { xs: "1.75rem", md: "2rem" } }} />
+          </Box>
 
           {!isMobile && navItems.map((item) => (
             <Button key={item.to} component={RouterLink} to={item.to} startIcon={item.icon} sx={navLinkSx}>
@@ -81,9 +82,9 @@ export default function Layout() {
           {!isMobile && (
             token ? (
               <>
-                <Typography variant="body2" color="text.secondary" alignSelf="center" sx={{ mx: 1.5 }}>
+                <Button component={RouterLink} to="/conta" sx={navLinkSx}>
                   {nome?.split(" ")[0]}
-                </Typography>
+                </Button>
                 <Button onClick={handleLogout} sx={navLinkSx}>Sair</Button>
               </>
             ) : (
@@ -116,6 +117,12 @@ export default function Layout() {
           )}
           <Divider />
           <List>
+            {contaItem && (
+              <ListItemButton component={RouterLink} to={contaItem.to} onClick={() => setMenuOpen(false)}>
+                <ListItemIcon>{contaItem.icon}</ListItemIcon>
+                <ListItemText primary={contaItem.label} />
+              </ListItemButton>
+            )}
             {navItems.map((item) => (
               <ListItemButton key={item.to} component={RouterLink} to={item.to} onClick={() => setMenuOpen(false)}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
