@@ -82,8 +82,11 @@ export default function Layout() {
           {!isMobile && (
             token ? (
               <>
-                <Button component={RouterLink} to="/conta" sx={navLinkSx}>
-                  {nome?.split(" ")[0]}
+                <Typography variant="body2" color="text.secondary" alignSelf="center" sx={{ mx: 1.5 }}>
+                  Olá, {nome?.split(" ")[0]}
+                </Typography>
+                <Button component={RouterLink} to="/conta" startIcon={<PersonOutlineIcon />} sx={navLinkSx}>
+                  Minha conta
                 </Button>
                 <Button onClick={handleLogout} sx={navLinkSx}>Sair</Button>
               </>
