@@ -99,7 +99,7 @@ export default function EventDetailPage() {
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
       <Container maxWidth="xl" sx={{ pt: 4, pb: 1.2 }}>
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 2.7, md: 3 }}>
           {/* Coluna esquerda: cabeçalho (imagem, título, data, local) */}
           <Grid item xs={12} md={3} sx={{ order: { xs: 1, md: "unset" } }}>
             {event.imagemUrl && (
@@ -108,7 +108,7 @@ export default function EventDetailPage() {
                   width: "100%",
                   borderRadius: "0.75rem",
                   overflow: "hidden",
-                  mb: 3,
+                  mb: { xs: 2.7, md: 3 },
                   boxShadow: "0 0.25rem 1rem rgba(19, 33, 68, 0.08)",
                 }}
               >
@@ -201,13 +201,13 @@ export default function EventDetailPage() {
                     Assistir
                   </Button>
                 }
-                sx={{ mb: 3 }}
+                sx={{ mb: { xs: 2.7, md: 3 } }}
               >
                 Este evento possui transmissão ao vivo.
               </Alert>
             )}
 
-            <Card sx={{ mb: 3 }}>
+            <Card sx={{ mb: { xs: 2.7, md: 3 } }}>
               <CardContent>
                 <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                   Ingressos
@@ -264,7 +264,7 @@ export default function EventDetailPage() {
 
           {/* Coluna esquerda: localização, mapa, contato — no mobile, vem depois de "Compartilhe" */}
           <Grid item xs={12} md={3} sx={{ order: { xs: 3, md: "unset" } }}>
-            <Card sx={{ p: 2.5, mb: 3 }}>
+            <Card sx={{ p: 2.5, mb: { xs: 2.7, md: 3 } }}>
               <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                 Localização
               </Typography>
@@ -291,7 +291,7 @@ export default function EventDetailPage() {
                 startIcon={<MapIcon />}
                 fullWidth
                 sx={{
-                  mb: 3,
+                  mb: { xs: 2.7, md: 3 },
                   py: 1.2,
                   borderRadius: "0.5rem",
                   backgroundColor: "rgba(55, 125, 255, 0.08)",
@@ -305,7 +305,7 @@ export default function EventDetailPage() {
             )}
 
             {(event.contatoWhatsapp || event.contatoTelefone || event.contatoEmail || event.contatoFacebook || event.contatoInstagram) && (
-              <Card sx={{ p: 2.5, mb: 3 }}>
+              <Card sx={{ p: 2.5, mb: { xs: 2.7, md: 3 } }}>
                 <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                   Contato
                 </Typography>
@@ -400,7 +400,7 @@ export default function EventDetailPage() {
           {/* Coluna direita: checkout e demais informações — no mobile, order 4+ */}
           <Grid item xs={12} md={9} sx={{ order: { xs: 4, md: "unset" } }}>
             {lotesSelecionados.length > 0 && !isAuthenticated && (
-              <Card sx={{ mb: 3, border: "1px solid rgba(55, 125, 255, 0.3)" }}>
+              <Card sx={{ mb: { xs: 2.7, md: 3 }, border: "1px solid rgba(55, 125, 255, 0.3)" }}>
                 <CardContent sx={{ textAlign: "center", py: 4 }}>
                   <Typography variant="h6" fontWeight={700} color="text.primary" mb={1}>
                     Entre ou crie sua conta para continuar
@@ -435,12 +435,12 @@ export default function EventDetailPage() {
             )}
 
             {lotesSelecionados.length > 0 && isAuthenticated && (
-              <Box sx={{ mb: 3 }}>
+              <Box sx={{ mb: { xs: 2.7, md: 3 } }}>
                 <CheckoutForm key={event.id} event={event} selecionados={lotesSelecionados} />
               </Box>
             )}
 
-            <Card sx={{ mb: 3 }}>
+            <Card sx={{ mb: { xs: 2.7, md: 3 } }}>
               <CardContent>
                 <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                   Informações sobre o evento
