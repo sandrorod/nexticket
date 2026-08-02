@@ -23,7 +23,8 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { getEventById, getLotsByEvent } from "../../api/events";
 import { getMyTickets } from "../../api/orders";
 import type { LotDto } from "../../types";
-import CheckoutForm from "../checkout/CheckoutForm";
+import { HolderFields, CheckoutSummary } from "../checkout/CheckoutForm";
+import { useCheckoutForm } from "../checkout/useCheckoutForm";
 import { formatarData, formatarHora } from "../../utils/date";
 import { paraLinkWhatsapp } from "../../utils/whatsapp";
 import { useAuthStore } from "../../store/authStore";
@@ -65,6 +66,12 @@ export default function EventDetailPage() {
     return false;
   }, [event]);
 
+  const lotesSelecionados = (lots ?? [])
+    .filter((l) => (quantidades[l.id] ?? 0) > 0)
+    .map((lot) => ({ lot, quantity: quantidades[lot.id] }));
+
+  const checkoutForm = useCheckoutForm(event, lotesSelecionados);
+
   if (!event) return null;
 
   const jaCompradosPorLote = (lotId: string) =>
@@ -91,10 +98,6 @@ export default function EventDetailPage() {
       return next;
     });
   };
-
-  const lotesSelecionados = (lots ?? [])
-    .filter((l) => (quantidades[l.id] ?? 0) > 0)
-    .map((lot) => ({ lot, quantity: quantidades[lot.id] }));
 
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
@@ -218,6 +221,7 @@ export default function EventDetailPage() {
                     const qtd = quantidades[lot.id] ?? 0;
                     const restante = restanteNoLote(lot);
                     const max = Math.min(lot.quantidadeDisponivel, restante, 10);
+                    const ehPrimeiroLoteSelecionado = lotesSelecionados[0]?.lot.id === lot.id;
                     return (
                       <Box key={lot.id} py={1}>
                         <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -253,6 +257,9 @@ export default function EventDetailPage() {
                           <Typography variant="caption" color="warning.main" sx={{ display: "block", mt: 0.5 }}>
                             Você já atingiu o limite de {lot.maximoPorUsuario} ingresso(s) por login neste lote.
                           </Typography>
+                        )}
+                        {qtd > 0 && isAuthenticated && (
+                          <HolderFields lot={lot} quantity={qtd} ehPrimeiroLoteGeral={ehPrimeiroLoteSelecionado} form={checkoutForm} />
                         )}
                       </Box>
                     );
@@ -293,9 +300,7 @@ export default function EventDetailPage() {
                 )}
 
                 {lotesSelecionados.length > 0 && isAuthenticated && (
-                  <Box sx={{ mt: 3, pt: 3, borderTop: "1px solid rgba(231, 234, 243, 0.9)" }}>
-                    <CheckoutForm key={event.id} event={event} selecionados={lotesSelecionados} />
-                  </Box>
+                  <CheckoutSummary form={checkoutForm} />
                 )}
               </CardContent>
             </Card>
