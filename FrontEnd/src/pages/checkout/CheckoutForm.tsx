@@ -132,7 +132,7 @@ export function CheckoutSummary({ form }: CheckoutSummaryProps) {
   const { error, total, loading, handleSubmit } = form;
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, pt: 3, borderTop: "1px solid rgba(231, 234, 243, 0.9)" }}>
+    <Box component="form" onSubmit={handleSubmit} sx={{ mt: { xs: 0.6, sm: 3 }, pt: { xs: 0.6, sm: 3 }, borderTop: "1px solid rgba(231, 234, 243, 0.9)" }}>
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
       <Divider sx={{ mb: 2 }} />
