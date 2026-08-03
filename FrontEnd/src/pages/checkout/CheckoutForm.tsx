@@ -24,8 +24,14 @@ export function HolderFields({ lot, quantity, ehPrimeiroLoteGeral, form }: Holde
         const ehPrimeiro = ehPrimeiroLoteGeral && i === 0;
         return (
           <Card key={`${lot.id}-${i}`} sx={{ border: { xs: "none", sm: "1px solid rgba(231, 234, 243, 0.9)" } }}>
-            <CardContent sx={{ px: { xs: 0.4, sm: 2 } }}>
-              <Typography fontWeight={700} color="text.primary" mb={2} sx={{ fontSize: "0.9rem" }}>
+            <CardContent
+              sx={{
+                px: { xs: 0.4, sm: 2 },
+                py: { xs: 0.8, sm: 2 },
+                "&:last-child": { pb: { xs: 0.8, sm: 3 } },
+              }}
+            >
+              <Typography fontWeight={700} color="text.primary" mb={{ xs: 0.8, sm: 2 }} sx={{ fontSize: "0.9rem" }}>
                 Ingresso {i + 1}
                 <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}> — {lot.nome}</Box>
               </Typography>
