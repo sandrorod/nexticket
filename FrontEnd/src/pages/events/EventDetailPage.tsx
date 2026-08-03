@@ -146,6 +146,143 @@ export default function EventDetailPage() {
               </Stack>
             </Stack>
 
+            {/* Localização/Contato/Compartilhar: no desktop ficam nesta mesma coluna
+                lateral, logo abaixo do cabeçalho — em vez de em Grid item separado,
+                que quebrava para uma nova linha do grid alinhada com o fundo do
+                card de Ingressos (coluna central), abrindo um vão grande. No
+                mobile continuam ocultos aqui e exibidos no bloco de order 4. */}
+            <Box sx={{ display: { xs: "none", md: "block" } }}>
+              <Card sx={{ p: 2.5, mb: 3 }}>
+                <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
+                  Localização
+                </Typography>
+                <Typography variant="body2" color="text.primary" mt={1} sx={{ textAlign: "left", fontSize: "0.7875rem" }}>
+                  <strong>Local:</strong> {event.local}
+                </Typography>
+                {(event.endereco || event.cidade) && (
+                  <Typography variant="body2" color="text.secondary" mt={0.5} sx={{ textAlign: "left", fontSize: "0.7875rem" }}>
+                    <strong>Endereço:</strong> {[
+                      event.endereco && event.numero ? `${event.endereco}, ${event.numero}` : event.endereco,
+                      event.bairro,
+                      event.cidade && event.estado ? `${event.cidade}/${event.estado}` : event.cidade,
+                      event.cep,
+                    ].filter(Boolean).join(" — ")}
+                  </Typography>
+                )}
+              </Card>
+
+              {event.mapaUrl && (
+                <Button
+                  href={event.mapaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  startIcon={<MapIcon />}
+                  fullWidth
+                  sx={{
+                    mb: 3,
+                    py: 1.2,
+                    borderRadius: "0.5rem",
+                    backgroundColor: "rgba(55, 125, 255, 0.08)",
+                    color: "primary.main",
+                    fontWeight: 700,
+                    "&:hover": { backgroundColor: "rgba(55, 125, 255, 0.16)" },
+                  }}
+                >
+                  Ver mapa de setores
+                </Button>
+              )}
+
+              {(event.contatoWhatsapp || event.contatoTelefone || event.contatoEmail || event.contatoFacebook || event.contatoInstagram) && (
+                <Card sx={{ p: 2.5, mb: 3 }}>
+                  <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
+                    Contato
+                  </Typography>
+                  <Stack spacing={1} mt={1.5}>
+                    {event.contatoWhatsapp && (
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        component="a"
+                        href={`https://wa.me/${paraLinkWhatsapp(event.contatoWhatsapp)}?text=${encodeURIComponent(`Olá! Tenho uma dúvida sobre o evento "${event.nome}".`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{ textDecoration: "none" }}
+                      >
+                        <WhatsAppIcon sx={{ fontSize: "1.1rem", color: "#00a650" }} />
+                        <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoWhatsapp}</Typography>
+                      </Stack>
+                    )}
+                    {event.contatoTelefone && (
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <PhoneIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
+                        <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoTelefone}</Typography>
+                      </Stack>
+                    )}
+                    {event.contatoEmail && (
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <EmailIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
+                        <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoEmail}</Typography>
+                      </Stack>
+                    )}
+                    {event.contatoFacebook && (
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        component="a"
+                        href={event.contatoFacebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{ textDecoration: "none" }}
+                      >
+                        <FacebookIcon sx={{ fontSize: "1.1rem", color: "primary.main" }} />
+                        <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoFacebook}</Typography>
+                      </Stack>
+                    )}
+                    {event.contatoInstagram && (
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        component="a"
+                        href={event.contatoInstagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{ textDecoration: "none" }}
+                      >
+                        <InstagramIcon sx={{ fontSize: "1.1rem", color: "#c13584" }} />
+                        <Typography variant="body2" color="text.primary" sx={{ fontSize: "0.7875rem" }}>{event.contatoInstagram}</Typography>
+                      </Stack>
+                    )}
+                  </Stack>
+                </Card>
+              )}
+
+              <Stack direction="row" spacing={1.5} mb={1} justifyContent="flex-start">
+                <IconButton
+                  component="a"
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ backgroundColor: "rgba(55, 125, 255, 0.08)", color: "primary.main" }}
+                >
+                  <FacebookIcon />
+                </IconButton>
+                <IconButton
+                  component="a"
+                  href={`https://wa.me/?text=${encodeURIComponent(`Confira este evento: ${window.location.href}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ backgroundColor: "rgba(0, 166, 80, 0.08)", color: "#00a650" }}
+                >
+                  <WhatsAppIcon />
+                </IconButton>
+              </Stack>
+              <Typography variant="caption" display="block" textAlign="left" color="text.secondary" mb={3}>
+                Compartilhe este evento
+              </Typography>
+            </Box>
           </Grid>
 
           {/* Ingressos: no mobile, sobe para antes de "Compartilhe este evento" */}
@@ -314,8 +451,9 @@ export default function EventDetailPage() {
             )}
           </Grid>
 
-          {/* Coluna esquerda: localização, mapa, contato — no mobile, vem depois de "Compartilhe" */}
-          <Grid item xs={12} md={3} sx={{ order: { xs: 4, md: "unset" } }}>
+          {/* Coluna esquerda: localização, mapa, contato — só mobile (no desktop já
+              renderizados dentro da coluna do cabeçalho, acima) */}
+          <Grid item xs={12} md={3} sx={{ order: { xs: 4, md: "unset" }, display: { xs: "block", md: "none" } }}>
             <Card sx={{ p: 2.5, mb: { xs: 2.7, md: 3 } }}>
               <Typography variant="overline" fontWeight={700} color="primary.main" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
                 Localização
