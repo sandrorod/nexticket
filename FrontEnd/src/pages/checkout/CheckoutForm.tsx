@@ -23,7 +23,7 @@ export function HolderFields({ lot, quantity, ehPrimeiroLoteGeral, form }: Holde
       {holders.map((holder: TicketHolder, i: number) => {
         const ehPrimeiro = ehPrimeiroLoteGeral && i === 0;
         return (
-          <Card key={`${lot.id}-${i}`} sx={{ border: "1px solid rgba(231, 234, 243, 0.9)" }}>
+          <Card key={`${lot.id}-${i}`} sx={{ border: { xs: "none", sm: "1px solid rgba(231, 234, 243, 0.9)" } }}>
             <CardContent sx={{ px: { xs: 0.4, sm: 2 } }}>
               <Typography fontWeight={700} color="text.primary" mb={2} sx={{ fontSize: "0.9rem" }}>Ingresso {i + 1} — {lot.nome}</Typography>
               <Grid container spacing={{ xs: 0.4, sm: 2 }}>
