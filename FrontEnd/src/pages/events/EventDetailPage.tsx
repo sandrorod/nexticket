@@ -102,7 +102,7 @@ export default function EventDetailPage() {
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
       <Container maxWidth="xl" sx={{ pt: 4, pb: 1.2 }}>
-        <Grid container spacing={{ xs: 2.7, md: 3 }}>
+        <Grid container spacing={{ xs: 2.7, md: 3 }} alignItems="flex-start">
           {/* Coluna esquerda: cabeçalho (imagem, título, data, local) */}
           <Grid item xs={12} md={3} sx={{ order: { xs: 1, md: "unset" } }}>
             {event.imagemUrl && (
