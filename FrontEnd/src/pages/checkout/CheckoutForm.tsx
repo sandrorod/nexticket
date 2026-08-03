@@ -95,7 +95,7 @@ export function HolderFields({ lot, quantity, ehPrimeiroLoteGeral, form }: Holde
                 </Grid>
               )}
               {ehPrimeiro && mostrarCamposComprador && (
-                <Box sx={{ py: 0.5 }}>
+                <Box sx={{ py: { xs: 0.5, sm: 0.2 } }}>
                   <Grid container spacing={{ xs: 0.8, sm: 2 }} mt={{ xs: 0.55, sm: 0.6 }}>
                     <Grid item xs={12} sm={7}>
                       <TextField
