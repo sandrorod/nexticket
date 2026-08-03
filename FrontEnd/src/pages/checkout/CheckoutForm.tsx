@@ -19,7 +19,7 @@ export function HolderFields({ lot, quantity, ehPrimeiroLoteGeral, form }: Holde
   const holders = holdersDoLote(lot.id, quantity);
 
   return (
-    <Box display="flex" flexDirection="column" gap={2} sx={{ mt: 2 }}>
+    <Box display="flex" flexDirection="column" sx={{ mt: 2, gap: { xs: 0.8, sm: 2 } }}>
       {holders.map((holder: TicketHolder, i: number) => {
         const ehPrimeiro = ehPrimeiroLoteGeral && i === 0;
         return (
