@@ -587,6 +587,11 @@ export default function EventDetailPage() {
             </Typography>
           </Grid>
 
+          {/* Espaçador: ocupa a coluna lateral (md=3) nesta linha do grid, para o
+              card de Informações/Orientações abaixo alinhar sob o card de
+              Ingressos em vez de começar do zero à esquerda. */}
+          <Grid item xs={0} md={3} sx={{ display: { xs: "none", md: "block" } }} />
+
           {/* Coluna direita: Informações/Orientações no desktop (mobile já mostradas acima) */}
           <Grid item xs={12} md={9} sx={{ order: { xs: 5, md: "unset" } }}>
             <Card sx={{ mb: { xs: 2.7, md: 3 }, display: { xs: "none", md: "block" } }}>
