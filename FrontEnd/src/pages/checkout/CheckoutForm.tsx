@@ -4,6 +4,13 @@ import type { UseCheckoutFormReturn } from "./useCheckoutForm";
 
 const idades = Array.from({ length: 100 }, (_, i) => i);
 
+function formatarTelefone(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 2) return digits.replace(/^(\d*)/, "($1");
+  if (digits.length <= 7) return digits.replace(/^(\d{2})(\d*)/, "($1) $2");
+  return digits.replace(/^(\d{2})(\d{5})(\d*)/, "($1) $2-$3");
+}
+
 interface HolderFieldsProps {
   lot: LotDto;
   quantity: number;
@@ -89,7 +96,7 @@ export function HolderFields({ lot, quantity, ehPrimeiroLoteGeral, form }: Holde
               )}
               {ehPrimeiro && mostrarCamposComprador && (
                 <Box sx={{ py: 0.5 }}>
-                  <Grid container spacing={{ xs: 0.8, sm: 2 }} mt={0.5}>
+                  <Grid container spacing={{ xs: 0.8, sm: 2 }} mt={0.55}>
                     <Grid item xs={12} sm={7}>
                       <TextField
                         label="Email do comprador"
@@ -104,8 +111,9 @@ export function HolderFields({ lot, quantity, ehPrimeiroLoteGeral, form }: Holde
                     <Grid item xs={12} sm={5}>
                       <TextField
                         label="Telefone do comprador"
+                        placeholder="(11) 96828-8820"
                         value={telefone}
-                        onChange={(e) => setTelefone(e.target.value)}
+                        onChange={(e) => setTelefone(formatarTelefone(e.target.value))}
                         required
                         fullWidth
                         sx={{ "& .MuiOutlinedInput-input": { py: "14.85px" } }}
