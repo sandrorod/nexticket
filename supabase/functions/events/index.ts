@@ -5,7 +5,7 @@ import { requireAuth, requireRole } from "../_shared/jwt.ts";
 import { Validator } from "../_shared/validate.ts";
 import { mapEventToDto } from "../_shared/eventMapper.ts";
 
-const categoriasEvento = ["Festa", "Shows", "Palestras e Congressos", "Religião", "Outros"];
+const categoriasEvento = ["Festa", "Shows", "Palestras e Congressos", "Religião", "Esporte", "Outros"];
 
 const json = (body: unknown, status: number, headers: Record<string, string>) =>
   new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });

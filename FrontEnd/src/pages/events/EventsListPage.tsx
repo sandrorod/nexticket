@@ -7,6 +7,7 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import ChurchIcon from "@mui/icons-material/Church";
+import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import ScheduleIcon from "@mui/icons-material/Schedule";
@@ -33,6 +34,7 @@ const categorias = [
   { label: "Shows", icon: <MusicNoteIcon /> },
   { label: "Palestras e Congressos", icon: <CampaignIcon /> },
   { label: "Religião", icon: <ChurchIcon /> },
+  { label: "Esporte", icon: <SportsSoccerIcon /> },
   { label: "Outros", icon: <MoreHorizIcon /> },
 ];
 
