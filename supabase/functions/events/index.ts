@@ -5,6 +5,8 @@ import { requireAuth, requireRole } from "../_shared/jwt.ts";
 import { Validator } from "../_shared/validate.ts";
 import { mapEventToDto } from "../_shared/eventMapper.ts";
 
+const categoriasEvento = ["Festa", "Shows", "Palestras e Congressos", "Religião", "Outros"];
+
 const json = (body: unknown, status: number, headers: Record<string, string>) =>
   new Response(JSON.stringify(body), { status, headers: { ...headers, "Content-Type": "application/json" } });
 
@@ -22,6 +24,9 @@ function validateEventRequest(body: Record<string, unknown>): void {
   v.maxLength(body.cidade as string, 150, "Cidade");
   v.maxLength(body.estado as string, 2, "Estado");
   v.maxLength(body.classificacao as string, 10, "Classificacao");
+  if (body.categoria !== undefined) {
+    v.custom(categoriasEvento.includes(body.categoria as string), "Categoria inválida.");
+  }
   v.maxLength(body.contatoWhatsapp as string, 20, "ContatoWhatsapp");
   v.maxLength(body.contatoTelefone as string, 20, "ContatoTelefone");
   if (body.contatoEmail) {
@@ -116,6 +121,7 @@ Deno.serve(async (req) => {
         Cidade: body.cidade ?? null,
         Estado: body.estado ?? null,
         Classificacao: body.classificacao ?? "Livre",
+        Categoria: body.categoria ?? "Outros",
         ContatoWhatsapp: body.contatoWhatsapp ?? null,
         ContatoTelefone: body.contatoTelefone ?? null,
         ContatoEmail: body.contatoEmail ?? null,
@@ -158,6 +164,7 @@ Deno.serve(async (req) => {
         Cidade: body.cidade ?? null,
         Estado: body.estado ?? null,
         Classificacao: body.classificacao ?? "Livre",
+        Categoria: body.categoria ?? "Outros",
         ContatoWhatsapp: body.contatoWhatsapp ?? null,
         ContatoTelefone: body.contatoTelefone ?? null,
         ContatoEmail: body.contatoEmail ?? null,

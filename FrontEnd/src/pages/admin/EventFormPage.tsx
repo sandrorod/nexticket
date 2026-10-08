@@ -10,6 +10,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { getEventById, createEvent, updateEvent, type EventPayload } from "../../api/events";
 import ImageUpload from "../../components/ImageUpload";
 import { isoParaDatetimeLocal } from "../../utils/date";
+import { categoriasEvento } from "../../utils/categorias";
 
 const classificacoes = ["Livre", "10", "12", "14", "16", "18"];
 
@@ -32,6 +33,7 @@ const emptyForm: EventPayload = {
   cidade: "",
   estado: "",
   classificacao: "Livre",
+  categoria: "",
   contatoWhatsapp: "",
   contatoTelefone: "",
   contatoEmail: "",
@@ -78,6 +80,7 @@ export default function EventFormPage() {
         cidade: existing.cidade ?? "",
         estado: existing.estado ?? "",
         classificacao: existing.classificacao ?? "Livre",
+        categoria: existing.categoria ?? "Outros",
         contatoWhatsapp: existing.contatoWhatsapp ?? "",
         contatoTelefone: existing.contatoTelefone ?? "",
         contatoEmail: existing.contatoEmail ?? "",
@@ -187,8 +190,23 @@ export default function EventFormPage() {
                 <Grid item xs={6} sm={2}>
                   <TextField label="Hora" type="time" value={form.hora} onChange={update("hora")} required fullWidth InputLabelProps={{ shrink: true }} />
                 </Grid>
-                <Grid item xs={6} sm={4}>
+                <Grid item xs={12} sm={4}>
                   <TextField label="Data" type="date" value={form.data} onChange={update("data")} required fullWidth InputLabelProps={{ shrink: true }} />
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                  <TextField
+                    label="Categoria"
+                    select
+                    value={form.categoria}
+                    onChange={update("categoria")}
+                    required
+                    fullWidth
+                    helperText="Usada no filtro de categorias da página inicial"
+                  >
+                    {categoriasEvento.map((c) => (
+                      <MenuItem key={c} value={c}>{c}</MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
                 <Grid item xs={12}>
                   <TextField label="Nome do local" value={form.local} onChange={update("local")} required fullWidth />

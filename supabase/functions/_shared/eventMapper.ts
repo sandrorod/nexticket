@@ -28,6 +28,7 @@ export function mapEventToDto(ev: any) {
     cidade: ev.Cidade,
     estado: ev.Estado,
     classificacao: ev.Classificacao,
+    categoria: ev.Categoria,
     contatoWhatsapp: ev.ContatoWhatsapp,
     contatoTelefone: ev.ContatoTelefone,
     contatoEmail: ev.ContatoEmail,

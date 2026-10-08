@@ -42,8 +42,10 @@ export default function EventsListPage() {
   const [busca, setBusca] = useState("");
   const [categoriaAtiva, setCategoriaAtiva] = useState("Tudo");
 
-  const eventosFiltrados = events?.filter((ev) =>
-    ev.nome.toLowerCase().includes(busca.toLowerCase()) || ev.local.toLowerCase().includes(busca.toLowerCase())
+  const eventosFiltrados = events?.filter(
+    (ev) =>
+      (categoriaAtiva === "Tudo" || (ev.categoria ?? "Outros") === categoriaAtiva) &&
+      (ev.nome.toLowerCase().includes(busca.toLowerCase()) || ev.local.toLowerCase().includes(busca.toLowerCase()))
   );
 
   const destaque = eventosFiltrados?.find((ev) => ev.imagemUrl);

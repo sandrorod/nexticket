@@ -50,6 +50,7 @@ export interface EventDto {
   cidade?: string;
   estado?: string;
   classificacao: string;
+  categoria: string;
   contatoWhatsapp?: string;
   contatoTelefone?: string;
   contatoEmail?: string;

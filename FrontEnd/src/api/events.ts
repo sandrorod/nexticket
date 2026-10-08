@@ -37,6 +37,7 @@ export interface EventPayload {
   cidade?: string;
   estado?: string;
   classificacao?: string;
+  categoria?: string;
   contatoWhatsapp?: string;
   contatoTelefone?: string;
   contatoEmail?: string;
@@ -94,6 +95,7 @@ export const duplicateEvent = async (id: string): Promise<EventDto> => {
     cidade: original.cidade,
     estado: original.estado,
     classificacao: original.classificacao,
+    categoria: original.categoria,
     contatoWhatsapp: original.contatoWhatsapp,
     contatoTelefone: original.contatoTelefone,
     contatoEmail: original.contatoEmail,
