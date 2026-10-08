@@ -68,7 +68,7 @@ export default function Layout() {
       >
         <Toolbar sx={{ gap: 0.5, minHeight: "4.75rem", px: { xs: 2, md: 4 } }}>
           <Box component={RouterLink} to="/eventos" sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
-            <Box component="img" src="/logo-borapass.png" alt="BoraPass" sx={{ height: { xs: "1.75rem", md: "2rem" } }} />
+            <Box component="img" src="/logo-mbingressos.png" alt="MB Ingressos" sx={{ height: { xs: "1.75rem", md: "2rem" } }} />
           </Box>
 
           {!isMobile && navItems.map((item) => (
