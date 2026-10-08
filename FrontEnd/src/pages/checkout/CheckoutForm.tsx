@@ -149,7 +149,7 @@ export function CheckoutSummary({ form }: CheckoutSummaryProps) {
             Dados do titular da conta
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, fontSize: "0.78rem" }}>
-            CPF e telefone do responsável pela conta são obrigatórios para comprar. Ficam salvos na sua conta.
+            CPF e telefone do responsável pela conta são obrigatórios para comprar.
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
