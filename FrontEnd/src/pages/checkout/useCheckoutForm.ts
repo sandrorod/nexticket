@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { EventDto, LotDto, TicketHolder } from "../../types";
 import { createOrder, getMyTickets } from "../../api/orders";
+import { getMyProfile, updateMyProfile } from "../../api/users";
+import { cpfValido } from "../../utils/cpf";
 import { lerRascunhoCheckout, salvarRascunhoCheckout, limparRascunhoCheckout } from "../../utils/checkoutDraft";
 
 export interface SelectedLot {
@@ -30,6 +32,16 @@ export function useCheckoutForm(event: EventDto | undefined, selecionados: Selec
   // mais recente em qualquer evento (getMyTickets já ordena por CreatedAt desc).
   const compradorDoEvento = meusIngressos?.find((t) => t.eventId === event?.id);
   const ultimoComprador = compradorDoEvento ?? meusIngressos?.[0];
+
+  // CPF e telefone do titular da conta: exigidos para comprar. Só aparecem quando a conta ainda não os tem
+  // (ex.: conta criada pelo login do Google). Sem resposta do servidor, o checkout segue como antes.
+  const { data: perfil } = useQuery({ queryKey: ["my-profile"], queryFn: getMyProfile, retry: false });
+  const exigirDadosConta = !!perfil && (!perfil.cpf || !perfil.telefone?.trim());
+  const [cpfConta, setCpfConta] = useState("");
+  const [telefoneConta, setTelefoneConta] = useState("");
+  useEffect(() => {
+    if (perfil?.telefone && !telefoneConta) setTelefoneConta(perfil.telefone);
+  }, [perfil]);
 
   const [email, setEmail] = useState(rascunho?.email ?? "");
   const [telefone, setTelefone] = useState(rascunho?.telefone ?? "");
@@ -103,6 +115,17 @@ export function useCheckoutForm(event: EventDto | undefined, selecionados: Selec
 
     if (!event) return;
 
+    if (exigirDadosConta) {
+      if (!cpfValido(cpfConta)) {
+        setError("Informe um CPF válido do titular da conta.");
+        return;
+      }
+      if (telefoneConta.replace(/\D/g, "").length < 10) {
+        setError("Informe o telefone do titular da conta com DDD.");
+        return;
+      }
+    }
+
     if (!exigirContatoTodosIngressos && (!email.trim() || !telefone.trim())) {
       setError("Informe email e telefone do comprador.");
       return;
@@ -142,6 +165,11 @@ export function useCheckoutForm(event: EventDto | undefined, selecionados: Selec
 
     setLoading(true);
     try {
+      if (exigirDadosConta) {
+        // Grava na conta antes do pedido (o servidor recusa a compra sem esses dados)
+        await updateMyProfile({ cpf: cpfConta.replace(/\D/g, ""), telefone: telefoneConta.trim() });
+        await queryClient.invalidateQueries({ queryKey: ["my-profile"] });
+      }
       const primeiroHolder = holdersDoLote(selecionados[0].lot.id, selecionados[0].quantity)[0];
       const order = await createOrder({
         eventId: event.id,
@@ -165,6 +193,11 @@ export function useCheckoutForm(event: EventDto | undefined, selecionados: Selec
   const total = selecionados.reduce((sum, { lot, quantity }) => sum + lot.preco * quantity, 0);
 
   return {
+    exigirDadosConta,
+    cpfConta,
+    setCpfConta,
+    telefoneConta,
+    setTelefoneConta,
     email,
     setEmail,
     telefone,

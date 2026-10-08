@@ -2,7 +2,7 @@ import { corsHeaders, handleOptions } from "../_shared/cors.ts";
 import { errorResponse, NotFoundError, ConflictError } from "../_shared/errors.ts";
 import { supabaseAdmin } from "../_shared/supabaseClient.ts";
 import { requireAuth, requireRole } from "../_shared/jwt.ts";
-import { Validator } from "../_shared/validate.ts";
+import { Validator, cpfValido } from "../_shared/validate.ts";
 
 const roleNames = ["Comprador", "Administrador", "Validador", "Master"];
 
@@ -32,6 +32,38 @@ Deno.serve(async (req) => {
 
   try {
     const auth = await requireAuth(req);
+
+    // Dados da própria conta (qualquer usuário logado): CPF e telefone do titular,
+    // exigidos para comprar ingressos
+    if (id === "me" && !action) {
+      const { data: me } = await supabaseAdmin.from("Users").select("*").eq("Id", auth.sub).maybeSingle();
+      if (!me) throw new NotFoundError("Usuário", auth.sub);
+      const meDto = (u: typeof me) => ({ nome: u.Nome, email: u.Email, telefone: u.Telefone ?? "", cpf: u.Cpf ?? null });
+
+      if (req.method === "GET") return json(meDto(me), 200, headers);
+
+      if (req.method === "PUT") {
+        const body = await req.json();
+        const cpf = String(body.cpf ?? "").replace(/\D/g, "");
+        const telefone = String(body.telefone ?? "").trim();
+        const v = new Validator();
+        v.custom(cpfValido(cpf), "Informe um CPF válido.");
+        v.notEmpty(telefone, "Telefone").maxLength(telefone, 20, "Telefone");
+        v.custom(telefone.replace(/\D/g, "").length >= 10, "Informe o telefone com DDD.");
+        v.throwIfInvalid();
+
+        // Anti-fraude: o CPF da conta não pode ser trocado depois de informado
+        if (me.Cpf && me.Cpf !== cpf) throw new ConflictError("O CPF desta conta já foi informado e não pode ser alterado.");
+        const { data: outro } = await supabaseAdmin.from("Users").select("Id").eq("Cpf", cpf).neq("Id", auth.sub).limit(1);
+        if (outro && outro.length > 0) throw new ConflictError("Este CPF já está cadastrado em outra conta.");
+
+        const { error } = await supabaseAdmin.from("Users").update({ Cpf: cpf, Telefone: telefone }).eq("Id", auth.sub);
+        if (error) throw error;
+        const { data: updated } = await supabaseAdmin.from("Users").select("*").eq("Id", auth.sub).single();
+        return json(meDto(updated), 200, headers);
+      }
+    }
+
     requireRole(auth, "Master");
 
     if (req.method === "GET" && !id) {

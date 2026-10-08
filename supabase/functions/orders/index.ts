@@ -1,5 +1,5 @@
 import { corsHeaders, handleOptions } from "../_shared/cors.ts";
-import { errorResponse, NotFoundError, UnauthorizedAppError } from "../_shared/errors.ts";
+import { errorResponse, NotFoundError, UnauthorizedAppError, ValidationAppError } from "../_shared/errors.ts";
 import { supabaseAdmin } from "../_shared/supabaseClient.ts";
 import { requireAuth, requireRole } from "../_shared/jwt.ts";
 import { Validator, temNomeESobrenome } from "../_shared/validate.ts";
@@ -96,6 +96,12 @@ Deno.serve(async (req) => {
       if (!event) throw new NotFoundError("Evento", body.eventId);
 
       validateCreateOrderRequest(body, event.ExigirContatoTodosIngressos);
+
+      // O titular da conta precisa ter CPF e telefone cadastrados para comprar
+      const { data: titular } = await supabaseAdmin.from("Users").select("Cpf, Telefone").eq("Id", auth.sub).maybeSingle();
+      if (!titular?.Cpf || !String(titular.Telefone ?? "").trim()) {
+        throw new ValidationAppError(["Informe o CPF e o telefone do titular da conta para comprar."]);
+      }
 
       const { data, error } = await supabaseAdmin.rpc("create_order", {
         p_user_id: auth.sub,

@@ -1,6 +1,7 @@
 import { Box, Button, Card, CardContent, TextField, Typography, Alert, Divider, Grid, MenuItem } from "@mui/material";
 import type { LotDto, TicketHolder } from "../../types";
 import type { UseCheckoutFormReturn } from "./useCheckoutForm";
+import { formatarCpf } from "../../utils/cpf";
 
 const idades = Array.from({ length: 100 }, (_, i) => i);
 
@@ -137,10 +138,46 @@ interface CheckoutSummaryProps {
 // Total e botão "Finalizar compra" — únicos, cobrindo todos os lotes
 // selecionados, renderizados depois do último lote na lista.
 export function CheckoutSummary({ form }: CheckoutSummaryProps) {
-  const { error, total, loading, handleSubmit } = form;
+  const { error, total, loading, handleSubmit, exigirDadosConta, cpfConta, setCpfConta, telefoneConta, setTelefoneConta } = form;
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mt: { xs: 0.6, sm: 3 }, pt: { xs: 0.6, sm: 3 }, borderTop: "1px solid rgba(231, 234, 243, 0.9)" }}>
+      {/* Titular da conta sem CPF/telefone (ex.: entrou pelo Google): obrigatórios para comprar; ficam salvos na conta */}
+      {exigirDadosConta && (
+        <Box sx={{ mb: 2 }}>
+          <Typography fontWeight={700} color="text.primary" sx={{ fontSize: "0.9rem" }}>
+            Dados do titular da conta
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, fontSize: "0.78rem" }}>
+            Obrigatórios para comprar. Ficam salvos na sua conta.
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="CPF"
+                placeholder="000.000.000-00"
+                value={cpfConta}
+                onChange={(e) => setCpfConta(formatarCpf(e.target.value))}
+                inputProps={{ inputMode: "numeric" }}
+                required
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Telefone"
+                placeholder="(11) 96828-8820"
+                value={telefoneConta}
+                onChange={(e) => setTelefoneConta(formatarTelefone(e.target.value))}
+                inputProps={{ inputMode: "tel" }}
+                required
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      )}
+
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
       <Divider sx={{ mb: 2 }} />

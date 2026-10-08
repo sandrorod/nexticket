@@ -76,3 +76,16 @@ export function temNomeESobrenome(nome: string): boolean {
   const partes = nome.trim().split(/\s+/).filter(Boolean);
   return partes.length >= 2 && partes.every((p) => p.length >= 2);
 }
+
+/** CPF com 11 dígitos e dígitos verificadores válidos (aceita com ou sem pontuação). */
+export function cpfValido(valor: string | undefined | null): boolean {
+  const cpf = (valor ?? "").replace(/\D/g, "");
+  if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+  const digito = (len: number) => {
+    let soma = 0;
+    for (let i = 0; i < len; i++) soma += Number(cpf[i]) * (len + 1 - i);
+    const resto = (soma * 10) % 11;
+    return resto === 10 ? 0 : resto;
+  };
+  return digito(9) === Number(cpf[9]) && digito(10) === Number(cpf[10]);
+}
