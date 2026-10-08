@@ -133,12 +133,12 @@ export default function EventDetailPage() {
             </Stack>
 
             <Stack spacing={1} mb={3}>
+              {/* Data e horário, cada um com o seu ícone (como no card da página inicial) */}
               <Stack direction="row" spacing={1} alignItems="center">
                 <CalendarTodayIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
-                <ScheduleIcon sx={{ fontSize: "1.1rem", color: "text.secondary" }} />
-                <Typography variant="body2" color="text.primary">
-                  {formatarData(event.data)} · {formatarHora(event.hora)}
-                </Typography>
+                <Typography variant="body2" color="text.primary">{formatarData(event.data)}</Typography>
+                <ScheduleIcon sx={{ fontSize: "1.1rem", color: "text.secondary", ml: "1rem !important" }} />
+                <Typography variant="body2" color="text.primary">{formatarHora(event.hora)}</Typography>
               </Stack>
               <Stack direction="row" spacing={1} alignItems="flex-start">
                 <LocationOnIcon sx={{ fontSize: "1.1rem", color: "text.secondary", mt: "1px" }} />
@@ -299,15 +299,16 @@ export default function EventDetailPage() {
                 />
               )}
             </Stack>
-            <Typography
-              variant="body1"
-              color="primary.main"
-              fontWeight={600}
-              mb={3}
-              sx={{ textAlign: "left", fontSize: "0.9rem", display: { xs: "none", md: "block" } }}
-            >
-              {formatarData(event.data).toUpperCase()} · {formatarHora(event.hora)}
-            </Typography>
+            <Stack direction="row" spacing={0.75} alignItems="center" mb={3} sx={{ display: { xs: "none", md: "flex" }, color: "primary.main" }}>
+              <CalendarTodayIcon sx={{ fontSize: "1rem" }} />
+              <Typography variant="body1" color="primary.main" fontWeight={600} sx={{ textAlign: "left", fontSize: "0.9rem" }}>
+                {formatarData(event.data).toUpperCase()}
+              </Typography>
+              <ScheduleIcon sx={{ fontSize: "1rem", ml: "1rem !important" }} />
+              <Typography variant="body1" color="primary.main" fontWeight={600} sx={{ textAlign: "left", fontSize: "0.9rem" }}>
+                {formatarHora(event.hora)}
+              </Typography>
+            </Stack>
 
             {event.transmissaoUrl && (
               <Alert
