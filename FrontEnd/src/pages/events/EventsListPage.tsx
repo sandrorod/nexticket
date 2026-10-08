@@ -50,7 +50,9 @@ export default function EventsListPage() {
       (ev.nome.toLowerCase().includes(busca.toLowerCase()) || ev.local.toLowerCase().includes(busca.toLowerCase()))
   );
 
-  const destaque = eventosFiltrados?.find((ev) => ev.imagemUrl);
+  // Banner sempre aparece: prioriza um evento do filtro atual e, se nenhum
+  // tiver imagem, usa qualquer evento com imagem.
+  const destaque = eventosFiltrados?.find((ev) => ev.imagemUrl) ?? events?.find((ev) => ev.imagemUrl);
 
   return (
     <Box sx={{ backgroundColor: "background.default", minHeight: "calc(100vh - 4.75rem)" }}>
