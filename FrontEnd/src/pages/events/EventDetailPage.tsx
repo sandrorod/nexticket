@@ -418,6 +418,37 @@ export default function EventDetailPage() {
                 )}
               </CardContent>
             </Card>
+
+            {/* Informações/Orientações no desktop: logo abaixo dos lotes (no mobile ficam no bloco seguinte) */}
+            <Box sx={{ display: { xs: "none", md: "block" } }}>
+              <Card sx={{ mt: 3, mb: 3 }}>
+                <CardContent>
+                  <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
+                    Informações sobre o evento
+                  </Typography>
+                  <Divider sx={{ my: 1.5 }} />
+                  <Typography variant="body2" color="text.primary" sx={{ whiteSpace: "pre-line", lineHeight: 1.8, textAlign: "left", fontSize: "0.7875rem" }}>{event.descricao}</Typography>
+                </CardContent>
+              </Card>
+
+              {event.orientacoesGerais && (
+                <Card sx={{ mb: 0.6 }}>
+                  <CardContent>
+                    <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
+                      Orientações gerais
+                    </Typography>
+                    <Divider sx={{ my: 1.5 }} />
+                    <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
+                      {event.orientacoesGerais.split("\n").filter(Boolean).map((linha, i) => (
+                        <Typography key={i} component="li" variant="body2" color="text.primary" sx={{ mb: 1.2, textAlign: "left", fontSize: "0.7875rem" }}>
+                          {linha}
+                        </Typography>
+                      ))}
+                    </Box>
+                  </CardContent>
+                </Card>
+              )}
+            </Box>
           </Grid>
 
           {/* Informações/Orientações: no mobile, sobe para logo após Ingressos */}
@@ -587,41 +618,6 @@ export default function EventDetailPage() {
             </Typography>
           </Grid>
 
-          {/* Espaçador: ocupa a coluna lateral (md=3) nesta linha do grid, para o
-              card de Informações/Orientações abaixo alinhar sob o card de
-              Ingressos em vez de começar do zero à esquerda. */}
-          <Grid item xs={0} md={3} sx={{ display: { xs: "none", md: "block" } }} />
-
-          {/* Coluna direita: Informações/Orientações no desktop (mobile já mostradas acima) */}
-          <Grid item xs={12} md={9} sx={{ order: { xs: 5, md: "unset" } }}>
-            <Card sx={{ mb: { xs: 2.7, md: 3 }, display: { xs: "none", md: "block" } }}>
-              <CardContent>
-                <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
-                  Informações sobre o evento
-                </Typography>
-                <Divider sx={{ my: 1.5 }} />
-                <Typography variant="body2" color="text.primary" sx={{ whiteSpace: "pre-line", lineHeight: 1.8, textAlign: "left", fontSize: "0.7875rem" }}>{event.descricao}</Typography>
-              </CardContent>
-            </Card>
-
-            {event.orientacoesGerais && (
-              <Card sx={{ mb: 0.6, display: { xs: "none", md: "block" } }}>
-                <CardContent>
-                  <Typography variant="overline" fontWeight={700} color="text.secondary" letterSpacing="0.04em" sx={{ display: "block", textAlign: "left" }}>
-                    Orientações gerais
-                  </Typography>
-                  <Divider sx={{ my: 1.5 }} />
-                  <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
-                    {event.orientacoesGerais.split("\n").filter(Boolean).map((linha, i) => (
-                      <Typography key={i} component="li" variant="body2" color="text.primary" sx={{ mb: 1.2, textAlign: "left", fontSize: "0.7875rem" }}>
-                        {linha}
-                      </Typography>
-                    ))}
-                  </Box>
-                </CardContent>
-              </Card>
-            )}
-          </Grid>
         </Grid>
       </Container>
 
