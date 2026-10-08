@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
         v.throwIfInvalid();
 
         // Anti-fraude: o CPF da conta não pode ser trocado depois de informado
-        if (me.Cpf && me.Cpf !== cpf) throw new ConflictError("O CPF desta conta já foi informado e não pode ser alterado.");
+        if (me.Cpf && cpfValido(me.Cpf) && me.Cpf !== cpf) throw new ConflictError("O CPF desta conta já foi informado e não pode ser alterado.");
         const { data: outro } = await supabaseAdmin.from("Users").select("Id").eq("Cpf", cpf).neq("Id", auth.sub).limit(1);
         if (outro && outro.length > 0) throw new ConflictError("Este CPF já está cadastrado em outra conta.");
 

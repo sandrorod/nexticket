@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { EventDto, LotDto, TicketHolder } from "../../types";
 import { createOrder, getMyTickets } from "../../api/orders";
 import { getMyProfile, updateMyProfile } from "../../api/users";
-import { cpfValido } from "../../utils/cpf";
+import { cpfValido, formatarCpf } from "../../utils/cpf";
 import { lerRascunhoCheckout, salvarRascunhoCheckout, limparRascunhoCheckout } from "../../utils/checkoutDraft";
 
 export interface SelectedLot {
@@ -33,13 +33,16 @@ export function useCheckoutForm(event: EventDto | undefined, selecionados: Selec
   const compradorDoEvento = meusIngressos?.find((t) => t.eventId === event?.id);
   const ultimoComprador = compradorDoEvento ?? meusIngressos?.[0];
 
-  // CPF e telefone do titular da conta: exigidos para comprar. Só aparecem quando a conta ainda não os tem
-  // (ex.: conta criada pelo login do Google). Sem resposta do servidor, o checkout segue como antes.
+  // CPF e telefone do titular da conta: obrigatórios em toda compra. Vêm preenchidos com os dados da conta
+  // para conferir; o CPF já cadastrado fica travado (não pode ser trocado).
   const { data: perfil } = useQuery({ queryKey: ["my-profile"], queryFn: getMyProfile, retry: false });
-  const exigirDadosConta = !!perfil && (!perfil.cpf || !perfil.telefone?.trim());
+  const exigirDadosConta = true;
+  // CPF salvo inválido (cadastro antigo) fica liberado para corrigir
+  const cpfBloqueado = !!perfil?.cpf && cpfValido(perfil.cpf);
   const [cpfConta, setCpfConta] = useState("");
   const [telefoneConta, setTelefoneConta] = useState("");
   useEffect(() => {
+    if (perfil?.cpf && !cpfConta) setCpfConta(formatarCpf(perfil.cpf));
     if (perfil?.telefone && !telefoneConta) setTelefoneConta(perfil.telefone);
   }, [perfil]);
 
@@ -165,9 +168,10 @@ export function useCheckoutForm(event: EventDto | undefined, selecionados: Selec
 
     setLoading(true);
     try {
-      if (exigirDadosConta) {
-        // Grava na conta antes do pedido (o servidor recusa a compra sem esses dados)
-        await updateMyProfile({ cpf: cpfConta.replace(/\D/g, ""), telefone: telefoneConta.trim() });
+      // Grava na conta o que for novo ou alterado (o servidor recusa a compra sem CPF e telefone)
+      const cpfDigitos = cpfConta.replace(/\D/g, "");
+      if (!perfil || perfil.cpf !== cpfDigitos || (perfil.telefone ?? "").trim() !== telefoneConta.trim()) {
+        await updateMyProfile({ cpf: cpfDigitos, telefone: telefoneConta.trim() });
         await queryClient.invalidateQueries({ queryKey: ["my-profile"] });
       }
       const primeiroHolder = holdersDoLote(selecionados[0].lot.id, selecionados[0].quantity)[0];
@@ -194,6 +198,7 @@ export function useCheckoutForm(event: EventDto | undefined, selecionados: Selec
 
   return {
     exigirDadosConta,
+    cpfBloqueado,
     cpfConta,
     setCpfConta,
     telefoneConta,

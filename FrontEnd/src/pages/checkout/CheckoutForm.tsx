@@ -138,18 +138,18 @@ interface CheckoutSummaryProps {
 // Total e botão "Finalizar compra" — únicos, cobrindo todos os lotes
 // selecionados, renderizados depois do último lote na lista.
 export function CheckoutSummary({ form }: CheckoutSummaryProps) {
-  const { error, total, loading, handleSubmit, exigirDadosConta, cpfConta, setCpfConta, telefoneConta, setTelefoneConta } = form;
+  const { error, total, loading, handleSubmit, exigirDadosConta, cpfBloqueado, cpfConta, setCpfConta, telefoneConta, setTelefoneConta } = form;
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mt: { xs: 0.6, sm: 3 }, pt: { xs: 0.6, sm: 3 }, borderTop: "1px solid rgba(231, 234, 243, 0.9)" }}>
-      {/* Titular da conta sem CPF/telefone (ex.: entrou pelo Google): obrigatórios para comprar; ficam salvos na conta */}
+      {/* Titular da conta: CPF e telefone obrigatórios em toda compra (preenchidos com os dados da conta; ficam salvos nela) */}
       {exigirDadosConta && (
         <Box sx={{ mb: 2 }}>
           <Typography fontWeight={700} color="text.primary" sx={{ fontSize: "0.9rem" }}>
             Dados do titular da conta
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, fontSize: "0.78rem" }}>
-            Obrigatórios para comprar. Ficam salvos na sua conta.
+            CPF e telefone do responsável pela conta são obrigatórios para comprar. Ficam salvos na sua conta.
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -159,6 +159,8 @@ export function CheckoutSummary({ form }: CheckoutSummaryProps) {
                 value={cpfConta}
                 onChange={(e) => setCpfConta(formatarCpf(e.target.value))}
                 inputProps={{ inputMode: "numeric" }}
+                disabled={cpfBloqueado}
+                helperText={cpfBloqueado ? "CPF cadastrado na conta" : undefined}
                 required
                 fullWidth
               />
