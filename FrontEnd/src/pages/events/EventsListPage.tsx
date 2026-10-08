@@ -151,12 +151,11 @@ export default function EventsListPage() {
                       {ev.nome}
                     </Typography>
                     <Stack spacing={0.4} mt={1} mb={2}>
+                      {/* Data e horário na mesma linha */}
                       <Stack direction="row" spacing={0.75} alignItems="center">
                         <CalendarTodayIcon sx={{ fontSize: "0.99rem", color: "text.secondary" }} />
                         <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.825rem" }}>{formatarData(ev.data)}</Typography>
-                      </Stack>
-                      <Stack direction="row" spacing={0.75} alignItems="center">
-                        <ScheduleIcon sx={{ fontSize: "0.99rem", color: "text.secondary" }} />
+                        <ScheduleIcon sx={{ fontSize: "0.99rem", color: "text.secondary", ml: "0.75rem !important" }} />
                         <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.825rem" }}>{formatarHora(ev.hora)}</Typography>
                       </Stack>
                       <Stack direction="row" spacing={0.75} alignItems="center">
